@@ -8,7 +8,14 @@
 
   const setHeader = () => header?.classList.toggle('scrolled', window.scrollY > 24);
   setHeader();
-  window.addEventListener('scroll', setHeader, { passive: true });
+  let scrollFrame = 0;
+  window.addEventListener('scroll', () => {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(() => {
+      setHeader();
+      scrollFrame = 0;
+    });
+  }, { passive: true });
 
   menuButton?.addEventListener('click', () => {
     const open = menuButton.getAttribute('aria-expanded') !== 'true';
@@ -72,18 +79,28 @@
 
   const preview = document.querySelector('#project-preview');
   const tabs = [...document.querySelectorAll('.preview-tab')];
-  tabs.forEach((tab) => tab.addEventListener('click', () => {
+  tabs.forEach((tab) => tab.addEventListener('pointerenter', () => {
+    const source = tab.dataset.image;
+    if (source) new Image().src = source;
+  }, { once: true }));
+  tabs.forEach((tab) => tab.addEventListener('click', async () => {
     if (!preview || tab.classList.contains('active')) return;
+    const source = tab.dataset.image || preview.src;
+    const nextImage = new Image();
+    nextImage.src = source;
+    try { await nextImage.decode(); } catch { /* browser falls back to normal loading */ }
     tabs.forEach((item) => {
       item.classList.toggle('active', item === tab);
       item.setAttribute('aria-selected', String(item === tab));
     });
-    preview.style.opacity = '0';
-    window.setTimeout(() => {
-      preview.src = tab.dataset.image || preview.src;
-      preview.alt = tab.dataset.alt || 'Project preview';
-      preview.onload = () => { preview.style.opacity = '1'; };
-    }, 170);
+    preview.src = source;
+    preview.alt = tab.dataset.alt || 'Project preview';
+    if (!reduceMotion) {
+      preview.animate([
+        { opacity: 0, transform: 'translateY(10px) scale(.992)' },
+        { opacity: 1, transform: 'translateY(0) scale(1)' }
+      ], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    }
   }));
 
   const lightbox = document.querySelector('.lightbox');
@@ -112,5 +129,9 @@
 
   document.querySelectorAll('[data-year]').forEach((element) => {
     element.textContent = String(new Date().getFullYear());
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    document.body.classList.toggle('motion-paused', document.hidden);
   });
 })();
