@@ -14,7 +14,7 @@ Double-click `index.html` or run a small local web server from this folder.
 - Order-to-Delivery Control Tower case study
 - Live dashboard, Excel, Power BI and PDF deliverables
 - Verified professional experience, tools and completed Microsoft certificates
-- Data & Reporting and Business Analysis CV downloads
+- One general Data, Business & Operations Analyst CV
 
 ## Deployment
 
