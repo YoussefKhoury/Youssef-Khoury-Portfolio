@@ -48,12 +48,10 @@ img { display: block; max-width: 100%; }
 .portrait-wrap::after { content: ""; position: absolute; z-index: -1; left: 10%; right: 10%; bottom: 2%; height: 26%; border-radius: 50%; background: rgba(74, 214, 205, .17); filter: blur(55px); }
 .portrait-glow { position: absolute; z-index: 0; inset: 15% 6% 3%; border-radius: 50%; background: radial-gradient(circle, rgba(74, 214, 205, .26), rgba(89, 138, 255, .08) 48%, transparent 72%); filter: blur(22px); animation: portraitGlow 5.5s ease-in-out infinite; }
 .portrait-wrap img { position: relative; z-index: 2; width: min(500px, 100%); max-height: 620px; object-fit: contain; object-position: bottom; filter: drop-shadow(0 30px 55px rgba(0, 0, 0, .42)); }
-.portrait-note { position: absolute; z-index: 3; right: -18px; bottom: 70px; display: flex; align-items: center; gap: 9px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 999px; color: #d5e1e9; background: rgba(10, 24, 34, .84); box-shadow: 0 18px 45px rgba(0, 0, 0, .25); backdrop-filter: blur(12px); font-size: 11px; }
-.portrait-note span { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 16px var(--teal); }
 .hero-copy { position: relative; z-index: 2; max-width: 780px; }
 .eyebrow { margin: 0 0 18px; color: var(--teal); font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
 .hero h1 { margin: 0; max-width: 820px; font-size: clamp(58px, 6.6vw, 104px); line-height: .93; letter-spacing: -.04em; }
-.hero h1 em { display: block; font-style: normal; color: transparent; background: linear-gradient(90deg, var(--teal), var(--blue), var(--purple)); background-clip: text; -webkit-background-clip: text; }
+.hero h1 em { display: block; font-style: normal; color: transparent; background: linear-gradient(90deg, #7ee8e0, var(--teal) 55%, var(--blue)); background-clip: text; -webkit-background-clip: text; filter: drop-shadow(0 0 28px rgba(74, 214, 205, .25)); }
 .hero-lead { max-width: 700px; margin: 30px 0 0; color: var(--muted); font-size: clamp(16px, 1.45vw, 20px); line-height: 1.7; }
 .hero-actions, .project-actions, .contact-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
 .button { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 18px; padding: 0 20px; border: 1px solid transparent; border-radius: 14px; font-size: 12px; font-weight: 850; transition: transform .25s var(--ease), background .25s, border-color .25s; }
@@ -204,7 +202,6 @@ footer p, footer a { margin: 0; color: var(--muted); font-size: 11px; }
   .hero-copy { max-width: 720px; margin-inline: auto; }
   .portrait-wrap { min-height: 470px; order: 2; width: min(100%, 570px); margin-inline: auto; }
   .portrait-wrap img { max-height: 500px; }
-  .portrait-note { right: 5%; }
   .hero-actions, .hero-social { justify-content: center; }
   .about-grid { grid-template-columns: 1fr; }
   .about-card { min-height: 240px; }
@@ -230,7 +227,6 @@ footer p, footer a { margin: 0; color: var(--muted); font-size: 11px; }
   .button { width: 100%; }
   .portrait-wrap { min-height: 390px; }
   .portrait-wrap img { max-height: 415px; }
-  .portrait-note { right: 0; bottom: 26px; font-size: 9px; }
   .section { padding-block: 78px; }
   .section-title { margin-bottom: 38px; }
   .section-title h2 { font-size: 44px; }
@@ -273,3 +269,16 @@ footer p, footer a { margin: 0; color: var(--muted); font-size: 11px; }
 }
 
 .motion-paused .portrait-glow { animation-play-state: paused; }
+
+@media (hover: hover) and (pointer: fine) {
+  a, button, .skip-link { cursor: none; }
+  .cursor-dot, .cursor-ring { position: fixed; z-index: 999; top: 0; left: 0; border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity .2s; }
+  .cursor-dot { width: 7px; height: 7px; margin: -3.5px; background: var(--teal); box-shadow: 0 0 12px rgba(74, 214, 205, .7); }
+  .cursor-ring { width: 34px; height: 34px; margin: -17px; border: 1px solid rgba(74, 214, 205, .45); transition: opacity .2s, transform .18s var(--ease), width .18s var(--ease), height .18s var(--ease), margin .18s var(--ease); }
+  .cursor-dot.visible, .cursor-ring.visible { opacity: 1; }
+  .cursor-ring.active { width: 52px; height: 52px; margin: -26px; border-color: var(--teal); background: rgba(74, 214, 205, .08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cursor-dot, .cursor-ring { display: none; }
+  a, button { cursor: auto; }
+}
