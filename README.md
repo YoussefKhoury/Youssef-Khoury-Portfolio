@@ -2,6 +2,8 @@
 
 Personal portfolio for data, business, reporting and operations analyst opportunities.
 
+**Live site:** https://youssefkx.github.io
+
 ## Open locally
 
 Double-click `index.html` or run a small local web server from this folder.
@@ -14,8 +16,8 @@ Double-click `index.html` or run a small local web server from this folder.
 - Verified professional experience, tools and completed Microsoft certificates
 - Data & Reporting and Business Analysis CV downloads
 
-## Publish
+## Deployment
 
-The included GitHub Actions workflow publishes the static site through GitHub Pages after the repository is connected and pushed.
+The included GitHub Actions workflow publishes the static site through GitHub Pages after every push to `main`.
 
 No employer, customer, supplier or confidential operational data is included. The flagship case-study dataset is synthetic.
