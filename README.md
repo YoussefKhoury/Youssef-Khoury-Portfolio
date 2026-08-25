@@ -2,7 +2,7 @@
 
 Personal portfolio for data, business, reporting and operations analyst opportunities.
 
-**Live site:** https://youssefkx.github.io
+**Live site:** https://youssefkhoury.github.io/youssefkx.github.io/
 
 ## Open locally
 
