@@ -28,6 +28,39 @@
     document.body.classList.remove('menu-open');
   }));
 
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const easeInOut = (progress) => progress < 0.5
+    ? 4 * progress * progress * progress
+    : 1 - ((-2 * progress + 2) ** 3) / 2;
+
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const id = link.getAttribute('href');
+      const target = id && id !== '#' ? document.querySelector(id) : null;
+      if (!target) return;
+      event.preventDefault();
+
+      const start = window.scrollY;
+      const destination = Math.max(0, target.getBoundingClientRect().top + start - 92);
+      const distance = destination - start;
+      if (reducedMotion || Math.abs(distance) < 8) {
+        window.scrollTo(0, destination);
+        history.replaceState(null, '', id);
+        return;
+      }
+
+      const started = performance.now();
+      const duration = 560;
+      const step = (now) => {
+        const progress = Math.min(1, (now - started) / duration);
+        window.scrollTo(0, start + distance * easeInOut(progress));
+        if (progress < 1) requestAnimationFrame(step);
+        else history.replaceState(null, '', id);
+      };
+      requestAnimationFrame(step);
+    });
+  });
+
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
