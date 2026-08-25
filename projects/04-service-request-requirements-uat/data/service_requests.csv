@@ -1,0 +1,121 @@
+Request ID,Channel,Request Type,Priority,Created Date,First Response Hours,Resolved Date,Status,Owner,Satisfaction
+SR-0001,Email,Product issue,Low,2026-05-12,20.1,2026-05-13,Resolved,Agent 1,5
+SR-0002,Web form,Account update,Medium,2026-06-05,4.4,2026-06-08,Resolved,Agent 2,2
+SR-0003,Email,Product issue,Low,2026-06-08,17.6,2026-06-11,Resolved,Agent 3,2
+SR-0004,Web form,Account update,Low,2026-05-07,6.9,2026-05-07,Resolved,Agent 4,5
+SR-0005,Web form,Billing,Medium,2026-05-24,18.2,2026-05-26,Resolved,Agent 5,5
+SR-0006,Email,Delivery inquiry,Low,2026-06-14,13.6,2026-06-17,Resolved,Agent 6,4
+SR-0007,Phone,Account update,Low,2026-05-30,13.6,2026-05-31,Resolved,Agent 1,3
+SR-0008,Email,Access,Medium,2026-04-29,9.9,2026-04-30,Resolved,Agent 2,4
+SR-0009,Email,Account update,Low,2026-06-04,7.6,2026-06-05,Resolved,Agent 3,5
+SR-0010,Phone,Delivery inquiry,Medium,2026-05-17,10.9,2026-05-18,Resolved,Agent 4,4
+SR-0011,Web form,Delivery inquiry,Low,2026-06-15,13.2,2026-06-15,Resolved,Agent 5,5
+SR-0012,Email,Access,Medium,2026-06-18,7.3,2026-06-21,Resolved,Agent 6,4
+SR-0013,Web form,Delivery inquiry,Medium,2026-04-09,9.6,2026-04-09,Resolved,Agent 1,5
+SR-0014,Phone,Delivery inquiry,High,2026-06-07,2.9,2026-06-08,Resolved,Agent 2,4
+SR-0015,Web form,Billing,High,2026-06-07,7.5,,Waiting on customer,Agent 3,
+SR-0016,Phone,Account update,Low,2026-04-26,17,,Waiting on customer,Agent 4,
+SR-0017,Email,Delivery inquiry,Low,2026-05-10,2.5,2026-05-12,Resolved,Agent 5,5
+SR-0018,Web form,Access,High,2026-06-23,2.9,,Waiting on customer,Agent 6,
+SR-0019,Email,Product issue,High,2026-06-20,3.2,2026-06-22,Resolved,Agent 1,5
+SR-0020,Phone,Product issue,High,2026-05-17,4.1,,Escalated,Agent 2,
+SR-0021,Phone,Delivery inquiry,Medium,2026-06-15,8.8,2026-06-16,Resolved,Agent 3,4
+SR-0022,Phone,Billing,Low,2026-06-25,4,2026-06-27,Resolved,Agent 4,2
+SR-0023,Web form,Account update,Low,2026-05-10,9.6,2026-05-11,Resolved,Agent 5,3
+SR-0024,Email,Billing,Low,2026-06-17,15.7,2026-06-18,Resolved,Agent 6,4
+SR-0025,Web form,Access,High,2026-06-29,3.4,2026-06-30,Resolved,Agent 1,4
+SR-0026,Email,Delivery inquiry,Low,2026-04-16,12.6,,Waiting on customer,Agent 2,
+SR-0027,Web form,Account update,Medium,2026-06-04,12.8,2026-06-06,Resolved,Agent 3,5
+SR-0028,Web form,Delivery inquiry,Medium,2026-06-18,20.1,2026-06-21,Resolved,Agent 4,3
+SR-0029,Email,Account update,Medium,2026-05-21,13.7,2026-05-22,Resolved,Agent 5,5
+SR-0030,Phone,Delivery inquiry,Low,2026-05-14,16.3,2026-05-15,Resolved,Agent 6,4
+SR-0031,Email,Account update,Medium,2026-06-05,19.1,2026-06-05,Resolved,Agent 1,3
+SR-0032,Web form,Product issue,Low,2026-04-02,1.2,2026-04-02,Resolved,Agent 2,5
+SR-0033,Email,Billing,Medium,2026-04-01,12.5,2026-04-03,Resolved,Agent 3,2
+SR-0034,Phone,Account update,High,2026-06-05,7.6,,Escalated,Agent 4,
+SR-0035,Email,Product issue,Medium,2026-05-26,7.7,,Open,Agent 5,
+SR-0036,Web form,Product issue,Medium,2026-06-05,19,2026-06-07,Resolved,Agent 6,2
+SR-0037,Email,Account update,High,2026-06-25,2.6,2026-06-25,Resolved,Agent 1,4
+SR-0038,Web form,Billing,High,2026-04-19,2.5,,Open,Agent 2,
+SR-0039,Email,Account update,Medium,2026-06-08,8.6,2026-06-10,Resolved,Agent 3,3
+SR-0040,Phone,Account update,Medium,2026-06-07,12.4,2026-06-07,Resolved,Agent 4,5
+SR-0041,Email,Delivery inquiry,Medium,2026-05-30,1.5,2026-06-02,Resolved,Agent 5,4
+SR-0042,Phone,Product issue,Medium,2026-04-27,15.8,,Escalated,Agent 6,
+SR-0043,Email,Product issue,Medium,2026-05-06,18.2,2026-05-07,Resolved,Agent 1,3
+SR-0044,Web form,Product issue,Low,2026-05-02,2.2,2026-05-04,Resolved,Agent 2,3
+SR-0045,Phone,Billing,High,2026-06-13,6.8,2026-06-13,Resolved,Agent 3,2
+SR-0046,Web form,Billing,Medium,2026-05-02,11.2,,Open,Agent 4,
+SR-0047,Email,Delivery inquiry,Low,2026-05-11,14.9,,Waiting on customer,Agent 5,
+SR-0048,Web form,Access,Medium,2026-06-03,20.7,2026-06-06,Resolved,Agent 6,5
+SR-0049,Phone,Account update,Medium,2026-05-07,19.6,2026-05-08,Resolved,Agent 1,5
+SR-0050,Phone,Access,Low,2026-05-18,20.7,2026-05-20,Resolved,Agent 2,2
+SR-0051,Phone,Billing,Low,2026-05-11,19.4,2026-05-14,Resolved,Agent 3,2
+SR-0052,Email,Access,Medium,2026-06-05,6.8,2026-06-07,Resolved,Agent 4,4
+SR-0053,Phone,Billing,Medium,2026-04-13,9.1,2026-04-16,Resolved,Agent 5,5
+SR-0054,Web form,Access,Medium,2026-04-22,17,,Escalated,Agent 6,
+SR-0055,Phone,Access,Medium,2026-06-19,5,2026-06-22,Resolved,Agent 1,4
+SR-0056,Email,Product issue,Medium,2026-04-27,3.5,2026-04-27,Resolved,Agent 2,4
+SR-0057,Email,Product issue,High,2026-05-28,4.9,2026-05-28,Resolved,Agent 3,2
+SR-0058,Email,Account update,Medium,2026-05-11,10.4,2026-05-14,Resolved,Agent 4,3
+SR-0059,Web form,Product issue,High,2026-06-22,7.6,2026-06-22,Resolved,Agent 5,4
+SR-0060,Phone,Billing,High,2026-05-24,2.6,2026-05-25,Resolved,Agent 6,3
+SR-0061,Phone,Product issue,High,2026-05-13,2.4,2026-05-14,Resolved,Agent 1,4
+SR-0062,Email,Billing,Low,2026-05-05,2,,Open,Agent 2,
+SR-0063,Web form,Delivery inquiry,Medium,2026-05-08,13.7,2026-05-09,Resolved,Agent 3,3
+SR-0064,Phone,Billing,Medium,2026-04-09,15.3,2026-04-10,Resolved,Agent 4,3
+SR-0065,Email,Delivery inquiry,Medium,2026-06-09,18.2,2026-06-09,Resolved,Agent 5,2
+SR-0066,Email,Product issue,High,2026-04-08,3.6,2026-04-08,Resolved,Agent 6,3
+SR-0067,Email,Account update,Medium,2026-04-06,9.9,,Escalated,Agent 1,
+SR-0068,Web form,Billing,Medium,2026-04-11,17.1,2026-04-12,Resolved,Agent 2,3
+SR-0069,Phone,Account update,Medium,2026-05-10,15.1,2026-05-12,Resolved,Agent 3,5
+SR-0070,Phone,Access,Medium,2026-04-26,17.3,2026-04-28,Resolved,Agent 4,5
+SR-0071,Web form,Delivery inquiry,Low,2026-05-08,6.9,2026-05-09,Resolved,Agent 5,2
+SR-0072,Web form,Account update,Low,2026-05-30,4.3,2026-06-01,Resolved,Agent 6,3
+SR-0073,Web form,Delivery inquiry,Medium,2026-05-16,18.6,2026-05-18,Resolved,Agent 1,5
+SR-0074,Email,Account update,Medium,2026-05-02,5.4,2026-05-05,Resolved,Agent 2,3
+SR-0075,Email,Account update,Medium,2026-05-06,20.8,,Waiting on customer,Agent 3,
+SR-0076,Web form,Access,Low,2026-05-26,21,2026-05-26,Resolved,Agent 4,5
+SR-0077,Web form,Product issue,High,2026-05-04,3.1,,Escalated,Agent 5,
+SR-0078,Phone,Delivery inquiry,Medium,2026-05-11,18.9,2026-05-14,Resolved,Agent 6,3
+SR-0079,Email,Billing,High,2026-05-04,7.8,2026-05-05,Resolved,Agent 1,3
+SR-0080,Web form,Delivery inquiry,Low,2026-04-02,15.3,2026-04-02,Resolved,Agent 2,2
+SR-0081,Email,Access,Medium,2026-04-07,9.8,2026-04-07,Resolved,Agent 3,5
+SR-0082,Email,Access,Low,2026-06-12,16.1,2026-06-14,Resolved,Agent 4,3
+SR-0083,Web form,Product issue,Medium,2026-04-21,2.6,2026-04-23,Resolved,Agent 5,2
+SR-0084,Web form,Access,Medium,2026-04-25,12,2026-04-28,Resolved,Agent 6,3
+SR-0085,Email,Access,Medium,2026-04-13,19.8,2026-04-13,Resolved,Agent 1,5
+SR-0086,Email,Access,Low,2026-06-16,11.7,,Open,Agent 2,
+SR-0087,Email,Delivery inquiry,Medium,2026-06-24,7.2,2026-06-25,Resolved,Agent 3,5
+SR-0088,Web form,Delivery inquiry,Medium,2026-05-08,18.5,2026-05-10,Resolved,Agent 4,2
+SR-0089,Web form,Account update,High,2026-06-28,1.9,2026-06-29,Resolved,Agent 5,3
+SR-0090,Email,Billing,Medium,2026-05-23,3.4,2026-05-24,Resolved,Agent 6,3
+SR-0091,Phone,Delivery inquiry,High,2026-06-04,3.2,2026-06-04,Resolved,Agent 1,3
+SR-0092,Email,Access,High,2026-06-18,6.9,2026-06-19,Resolved,Agent 2,4
+SR-0093,Email,Account update,High,2026-06-08,5.1,2026-06-09,Resolved,Agent 3,2
+SR-0094,Web form,Billing,High,2026-06-19,6.6,,Waiting on customer,Agent 4,
+SR-0095,Email,Product issue,High,2026-04-22,3,2026-04-23,Resolved,Agent 5,2
+SR-0096,Email,Account update,Low,2026-04-26,17.1,2026-04-28,Resolved,Agent 6,4
+SR-0097,Web form,Delivery inquiry,Low,2026-06-20,4.3,2026-06-20,Resolved,Agent 1,2
+SR-0098,Email,Billing,Low,2026-05-12,18.6,2026-05-12,Resolved,Agent 2,4
+SR-0099,Web form,Delivery inquiry,High,2026-06-21,7,2026-06-22,Resolved,Agent 3,2
+SR-0100,Phone,Account update,Medium,2026-06-20,5.8,2026-06-22,Resolved,Agent 4,2
+SR-0101,Web form,Product issue,Low,2026-06-08,7.9,2026-06-08,Resolved,Agent 5,2
+SR-0102,Email,Product issue,Low,2026-04-01,13.1,2026-04-02,Resolved,Agent 6,2
+SR-0103,Email,Product issue,Medium,2026-06-26,1.9,2026-06-29,Resolved,Agent 1,4
+SR-0104,Web form,Product issue,Medium,2026-04-23,19.7,,Waiting on customer,Agent 2,
+SR-0105,Phone,Delivery inquiry,Medium,2026-06-12,12.3,2026-06-14,Resolved,Agent 3,2
+SR-0106,Web form,Access,Low,2026-06-23,18.7,2026-06-24,Resolved,Agent 4,2
+SR-0107,Email,Access,Medium,2026-05-29,20.8,2026-05-30,Resolved,Agent 5,3
+SR-0108,Web form,Billing,Medium,2026-05-06,5.3,,Escalated,Agent 6,
+SR-0109,Web form,Delivery inquiry,Low,2026-06-25,3.6,2026-06-27,Resolved,Agent 1,5
+SR-0110,Phone,Billing,High,2026-05-17,1.2,2026-05-18,Resolved,Agent 2,3
+SR-0111,Web form,Product issue,High,2026-04-10,4.2,2026-04-11,Resolved,Agent 3,5
+SR-0112,Web form,Product issue,Medium,2026-04-09,8.3,2026-04-09,Resolved,Agent 4,4
+SR-0113,Email,Account update,High,2026-05-02,2.8,2026-05-02,Resolved,Agent 5,5
+SR-0114,Email,Account update,Medium,2026-04-10,2.3,2026-04-13,Resolved,Agent 6,5
+SR-0115,Email,Delivery inquiry,Medium,2026-04-20,7.9,2026-04-21,Resolved,Agent 1,2
+SR-0116,Email,Account update,High,2026-05-02,3.7,,Escalated,Agent 2,
+SR-0117,Web form,Account update,Low,2026-06-04,7,2026-06-06,Resolved,Agent 3,5
+SR-0118,Phone,Account update,Low,2026-06-15,7.3,2026-06-17,Resolved,Agent 4,3
+SR-0119,Web form,Billing,Low,2026-06-13,1.4,2026-06-16,Resolved,Agent 5,4
+SR-0120,Web form,Delivery inquiry,Medium,2026-04-13,19,,Open,Agent 6,
