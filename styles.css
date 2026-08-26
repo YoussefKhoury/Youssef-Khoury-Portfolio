@@ -29,7 +29,8 @@ img { display: block; max-width: 100%; }
 .nav { min-height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 8px 10px 8px 14px; border: 1px solid transparent; border-radius: 20px; transition: background .3s, border-color .3s, box-shadow .3s; }
 .site-header.scrolled .nav { background: rgba(7, 16, 25, .88); border-color: var(--line); box-shadow: 0 16px 45px rgba(0, 0, 0, .25); backdrop-filter: blur(18px); }
 .brand { display: inline-flex; align-items: center; gap: 11px; }
-.brand-mark { width: 42px; height: 42px; display: grid; place-items: center; color: #04110f; background: var(--teal); border-radius: 13px; font-size: 13px; font-weight: 900; }
+.brand-mark { width: 42px; height: 42px; display: block; border-radius: 13px; overflow: hidden; }
+.brand-mark svg { display: block; width: 100%; height: 100%; }
 .brand > span:last-child { display: grid; }
 .brand strong { font-size: 13px; }
 .brand small { color: var(--muted); font-size: 10px; }
@@ -223,6 +224,7 @@ footer p, footer a { margin: 0; color: var(--muted); font-size: 11px; }
   .nav { min-height: 58px; padding: 6px 8px; background: rgba(7,16,25,.88); border-color: var(--line); backdrop-filter: blur(16px); }
   .brand small { display: none; }
   .brand-mark { width: 38px; height: 38px; border-radius: 11px; }
+  .brand-mark svg { border-radius: 11px; }
   .nav-links { inset: 76px 12px auto; }
   .hero { min-height: auto; padding-top: 120px; padding-bottom: 54px; }
   .hero h1 { font-size: clamp(49px, 15.8vw, 72px); }
