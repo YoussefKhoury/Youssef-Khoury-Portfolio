@@ -128,45 +128,4 @@
   document.addEventListener('visibilitychange', () => {
     document.body.classList.toggle('motion-paused', document.hidden);
   });
-
-  const fineHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const dot = document.querySelector('.cursor-dot');
-  const ring = document.querySelector('.cursor-ring');
-  if (fineHover && !reducedMotion && dot && ring) {
-    let ringX = window.innerWidth / 2;
-    let ringY = window.innerHeight / 2;
-    let targetX = ringX;
-    let targetY = ringY;
-    let shown = false;
-
-    window.addEventListener('mousemove', (event) => {
-      targetX = event.clientX;
-      targetY = event.clientY;
-      dot.style.transform = `translate(${targetX}px, ${targetY}px)`;
-      if (!shown) {
-        shown = true;
-        dot.classList.add('visible');
-        ring.classList.add('visible');
-      }
-    }, { passive: true });
-
-    document.addEventListener('mouseleave', () => {
-      shown = false;
-      dot.classList.remove('visible');
-      ring.classList.remove('visible');
-    });
-
-    document.querySelectorAll('a, button').forEach((element) => {
-      element.addEventListener('mouseenter', () => ring.classList.add('active'));
-      element.addEventListener('mouseleave', () => ring.classList.remove('active'));
-    });
-
-    const followRing = () => {
-      ringX += (targetX - ringX) * 0.18;
-      ringY += (targetY - ringY) * 0.18;
-      ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
-      requestAnimationFrame(followRing);
-    };
-    requestAnimationFrame(followRing);
-  }
 })();
