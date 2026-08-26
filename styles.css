@@ -83,7 +83,7 @@ img { display: block; max-width: 100%; }
 .nav { min-height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 8px 10px 8px 14px; border: 1px solid transparent; border-radius: 20px; transition: background .3s, border-color .3s, box-shadow .3s; }
 .site-header.scrolled .nav { background: var(--nav-scrolled-bg); border-color: var(--line); box-shadow: 0 16px 45px rgba(0, 0, 0, .25); backdrop-filter: blur(18px); }
 .brand { display: inline-flex; align-items: center; gap: 11px; }
-.brand-mark { width: 52px; height: 52px; display: block; }
+.brand-mark { width: 72px; height: 72px; display: block; }
 .brand-mark svg, .brand-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
 :root[data-theme="light"] .brand-mark img { filter: invert(1); }
 .brand > span:last-child { display: grid; }
@@ -102,7 +102,7 @@ img { display: block; max-width: 100%; }
 
 .hero { position: relative; min-height: min(820px, 92vh); display: grid; grid-template-columns: minmax(360px, .82fr) minmax(520px, 1.25fr); align-items: center; gap: clamp(60px, 7vw, 120px); padding-top: 132px; padding-bottom: 68px; overflow: clip; }
 .hero::before { content: ""; position: absolute; inset: 90px -10vw 0; pointer-events: none; opacity: .23; background-image: linear-gradient(rgba(110, 166, 190, .11) 1px, transparent 1px), linear-gradient(90deg, rgba(110, 166, 190, .11) 1px, transparent 1px); background-size: 72px 72px; mask-image: linear-gradient(to bottom, #000, transparent 76%), linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); mask-composite: intersect; -webkit-mask-composite: source-in; }
-.hero-ambient { position: absolute; width: 620px; height: 620px; top: 40px; right: -60px; border-radius: 50%; background: radial-gradient(circle, rgba(74, 214, 205, .16), rgba(101, 168, 255, .05) 42%, transparent 70%); filter: blur(40px); pointer-events: none; }
+.hero-ambient { position: absolute; width: 620px; height: 620px; top: 40px; right: -60px; border-radius: 50%; background: radial-gradient(circle, rgba(74, 214, 205, .16), rgba(101, 168, 255, .05) 42%, transparent 70%); filter: blur(40px); pointer-events: none; animation: ambientDrift 16s ease-in-out infinite; }
 .portrait-wrap { position: relative; z-index: 1; min-height: 570px; display: flex; align-items: flex-end; justify-content: center; border-radius: 46% 46% 34% 34%; background: radial-gradient(circle at 50% 35%, rgba(74, 214, 205, .16), transparent 57%); }
 .portrait-wrap::after { content: ""; position: absolute; z-index: -1; left: 10%; right: 10%; bottom: 2%; height: 26%; border-radius: 50%; background: rgba(74, 214, 205, .17); filter: blur(55px); }
 .portrait-glow { position: absolute; z-index: 0; inset: 15% 6% 3%; border-radius: 50%; background: radial-gradient(circle, rgba(74, 214, 205, .26), rgba(89, 138, 255, .08) 48%, transparent 72%); filter: blur(22px); animation: portraitGlow 5.5s ease-in-out infinite; }
@@ -135,6 +135,11 @@ img { display: block; max-width: 100%; }
 .portrait-wrap.hero-in { animation-delay: .12s; }
 @keyframes heroIn { to { opacity: 1; transform: none; } }
 @keyframes portraitGlow { 50% { transform: scale(1.06); opacity: .72; } }
+@keyframes ambientDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-26px, 18px) scale(1.07); }
+  66% { transform: translate(16px, -22px) scale(0.96); }
+}
 
 .section { padding-block: 118px; }
 .section-soft { background: linear-gradient(180deg, var(--bg-soft), var(--section-soft-end)); }
@@ -285,8 +290,7 @@ footer p, footer a { margin: 0; color: var(--muted); font-size: 11px; }
   .site-header { padding-top: 8px; }
   .nav { min-height: 58px; padding: 6px 8px; background: var(--nav-scrolled-bg); border-color: var(--line); backdrop-filter: blur(16px); }
   .brand small { display: none; }
-  .brand-mark { width: 38px; height: 38px; border-radius: 11px; }
-  .brand-mark svg { border-radius: 11px; }
+  .brand-mark { width: 52px; height: 52px; }
   .nav-links { inset: 76px 12px auto; }
   .hero { min-height: auto; padding-top: 120px; padding-bottom: 54px; }
   .hero h1 { font-size: clamp(49px, 15.8vw, 72px); }
