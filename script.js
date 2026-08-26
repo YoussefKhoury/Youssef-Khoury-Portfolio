@@ -1,14 +1,24 @@
 (() => {
   const themeToggle = document.querySelector('[data-theme-toggle]');
+  const dashboardFrame = document.querySelector('.dashboard-window iframe');
+  const currentTheme = () => (document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  const notifyDashboard = (theme) => {
+    dashboardFrame?.contentWindow?.postMessage({ type: 'otd-theme', theme }, '*');
+  };
+  if (dashboardFrame) {
+    const src = new URL(dashboardFrame.getAttribute('src'), window.location.href);
+    src.searchParams.set('theme', currentTheme());
+    dashboardFrame.setAttribute('src', `${src.pathname}${src.search}`);
+  }
   const applyThemeIcon = () => {
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const isLight = currentTheme() === 'light';
     if (!themeToggle) return;
     themeToggle.innerHTML = isLight ? '<span aria-hidden="true">☀</span>' : '<span aria-hidden="true">☾</span>';
     themeToggle.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
   };
   applyThemeIcon();
   themeToggle?.addEventListener('click', () => {
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const isLight = currentTheme() === 'light';
     if (isLight) {
       document.documentElement.removeAttribute('data-theme');
       localStorage.setItem('site-theme', 'dark');
@@ -17,6 +27,7 @@
       localStorage.setItem('site-theme', 'light');
     }
     applyThemeIcon();
+    notifyDashboard(currentTheme());
   });
 
   const header = document.querySelector('[data-header]');
