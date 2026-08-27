@@ -257,6 +257,8 @@
     head.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
     });
+    // the phone-only metric row is part of the same tap target
+    sec.querySelector('.sec-metrics')?.addEventListener('click', toggle);
   });
 
   // Any in-page link to a collapsed section (hero action, strip pill, menu item)

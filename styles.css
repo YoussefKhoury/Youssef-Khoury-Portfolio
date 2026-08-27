@@ -375,6 +375,8 @@ h1 .tp-ch {
 /* draw the divider in with the reveal, but only when JS can also un-hide it */
 .js .sec-head.reveal:not(.visible)::after { transform: scaleX(0); }
 .sec-head span:first-child { color: var(--accent); }
+/* collapsed-section metric row is a phone-only affordance */
+.sec-metrics { display: none; }
 /* section label doubles as the a11y/SEO heading — keep it visually a label */
 .sec-head h2.sk {
   font: inherit; margin: 0; color: var(--accent); font-weight: 400;
@@ -762,84 +764,82 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   main section[id] { scroll-margin-top: 98px; }
 
-  /* === the three sections are a drawer of case files: tap a tab to open === */
-  .section.collapsible + .section.collapsible { padding-top: 0; }
-  .section.collapsible:has(+ .section.collapsible) { padding-bottom: 0; }
+  /* === the three long sections collapse to a spreadsheet row: tap to fill & open === */
+  .section.collapsible + .section.collapsible { padding-top: 22px; }
+  .section.collapsible:has(+ .section.collapsible) { padding-bottom: 22px; }
 
-  /* collapsed = a folder tab: amber top edge, rounded shoulders, stacked */
+  /* collapsed = a compact label bar sitting on an empty cell row */
   .section.collapsible .sec-head {
     cursor: pointer; user-select: none; align-items: center;
-    margin-bottom: 12px; padding: 15px 14px;
-    background: var(--surface);
-    border: 1px solid var(--line); border-top: 2px solid var(--accent);
-    border-radius: 10px 10px 0 0;
+    margin-bottom: 0; padding: 2px 2px 11px;
   }
-  .section.collapsible.open .sec-head { margin-bottom: 0; }
-  /* the folder has its own border now, so drop the drawn section rule here */
   .section.collapsible .sec-head::after { display: none; }
-
-  /* tab label: _01  NAME  — underscore-prefixed archive code */
   .section.collapsible .sec-head > :first-child::before {
     content: "_" attr(data-file) "  ";
     color: var(--faint); font-weight: 400;
   }
-
-  /* right side: the pull control */
   .section.collapsible .sec-head > :last-child {
-    display: inline-flex; align-items: center; gap: 12px;
+    display: inline-flex; align-items: center;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
   }
   .section.collapsible .sec-head > :last-child::after {
-    content: "[ open ]";
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--accent); padding: 4px 0;
+    content: "\00a0\00a0[ fill ]"; color: var(--accent);
     transition: letter-spacing .25s var(--ease);
   }
-  .section.collapsible .sec-head:hover > :last-child::after { letter-spacing: 0.24em; }
-  .section.collapsible.open .sec-head > :last-child::after { content: "[ close ]"; }
+  .section.collapsible .sec-head:hover > :last-child::after { letter-spacing: 0.22em; }
+  .section.collapsible.open .sec-head > :last-child::after { content: "\00a0\00a0[ close ]"; }
 
-  /* the sheet that slides out of the folder */
+  /* the empty cell row — doubles as the visual trigger */
+  .section.collapsible .sec-metrics {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; padding: 1px; margin: 0;
+    list-style: none; cursor: pointer;
+    background: var(--line); border: 1px solid var(--line);
+    border-radius: 8px; overflow: hidden;
+  }
+  .section.collapsible.open .sec-metrics { border-radius: 8px 8px 0 0; }
+  .section.collapsible .sec-metrics li {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: 10px 4px; text-align: center;
+    background: var(--surface-2);
+    font: 500 11px/1.25 var(--mono); letter-spacing: 0.01em; color: var(--ink);
+  }
+  .section.collapsible .sec-metrics li span {
+    opacity: 0; transition: opacity .2s ease calc(var(--i, 0) * 90ms);
+  }
+  .section.collapsible.open .sec-metrics li {
+    animation: cellFill .45s var(--ease) calc(var(--i, 0) * 90ms) both;
+  }
+  .section.collapsible.open .sec-metrics li span { opacity: 1; }
+  @keyframes cellFill {
+    0%, 40% { background: color-mix(in srgb, var(--accent) 30%, var(--surface-2)); }
+    100%    { background: var(--surface-2); }
+  }
+
+  /* the detail drops open under the filled row */
   .js .section.collapsible .sec-body {
     position: relative; overflow: hidden;
     transition: height .42s var(--ease);
   }
   .js .section.collapsible.open .sec-body {
-    margin-bottom: 12px;
-    padding: 24px 16px 24px 42px;            /* room for the binding strip */
+    padding: 20px 14px 22px;
     border: 1px solid var(--line); border-top: 0;
-    border-radius: 0 0 10px 10px;
-    background:
-      repeating-linear-gradient(to bottom,
-        transparent 0 27px,
-        color-mix(in srgb, var(--accent) 7%, transparent) 27px 28px),
-      color-mix(in srgb, var(--ink) 4%, var(--surface-2));
+    border-radius: 0 0 8px 8px;
+    background: var(--surface-2);
   }
   /* resting collapsed state is CSS-only, so a resize back to desktop always reveals */
   .js .section.collapsible:not(.open) .sec-body { height: 0; padding: 0; }
 
-  /* punched binding strip down the left edge */
-  .js .section.collapsible.open .sec-body::before {
-    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 28px;
-    background:
-      radial-gradient(circle at 14px 14px, var(--bg) 3.5px, transparent 4.5px) 0 0 / 100% 28px repeat-y,
-      var(--surface);
-    border-right: 2px solid var(--accent);
-  }
-  /* folded dog-ear at the top-right corner */
-  .js .section.collapsible.open .sec-body::after {
-    content: ""; position: absolute; top: 0; right: 0;
-    border: 15px solid transparent; border-right-color: var(--bg); border-top-color: var(--bg);
-  }
-
-  /* the sheet's contents lift into place, lightly staggered */
+  /* contents fade up once the cells have finished filling */
   .js .section.collapsible .sec-body > * {
-    opacity: 0; transform: translateY(18px);
+    opacity: 0; transform: translateY(14px);
     transition: opacity .45s var(--ease), transform .45s var(--ease);
   }
-  .js .section.collapsible.open .sec-body > * { opacity: 1; transform: none; transition-delay: .12s; }
-  .js .section.collapsible.open .sec-body > :nth-child(2) { transition-delay: .18s; }
-  .js .section.collapsible.open .sec-body > :nth-child(3) { transition-delay: .24s; }
-  .js .section.collapsible.open .sec-body > :nth-child(4) { transition-delay: .30s; }
-  .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .36s; }
+  .js .section.collapsible.open .sec-body > * { opacity: 1; transform: none; transition-delay: .46s; }
+  .js .section.collapsible.open .sec-body > :nth-child(2) { transition-delay: .52s; }
+  .js .section.collapsible.open .sec-body > :nth-child(3) { transition-delay: .58s; }
+  .js .section.collapsible.open .sec-body > :nth-child(4) { transition-delay: .64s; }
+  .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .70s; }
 
   /* --- fewer words on a phone: keep collapsed rows to title + tags --- */
   .row .meta, .row .outcome { display: none; }
@@ -926,6 +926,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .to-top { transition: opacity .15s ease; transform: none; }
   .section.collapsible .sec-body { transition: none; }
   .section.collapsible .sec-body > * { opacity: 1; transform: none; transition: none; }
+  .section.collapsible .sec-metrics li { animation: none; }
+  .section.collapsible .sec-metrics li span { opacity: 1; transition: none; }
   .section.collapsible .sec-head > :last-child::after { transition: none; }
   .section.collapsible .sec-head:hover > :last-child::after { letter-spacing: 0.14em; }
   .section.collapsible .sec-head::after { animation: none; }
