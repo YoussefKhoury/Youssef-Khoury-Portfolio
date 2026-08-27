@@ -84,7 +84,7 @@
     indexBtn?.setAttribute('aria-expanded', 'true');
     document.documentElement.classList.add('menu-open');
     overlay.scrollTop = 0;
-    closeBtn?.focus();
+    requestAnimationFrame(() => closeBtn?.focus());
   };
   const closeOverlay = () => {
     if (!overlay) return;
