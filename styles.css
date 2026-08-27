@@ -766,35 +766,43 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   main section[id] { scroll-margin-top: 98px; }
 
-  /* --- collapse the long sections behind their heading; tap to open --- */
+  /* --- the three long sections read as terminal case files: tap to open --- */
   .section.collapsible .sec-head {
     cursor: pointer; align-items: center; user-select: none; margin-bottom: 20px;
   }
   .section.collapsible:not(.open) .sec-head { margin-bottom: 0; }
+
+  /* file index in front of the section name: [01] [02] [03] */
+  .section.collapsible .sec-head > :first-child::before {
+    content: "[" attr(data-file) "]  ";
+    color: var(--faint); font-weight: 400;
+  }
+
+  /* right side: status word + a bracketed open/close control (no box) */
   .section.collapsible .sec-head > :last-child {
     display: inline-flex; align-items: center; gap: 12px;
   }
-  /* the +/- affordance is a small rotating square */
   .section.collapsible .sec-head > :last-child::after {
-    content: "+"; width: 24px; height: 24px; flex: 0 0 auto;
-    display: inline-flex; align-items: center; justify-content: center;
-    border: 1px solid var(--line); border-radius: 7px;
-    color: var(--accent); font-size: 16px; line-height: 1;
-    transition: transform .35s var(--ease), border-color .2s ease, background .2s ease;
+    content: "[ open ]";
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); padding: 4px 0;
+    transition: letter-spacing .25s var(--ease);
   }
-  .section.collapsible.open .sec-head > :last-child::after {
-    content: "\00d7"; transform: rotate(90deg);
-    border-color: var(--accent); color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-  }
+  .section.collapsible .sec-head:hover > :last-child::after { letter-spacing: 0.24em; }
+  .section.collapsible.open .sec-head > :last-child::after { content: "[ close ]"; }
+
+  /* the header rule flashes amber as the file opens */
+  .section.collapsible.open .sec-head::after { animation: fileOpenSweep .55s var(--ease); }
+  @keyframes fileOpenSweep { from { background: var(--accent); } to { background: var(--line); } }
+
   .js .section.collapsible .sec-body {
     overflow: hidden; transition: height .42s var(--ease);
-    /* nest the opened detail so it doesn't run edge to edge */
-    padding-left: 15px; border-left: 1px solid var(--line);
+    /* opened file is bound along an amber spine and indented off it */
+    padding-left: 16px; border-left: 2px solid var(--accent);
   }
   /* resting collapsed state is CSS-only, so a resize back to desktop always reveals */
   .js .section.collapsible:not(.open) .sec-body { height: 0; border-left-color: transparent; }
-  /* creative open: children rise + fade in, lightly staggered */
+  /* contents cascade in as the file opens */
   .js .section.collapsible .sec-body > * {
     opacity: 0; transform: translateY(16px);
     transition: opacity .5s var(--ease), transform .5s var(--ease);
@@ -887,7 +895,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-body { transition: none; }
   .section.collapsible .sec-body > * { opacity: 1; transform: none; transition: none; }
   .section.collapsible .sec-head > :last-child::after { transition: none; }
-  .section.collapsible.open .sec-head > :last-child::after { transform: none; content: "\00d7"; }
+  .section.collapsible .sec-head:hover > :last-child::after { letter-spacing: 0.14em; }
+  .section.collapsible.open .sec-head::after { animation: none; }
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
