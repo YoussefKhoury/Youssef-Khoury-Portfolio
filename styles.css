@@ -163,7 +163,10 @@ img { display: block; max-width: 100%; }
 .about-card h3 { margin: 26px 0 12px; font-size: 27px; line-height: 1.08; letter-spacing: -.04em; }
 .about-card p, .skill-card p { margin: 0; color: var(--muted); font-size: 14px; }
 .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-.skill-card { position: relative; min-height: 320px; display: flex; flex-direction: column; padding: 32px; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(145deg, var(--panel-2), var(--skill-card-end) 70%); transition: transform .35s var(--ease), border-color .35s, box-shadow .35s; }
+.skill-card { position: relative; min-height: 320px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 32px; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: linear-gradient(145deg, var(--panel-2), var(--skill-card-end) 70%); transition: transform .35s var(--ease), border-color .35s, box-shadow .35s; }
+.skill-card .chips { justify-content: center; }
+.skill-card .skill-proof { justify-items: center; }
+.skill-card-top { width: 100%; }
 .skill-card:hover { transform: translateY(-6px); border-color: rgba(74,214,205,.34); box-shadow: 0 24px 55px rgba(0,0,0,.18); }
 .skill-card::after { content: ""; position: absolute; width: 220px; height: 220px; right: -100px; top: -100px; border-radius: 50%; background: rgba(74, 214, 205, .08); filter: blur(10px); }
 .skill-card-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
@@ -176,7 +179,7 @@ img { display: block; max-width: 100%; }
 .skill-proof span { color: var(--accent-text); font-size: 9px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
 .skill-proof strong { color: var(--text); font-size: 12px; font-weight: 700; }
 .skills-evidence { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 18px; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: var(--overlay-018); }
-.skills-evidence div { display: grid; gap: 4px; padding: 25px 28px; border-right: 1px solid var(--line); }
+.skills-evidence div { display: grid; gap: 4px; padding: 25px 28px; border-right: 1px solid var(--line); justify-items: center; text-align: center; }
 .skills-evidence div:last-child { border-right: 0; }
 .skills-evidence strong { font-size: 29px; line-height: 1; letter-spacing: -.04em; }
 .skills-evidence span { color: var(--muted); font-size: 11px; }
