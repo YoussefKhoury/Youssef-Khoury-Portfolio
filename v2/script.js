@@ -61,6 +61,18 @@
     if (e.key === 'Escape' && overlay?.classList.contains('open')) closeOverlay();
   });
 
+  // keep Tab focus inside the dialog while it is open
+  overlay?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || !overlay.classList.contains('open')) return;
+    const items = [...overlay.querySelectorAll('a[href], button:not([disabled])')]
+      .filter((el) => el.offsetParent !== null);
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
   /* ---------- count-up with hard timeout fallback ---------- */
   const easeOut = (p) => 1 - Math.pow(1 - p, 3);
   const counters = [...document.querySelectorAll('[data-count-to]')];
