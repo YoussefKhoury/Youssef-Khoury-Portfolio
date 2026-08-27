@@ -13,18 +13,17 @@
   const applyThemeIcon = () => {
     const isLight = currentTheme() === 'light';
     if (!themeToggle) return;
-    themeToggle.innerHTML = isLight ? '<span aria-hidden="true">☀</span>' : '<span aria-hidden="true">☾</span>';
-    themeToggle.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
+    themeToggle.checked = isLight;
+    themeToggle.closest('.theme-switch')?.setAttribute('aria-label', isLight ? 'Switch to dark theme' : 'Switch to light theme');
   };
   applyThemeIcon();
-  themeToggle?.addEventListener('click', () => {
-    const isLight = currentTheme() === 'light';
-    if (isLight) {
-      document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('site-theme', 'dark');
-    } else {
+  themeToggle?.addEventListener('change', () => {
+    if (themeToggle.checked) {
       document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('site-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('site-theme', 'dark');
     }
     applyThemeIcon();
     notifyDashboard(currentTheme());
