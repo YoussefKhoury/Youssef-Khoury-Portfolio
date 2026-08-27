@@ -60,10 +60,10 @@
   themeToggle?.addEventListener('change', () => {
     if (themeToggle.checked) {
       document.documentElement.setAttribute('data-theme', 'light');
-      localStorage.setItem('site-theme', 'light');
+      localStorage.setItem('site-theme-v2', 'light');
     } else {
       document.documentElement.removeAttribute('data-theme');
-      localStorage.setItem('site-theme', 'dark');
+      localStorage.setItem('site-theme-v2', 'dark');
     }
     applyThemeIcon();
     notifyDashboard(currentTheme());
@@ -207,4 +207,63 @@
   document.addEventListener('visibilitychange', () => {
     document.body.classList.toggle('motion-paused', document.hidden);
   });
+
+  // Mobile only: collapse Skills / Projects / Credentials cards into a tap-to-expand list
+  const mCards = document.querySelectorAll(
+    '#skills .skill-card, #projects .portfolio-card, #credentials .certificate-card'
+  );
+  if (mCards.length) {
+    const mq = window.matchMedia('(max-width: 640px)');
+    mCards.forEach((card) => {
+      const chev = document.createElement('span');
+      chev.className = 'm-chev';
+      chev.setAttribute('aria-hidden', 'true');
+      chev.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>';
+      card.appendChild(chev);
+
+      const isCert = card.classList.contains('certificate-card');
+      const toggle = () => {
+        const open = card.classList.toggle('is-open');
+        card.setAttribute('aria-expanded', String(open));
+      };
+
+      card.addEventListener('click', (event) => {
+        if (!mq.matches) return;
+        if (isCert) {
+          if (event.target.closest('strong')) return; // explicit "View certificate PDF" CTA navigates
+          event.preventDefault();
+          toggle();
+          return;
+        }
+        if (card.classList.contains('is-open') && event.target.closest('a, button')) return;
+        toggle();
+      });
+      card.addEventListener('keydown', (event) => {
+        if (!mq.matches || isCert) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggle();
+        }
+      });
+    });
+
+    const syncMobile = () => {
+      mCards.forEach((card) => {
+        if (mq.matches) {
+          if (!card.classList.contains('certificate-card')) {
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+          }
+          if (!card.hasAttribute('aria-expanded')) card.setAttribute('aria-expanded', 'false');
+        } else {
+          card.removeAttribute('role');
+          card.removeAttribute('tabindex');
+          card.removeAttribute('aria-expanded');
+          card.classList.remove('is-open');
+        }
+      });
+    };
+    syncMobile();
+    mq.addEventListener('change', syncMobile);
+  }
 })();
