@@ -400,6 +400,7 @@ h2 {
 }
 
 /* ---------- work rows ---------- */
+#work { --case-rise: 52px; --case-tilt: 7deg; }
 #work .shell { position: relative; }
 
 /* scroll rail down the left of the list; fill tracks progress through the section */
@@ -415,6 +416,26 @@ h2 {
 }
 
 .case-item { position: relative; max-width: 1000px; border-bottom: 1px solid var(--line); }
+
+/* scroll-scrubbed entrance: each case tilts up out of depth and settles as it
+   scrolls into view. Native scroll-timeline only — GPU-composited, no JS. Browsers
+   without it (Firefox / older Safari) keep the IntersectionObserver .reveal fade. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .js #work .shell { perspective: 1200px; }
+    .js #work .case-item.reveal { opacity: 1; transform: none; transition: none; }
+    .js #work .case-item {
+      transform-origin: 50% 100%;
+      animation: caseScrub linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 22%;
+    }
+  }
+}
+@keyframes caseScrub {
+  from { opacity: 0; transform: translateY(var(--case-rise)) rotateX(var(--case-tilt)) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
 
 /* flagship case — marked only by the label, not a permanent highlight */
 .case-item.flagship::before {
@@ -989,6 +1010,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .idcard .idlinks { justify-content: center; }
 
   .case-item { max-width: none; }
+  #work { --case-rise: 26px; --case-tilt: 0deg; }
   #work .sec-head { margin-bottom: 6px; }
   .row {
     max-width: none; grid-template-columns: 1fr; gap: 6px;
