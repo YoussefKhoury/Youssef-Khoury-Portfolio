@@ -198,6 +198,62 @@
     });
   });
 
+  /* ---------- mobile: collapse the long sections behind their heading ----------
+     Resting open/closed height is owned by CSS (@media + .collapsible:not(.open)).
+     JS only flips .open and animates height, always handing the resting state
+     back to CSS afterwards, so a resize to desktop can never leave one stuck. */
+  const mqMobile = window.matchMedia('(max-width: 720px)');
+  const collSecs = [...document.querySelectorAll('.section.collapsible')];
+
+  const applyHeadRole = () => {
+    collSecs.forEach((sec) => {
+      const head = sec.querySelector('.sec-head');
+      if (!head) return;
+      if (mqMobile.matches) {
+        head.setAttribute('role', 'button');
+        head.setAttribute('tabindex', '0');
+        head.setAttribute('aria-expanded', String(sec.classList.contains('open')));
+      } else {
+        head.removeAttribute('role');
+        head.removeAttribute('tabindex');
+        head.removeAttribute('aria-expanded');
+      }
+    });
+  };
+  applyHeadRole();
+  mqMobile.addEventListener('change', applyHeadRole);
+
+  collSecs.forEach((sec) => {
+    const head = sec.querySelector('.sec-head');
+    const body = sec.querySelector('.sec-body');
+    if (!head || !body) return;
+
+    const toggle = () => {
+      if (!mqMobile.matches) return;
+      const open = !sec.classList.contains('open');
+      if (open) body.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+      body.style.height = (open ? 0 : body.scrollHeight) + 'px';
+      void body.offsetHeight;                         // reflow so the start height sticks
+      sec.classList.toggle('open', open);
+      head.setAttribute('aria-expanded', String(open));
+      body.style.height = (open ? body.scrollHeight : 0) + 'px';
+      let t;
+      const done = () => {
+        body.style.height = '';                       // hand resting state back to CSS
+        body.removeEventListener('transitionend', done);
+        clearTimeout(t);
+      };
+      body.addEventListener('transitionend', done);
+      t = setTimeout(done, 500);                        // fallback if transitionend never fires
+      if (reduced) done();
+    };
+
+    head.addEventListener('click', toggle);
+    head.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+
   // Fallback: if IntersectionObserver never delivers (rare edge cases), un-hide
   // everything so nothing is stuck invisible.
   setTimeout(() => {
