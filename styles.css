@@ -871,7 +871,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
   }
   .section.collapsible .sec-head > :last-child::after {
-    content: "\00a0\00a0[ fill ]"; color: var(--accent);
+    content: "\00a0\00a0[ open ]"; color: var(--accent);
     transition: letter-spacing .25s var(--ease);
   }
   .section.collapsible .sec-head:hover > :last-child::after { letter-spacing: 0.22em; }
@@ -887,22 +887,22 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .section.collapsible.open .sec-metrics { border-radius: 8px 8px 0 0; }
   .section.collapsible .sec-metrics li {
+    position: relative; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
     min-height: 44px; padding: 10px 4px; text-align: center;
     background: var(--surface-2);
-    font: 500 11px/1.25 var(--mono); letter-spacing: 0.01em; color: var(--ink);
+    font: 500 11px/1.25 var(--mono); letter-spacing: 0.04em; color: var(--ink);
+    text-transform: uppercase;
   }
-  .section.collapsible .sec-metrics li span {
-    opacity: 0; transition: opacity .2s ease calc(var(--i, 0) * 90ms);
+  /* classified-doc redaction bar: covers the cell until the row opens, then
+     wipes off left-to-right (staggered) in step with the body expanding */
+  .section.collapsible .sec-metrics li::before {
+    content: ""; position: absolute; inset: 0; z-index: 1;
+    background: #0a0a0a;
+    transform-origin: right;
+    transition: transform .42s var(--ease) calc(var(--i, 0) * 70ms);
   }
-  .section.collapsible.open .sec-metrics li {
-    animation: cellFill .45s var(--ease) calc(var(--i, 0) * 90ms) both;
-  }
-  .section.collapsible.open .sec-metrics li span { opacity: 1; }
-  @keyframes cellFill {
-    0%, 40% { background: color-mix(in srgb, var(--accent) 30%, var(--surface-2)); }
-    100%    { background: var(--surface-2); }
-  }
+  .section.collapsible.open .sec-metrics li::before { transform: scaleX(0); }
 
   /* the detail drops open under the filled row */
   .js .section.collapsible .sec-body {
@@ -1019,6 +1019,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-body > * { opacity: 1; transform: none; transition: none; }
   .section.collapsible .sec-metrics li { animation: none; }
   .section.collapsible .sec-metrics li span { opacity: 1; transition: none; }
+  .section.collapsible .sec-metrics li::before { transition: none; transform: scaleX(0); }
   .section.collapsible .sec-head > :last-child::after { transition: none; }
   .section.collapsible .sec-head:hover > :last-child::after { letter-spacing: 0.14em; }
   .section.collapsible .sec-head::after { animation: none; }
