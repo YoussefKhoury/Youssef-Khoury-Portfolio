@@ -19,14 +19,36 @@
     }
   }
 
-  /* ---------- header + scroll progress ---------- */
+  /* ---------- header + scroll progress + work rail ---------- */
   const header = document.querySelector('[data-header]');
   const progress = document.querySelector('.scroll-progress');
+  const workSec = document.getElementById('work');
+  const workRail = workSec?.querySelector('.work-rail span');
+  const workRows = [...(workSec ? workSec.querySelectorAll('.row') : [])];
+
   const onScroll = () => {
+    const vh = window.innerHeight;
     header?.classList.toggle('scrolled', window.scrollY > 20);
     if (progress) {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const max = document.documentElement.scrollHeight - vh;
       progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+    }
+    if (workSec && workRail) {
+      const r = workSec.getBoundingClientRect();
+      const span = Math.max(1, r.height - vh * 0.55);
+      const p = Math.min(1, Math.max(0, (vh * 0.5 - r.top) / span));
+      workRail.style.height = (p * 100) + '%';
+    }
+    if (workRows.length) {
+      const focus = vh * 0.42;
+      let best = null, bestD = Infinity;
+      workRows.forEach((row) => {
+        const rr = row.getBoundingClientRect();
+        if (rr.bottom < 0 || rr.top > vh) return;
+        const d = Math.abs(rr.top + rr.height / 2 - focus);
+        if (d < bestD) { bestD = d; best = row; }
+      });
+      workRows.forEach((row) => row.classList.toggle('is-active', row === best));
     }
   };
   onScroll();
