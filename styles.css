@@ -405,7 +405,7 @@ h2 {
 /* scroll rail down the left of the list; fill tracks progress through the section */
 .work-rail {
   position: absolute; left: -2px; top: 128px; bottom: 56px; width: 2px;
-  background: var(--line); pointer-events: none;
+  background: none; pointer-events: none;
 }
 .work-rail span {
   position: absolute; left: 0; top: 0; width: 2px; height: var(--rail, 0%);
