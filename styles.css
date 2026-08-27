@@ -710,10 +710,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* let the heading use the full centred width and breathe a little smaller */
   h1 { font-size: clamp(27px, 8vw, 34px); max-width: none; }
 
-  .dashboard-window { min-height: 0; }
-  .dash-stage { min-height: 280px; }
-  .dash-skeleton { padding: 16px; }
-  .dash-skeleton .sk-kpis { grid-template-columns: 1fr 1fr; }
+  /* the embedded dashboard is unusable at phone width; the "Open live dashboard"
+     button above it is the way in on mobile */
+  .dashboard-window { display: none; }
 
   /* calmer hero: centred, drop the 3-beat method list */
   .hero-copy { text-align: center; }
