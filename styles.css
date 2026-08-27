@@ -386,14 +386,14 @@ h2 {
 .row {
   position: relative; width: 100%;
   display: grid; grid-template-columns: 168px 1fr 178px; column-gap: 40px; align-items: center;
-  padding: 46px 6px;
+  padding: 46px 6px 46px 54px;
   font: inherit; color: inherit; text-align: left;
   background: none; border: 0; cursor: pointer; -webkit-appearance: none; appearance: none;
 }
 
 /* expandable case detail */
 .js .case { overflow: hidden; height: 0; transition: height .38s var(--ease); }
-.case-inner { padding: 0 6px 44px 208px; }
+.case-inner { padding: 0 6px 44px 262px; }
 .js .case-inner { opacity: 0; transition: opacity .3s ease; }
 .js .case.open > .case-inner { opacity: 1; }
 .case dl { margin: 0 0 22px; display: grid; gap: 16px; max-width: 78ch; }
