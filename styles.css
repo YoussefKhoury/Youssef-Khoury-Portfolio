@@ -197,8 +197,33 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .ov-stamp { font-size: 11px; letter-spacing: 0.14em; color: var(--faint); margin: 8px 0 0; }
 
 /* ---------- reveal (only hidden once JS confirms it can un-hide them) ---------- */
-.js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .js .reveal.visible { opacity: 1; transform: none; }
+
+/* section-aware scroll reveal: headings wipe in as you reach them */
+
+/* small amber section labels type-wipe left to right */
+.js .sec-head.reveal .sk,
+.js .sec-head.reveal > span:first-child {
+  clip-path: inset(0 105% 0 -2px);
+  transition: clip-path .7s var(--ease);
+}
+.js .sec-head.reveal.visible .sk,
+.js .sec-head.reveal.visible > span:first-child { clip-path: inset(0 -2px 0 -2px); }
+.js .sec-head.reveal > span:last-child { opacity: 0; transition: opacity .5s ease .28s; }
+.js .sec-head.reveal.visible > span:last-child { opacity: 1; }
+
+/* large display headings clip-wipe + rise */
+.js .flag-copy.reveal h2,
+.js .contact .shell.reveal h2 {
+  clip-path: inset(0 100% 0 0); transform: translateY(14px);
+  transition: clip-path .8s var(--ease), transform .8s var(--ease);
+}
+.js .flag-copy.reveal.visible h2,
+.js .contact .shell.reveal.visible h2 { clip-path: inset(0 0 0 0); transform: none; }
+
+/* cascade the two credential cards instead of popping together */
+.js .cred-grid .cert.reveal:nth-child(2) { transition-delay: .12s; }
 
 /* ---------- one-time hero boot sequence (~950ms, once per session) ---------- */
 html.booting .frame { animation: bootFrame .32s var(--ease) both; }
@@ -696,6 +721,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
+  .js .sec-head.reveal .sk, .js .sec-head.reveal > span,
+  .js .flag-copy.reveal h2, .js .contact .shell.reveal h2 {
+    clip-path: none; transform: none; opacity: 1; transition: none;
+  }
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
