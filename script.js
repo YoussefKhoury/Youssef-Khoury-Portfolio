@@ -23,6 +23,7 @@
   const header = document.querySelector('[data-header]');
   const progress = document.querySelector('.scroll-progress');
   const secnav = document.querySelector('.secnav');
+  const toTop = document.querySelector('.to-top');
   const workSec = document.getElementById('work');
   const workRail = workSec?.querySelector('.work-rail span');
   const workRows = [...(workSec ? workSec.querySelectorAll('.row') : [])];
@@ -35,6 +36,7 @@
       secnav.classList.toggle('show', heroBottom < 54);
       secnav.setAttribute('aria-hidden', heroBottom < 54 ? 'false' : 'true');
     }
+    if (toTop) toTop.classList.toggle('show', window.scrollY > vh * 1.4);
     if (progress) {
       const max = document.documentElement.scrollHeight - vh;
       progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
@@ -217,6 +219,8 @@
         head.removeAttribute('role');
         head.removeAttribute('tabindex');
         head.removeAttribute('aria-expanded');
+        // back on desktop the body is always shown, so its reveals must be live
+        sec.querySelectorAll('.sec-body .reveal').forEach((el) => el.classList.add('visible'));
       }
     });
   };
@@ -278,6 +282,11 @@
     }, { rootMargin: '-40% 0px -55% 0px' });
     sections.forEach((s) => secObserver.observe(s));
   }
+
+  /* ---------- back to top ---------- */
+  toTop?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  });
 
   /* ---------- copy email ---------- */
   const toast = document.querySelector('.toast');
