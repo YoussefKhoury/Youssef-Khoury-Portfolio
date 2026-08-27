@@ -37,7 +37,8 @@
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
     indexBtn?.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
+    document.documentElement.classList.add('menu-open');
+    overlay.scrollTop = 0;
     tickClock();
     clockTimer = window.setInterval(tickClock, 1000);
     closeBtn?.focus();
@@ -47,7 +48,7 @@
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
     indexBtn?.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
+    document.documentElement.classList.remove('menu-open');
     clearInterval(clockTimer);
     indexBtn?.focus();
   };
