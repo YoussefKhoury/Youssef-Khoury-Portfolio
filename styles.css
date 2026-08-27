@@ -665,6 +665,15 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 .actions a:hover, .actions button:hover { transform: translateX(6px); }
 .idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,
 .actions a:hover .ar, .actions button:hover .ar { transform: translateX(-6px); }
+
+/* Keep the ↗ only where it means something — a link that leaves the site or
+   downloads a file. In-page jumps, mailto and copy buttons lose the decoration. */
+.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions a .ar, .actions button .ar { display: none; }
+.idlinks a[href^="http"] .ar,
+.fcol a[href^="http"] .ar, .fcol a[download] .ar,
+.ov-social a[href^="http"] .ar,
+.actions a[href^="http"] .ar, .actions a[download] .ar, .actions a[target="_blank"] .ar { display: inline-block; }
+
 .stamp {
   display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
   color: var(--faint); font-size: 11px; letter-spacing: 0.12em;
@@ -681,6 +690,21 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   transition: transform .3s var(--ease), opacity .3s ease, visibility .3s;
 }
 .toast.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
+
+/* ---------- back-to-top ---------- */
+.to-top {
+  position: fixed; right: 20px; bottom: 20px; z-index: 300;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 13px; background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
+  backdrop-filter: blur(8px);
+  opacity: 0; transform: translateY(14px); pointer-events: none;
+  transition: opacity .3s var(--ease), transform .3s var(--ease), color .2s ease, border-color .2s ease;
+}
+.to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { color: var(--accent); border-color: var(--accent); }
+.to-top span:first-child { color: var(--accent); font-size: 13px; line-height: 1; }
 
 /* ============================================================
    Responsive
@@ -746,21 +770,36 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head > :last-child {
     display: inline-flex; align-items: center; gap: 12px;
   }
+  /* the +/- affordance is a small rotating square */
   .section.collapsible .sec-head > :last-child::after {
-    content: "+"; width: 22px; height: 22px; flex: 0 0 auto;
+    content: "+"; width: 24px; height: 24px; flex: 0 0 auto;
     display: inline-flex; align-items: center; justify-content: center;
-    border: 1px solid var(--line); border-radius: 6px;
-    color: var(--accent); font-size: 15px; line-height: 1;
-    transition: border-color .2s ease;
+    border: 1px solid var(--line); border-radius: 7px;
+    color: var(--accent); font-size: 16px; line-height: 1;
+    transition: transform .35s var(--ease), border-color .2s ease, background .2s ease;
   }
   .section.collapsible.open .sec-head > :last-child::after {
-    content: "\2212"; border-color: var(--accent);
+    content: "\00d7"; transform: rotate(90deg);
+    border-color: var(--accent); color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
   }
   .js .section.collapsible .sec-body {
-    overflow: hidden; transition: height .4s var(--ease);
+    overflow: hidden; transition: height .42s var(--ease);
+    /* nest the opened detail so it doesn't run edge to edge */
+    padding-left: 15px; border-left: 1px solid var(--line);
   }
   /* resting collapsed state is CSS-only, so a resize back to desktop always reveals */
-  .js .section.collapsible:not(.open) .sec-body { height: 0; }
+  .js .section.collapsible:not(.open) .sec-body { height: 0; border-left-color: transparent; }
+  /* creative open: children rise + fade in, lightly staggered */
+  .js .section.collapsible .sec-body > * {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .5s var(--ease), transform .5s var(--ease);
+  }
+  .js .section.collapsible.open .sec-body > * { opacity: 1; transform: none; }
+  .js .section.collapsible.open .sec-body > :nth-child(2) { transition-delay: .05s; }
+  .js .section.collapsible.open .sec-body > :nth-child(3) { transition-delay: .10s; }
+  .js .section.collapsible.open .sec-body > :nth-child(4) { transition-delay: .15s; }
+  .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .20s; }
 
   /* --- fewer words on a phone: keep collapsed rows to title + tags --- */
   .row .meta, .row .outcome { display: none; }
@@ -771,16 +810,26 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     -webkit-line-clamp: 3; overflow: hidden;
   }
 
-  /* the embedded dashboard is unusable at phone width; the "Open live dashboard"
-     button above it is the way in on mobile */
-  .dashboard-window { display: none; }
+  /* keep the live preview, just shorter — it only mounts once Flagship is opened */
+  .dashboard-window { min-height: 0; }
+  .dash-stage { min-height: 300px; }
+  .dash-skeleton .sk-kpis { grid-template-columns: repeat(2, 1fr); }
+  .dash-gate .play { width: 48px; height: 48px; font-size: 14px; }
+  .mobile-dash {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 12px 14px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 11px; letter-spacing: 0.06em;
+  }
+  .mobile-dash strong { color: var(--ink); font-size: 12px; }
 
   /* calmer hero: centred, drop the 3-beat method list */
   .hero-copy { text-align: center; }
   .hero-copy .actions { justify-content: center; }
   .method { display: none; }
   .idcard { flex-direction: column; align-items: center; text-align: center; }
-  .idcard .avatar { width: 132px; }
+  .idcard .avatar { width: 132px; border-color: color-mix(in srgb, var(--line) 45%, transparent); }
+  .idcard .avatar .pc { opacity: 0.28; }
+  .idcard .idgeo { border-top-color: color-mix(in srgb, var(--line) 45%, transparent); }
   .idcard .idlinks { justify-content: center; }
 
   .case-item { max-width: none; }
@@ -825,8 +874,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     clip-path: none; transform: none; opacity: 1; transition: none;
   }
   .secnav { transition: none; }
+  .to-top { transition: opacity .15s ease; transform: none; }
   .section.collapsible .sec-body { transition: none; }
+  .section.collapsible .sec-body > * { opacity: 1; transform: none; transition: none; }
   .section.collapsible .sec-head > :last-child::after { transition: none; }
+  .section.collapsible.open .sec-head > :last-child::after { transform: none; content: "\00d7"; }
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
