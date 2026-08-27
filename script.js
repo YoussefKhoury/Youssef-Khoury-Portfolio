@@ -1,6 +1,86 @@
 (() => {
+  const heroHeadline = document.getElementById('hero-headline');
+  if (heroHeadline) {
+    const plainText = heroHeadline.dataset.plain || '';
+    const emText = heroHeadline.dataset.em || '';
+    const reducedForHeadline = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reducedForHeadline) {
+      const DECK = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const pick = () => DECK[(Math.random() * DECK.length) | 0];
+      heroHeadline.textContent = '';
+      const plainSpan = document.createElement('span');
+      const emEl = document.createElement('em');
+      heroHeadline.appendChild(plainSpan);
+      heroHeadline.appendChild(emEl);
+      const chars = [...plainText].map((ch) => {
+        const s = document.createElement('span');
+        s.textContent = ch === ' ' ? ' ' : pick();
+        plainSpan.appendChild(s);
+        return s;
+      });
+      const total = plainText.length + emText.length;
+      const duration = 1000;
+      const fps = 24;
+      let t0 = null;
+      let lastSwap = 0;
+      const frame = (now) => {
+        if (t0 === null) t0 = now;
+        if (now - lastSwap >= 1000 / fps) {
+          lastSwap = now;
+          const ratio = Math.min(1, (now - t0) / duration);
+          const lockedCount = Math.floor(ratio * total);
+          for (let i = 0; i < plainText.length; i++) {
+            const ch = plainText[i];
+            chars[i].textContent = ch === ' ' ? ' ' : (i < lockedCount ? ch : pick());
+          }
+          let emOut = '';
+          for (let i = 0; i < emText.length; i++) {
+            const ch = emText[i];
+            const globalIdx = plainText.length + i;
+            emOut += ch === ' ' || globalIdx < lockedCount ? ch : pick();
+          }
+          emEl.textContent = emOut;
+        }
+        if (now - t0 < duration + 80) {
+          requestAnimationFrame(frame);
+        } else {
+          chars.forEach((s, i) => { s.textContent = plainText[i] === ' ' ? ' ' : plainText[i]; });
+          emEl.textContent = emText;
+        }
+      };
+      requestAnimationFrame(frame);
+    }
+  }
+
+  const reducedForTilt = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reducedForTilt) {
+    const TILT_MAX = 7;
+    document.querySelectorAll('.portfolio-card, .skill-card').forEach((card) => {
+      card.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'touch') return;
+        const rect = card.getBoundingClientRect();
+        const cx = (event.clientX - rect.left) / rect.width - 0.5;
+        const cy = (event.clientY - rect.top) / rect.height - 0.5;
+        card.style.setProperty('--rx', `${-cy * TILT_MAX * 2}deg`);
+        card.style.setProperty('--ry', `${cx * TILT_MAX * 2}deg`);
+        card.style.setProperty('--gx', `${(cx + 0.5) * 100}%`);
+        card.style.setProperty('--gy', `${(cy + 0.5) * 100}%`);
+        card.style.setProperty('--tilt-s', '1.015');
+        card.style.setProperty('--tilt-trs', '0ms');
+      });
+      card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+        card.style.setProperty('--tilt-s', '1');
+        card.style.setProperty('--tilt-trs', '320ms');
+      });
+    });
+  }
+
   const themeToggle = document.querySelector('[data-theme-toggle]');
   const dashboardFrame = document.querySelector('.dashboard-window iframe');
+  const dashboardSkeleton = document.querySelector('.dashboard-skeleton');
+  dashboardFrame?.addEventListener('load', () => dashboardSkeleton?.classList.add('is-hidden'), { once: true });
   const currentTheme = () => (document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
   const notifyDashboard = (theme) => {
     dashboardFrame?.contentWindow?.postMessage({ type: 'otd-theme', theme }, '*');
