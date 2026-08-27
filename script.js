@@ -344,15 +344,36 @@
 
   /* ---------- copy email ---------- */
   const toast = document.querySelector('.toast');
-  document.querySelector('[data-copy-email]')?.addEventListener('click', async () => {
+  const flashToast = () => {
+    if (!toast) return;
+    toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toast.classList.remove('show'), 1700);
+  };
+  const copyEmail = async () => {
+    const addr = 'youssefkhoury01@gmail.com';
     try {
-      await navigator.clipboard.writeText('youssefkhoury01@gmail.com');
-      toast?.classList.add('show');
-      setTimeout(() => toast?.classList.remove('show'), 1700);
-    } catch {
-      window.location.href = 'mailto:youssefkhoury01@gmail.com';
-    }
-  });
+      if (!navigator.clipboard?.writeText) throw new Error('no clipboard api');
+      await navigator.clipboard.writeText(addr);
+      flashToast();
+      return;
+    } catch {}
+    // fallback for older / restricted mobile browsers
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = addr;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, addr.length);
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (ok) { flashToast(); return; }
+    } catch {}
+    window.location.href = 'mailto:' + addr;
+  };
+  document.querySelector('[data-copy-email]')?.addEventListener('click', copyEmail);
 
   /* ---------- hero motes ---------- */
   const canvas = document.getElementById('motes');
