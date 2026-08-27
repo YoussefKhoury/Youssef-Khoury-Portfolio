@@ -1,18 +1,42 @@
 (() => {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const root = document.documentElement;
   // Content is visible by default; only allow the hidden/reveal state now that JS runs.
-  document.documentElement.classList.add('js');
+  root.classList.add('js');
 
-  /* ---------- header ---------- */
+  /* ---------- one-time hero boot sequence ---------- */
+  if (!reduced) {
+    let booted = false;
+    try { booted = sessionStorage.getItem('v2-booted') === '1'; } catch {}
+    if (!booted) {
+      root.classList.add('booting');
+      // pin the end state so removing .booting can't hide anything
+      document.querySelectorAll('.hero .reveal').forEach((el) => el.classList.add('visible'));
+      setTimeout(() => {
+        root.classList.remove('booting');
+        try { sessionStorage.setItem('v2-booted', '1'); } catch {}
+      }, 1300);
+    }
+  }
+
+  /* ---------- header + scroll progress ---------- */
   const header = document.querySelector('[data-header]');
-  const setHeader = () => header?.classList.toggle('scrolled', window.scrollY > 20);
-  setHeader();
+  const progress = document.querySelector('.scroll-progress');
+  const onScroll = () => {
+    header?.classList.toggle('scrolled', window.scrollY > 20);
+    if (progress) {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+    }
+  };
+  onScroll();
   let ticking = false;
   window.addEventListener('scroll', () => {
     if (ticking) return;
     ticking = true;
-    requestAnimationFrame(() => { setHeader(); ticking = false; });
+    requestAnimationFrame(() => { onScroll(); ticking = false; });
   }, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
 
   /* ---------- full-screen index overlay ---------- */
   const overlay = document.getElementById('overlay');

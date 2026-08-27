@@ -78,6 +78,13 @@ a { color: inherit; text-decoration: none; }
 .frame.bl { bottom: 13px; left: 13px; border-right: 0; border-top: 0; }
 .frame.br { bottom: 13px; right: 13px; border-left: 0; border-top: 0; }
 
+.scroll-progress {
+  position: fixed; top: 0; left: 0; z-index: 130;
+  width: 0; height: 2px; background: var(--accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);
+  will-change: width;
+}
+
 /* ---------- top bar ---------- */
 .topbar {
   position: sticky; top: 0; z-index: 100;
@@ -192,6 +199,25 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 /* ---------- reveal (only hidden once JS confirms it can un-hide them) ---------- */
 .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .js .reveal.visible { opacity: 1; transform: none; }
+
+/* ---------- one-time hero boot sequence (~950ms, once per session) ---------- */
+html.booting .frame { animation: bootFrame .32s var(--ease) both; }
+html.booting .avatar > img { animation: bootWipe .4s var(--ease) .16s both; }
+html.booting .hero .reveal { transition: none; }
+html.booting .hero-copy > * { animation: bootIn .34s var(--ease) both; }
+html.booting .hero-copy > :nth-child(1) { animation-delay: .42s; }
+html.booting .hero-copy > :nth-child(2) { animation-delay: .50s; }
+html.booting .hero-copy > :nth-child(3) { animation-delay: .58s; }
+html.booting .hero-copy > :nth-child(4) { animation-delay: .66s; }
+html.booting .hero-copy > :nth-child(5) { animation-delay: .74s; }
+html.booting .idcard > :not(.avatar) { animation: bootIn .34s var(--ease) .5s both; }
+
+@keyframes bootFrame { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes bootWipe {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes bootIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 /* ---------- hero ---------- */
 .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
@@ -321,6 +347,14 @@ h2 {
 }
 .row .tags b { color: var(--accent-2); font-weight: 500; }
 .row .meta { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 66ch; }
+.row .outcome {
+  color: var(--ink); font-size: 13px; margin: 10px 0 0; max-width: 66ch;
+  padding-left: 12px; border-left: 2px solid var(--accent);
+}
+.row .outcome .mono {
+  color: var(--accent); font-size: 10px; letter-spacing: 0.16em;
+  margin-right: 8px;
+}
 
 .row .go {
   display: inline-flex; align-items: center; gap: 9px; white-space: nowrap;
@@ -518,6 +552,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .ov-nav a::before, .ov-nav a::after { transition: opacity .15s ease; transform: none; }
   .row:hover .spark { transform: none; }
   .row .go b { transition: opacity .15s ease; }
+  html.booting .frame,
+  html.booting .avatar > img,
+  html.booting .hero-copy > *,
+  html.booting .idcard > :not(.avatar) { animation: none !important; }
+  .scroll-progress { box-shadow: none; }
   .overlay { transition: opacity .12s ease, visibility .12s; clip-path: none; }
   .overlay .ov-nav a { transition: color .2s ease; }
   .overlay.open .ov-nav a { opacity: 1; transform: none; transition-delay: 0s; }
