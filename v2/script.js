@@ -202,4 +202,37 @@
   /* ---------- dashboard skeleton hide (safety) ---------- */
   const frame = document.querySelector('.dashboard-window iframe');
   frame?.addEventListener('load', () => frame.classList.add('is-loaded'), { once: true });
+
+  /* ---------- decrypt-on-hover for menu links ---------- */
+  if (!reduced) {
+    const GLYPHS = '!<>-_\\/[]{}=+*^?#%$&01';
+    const scramble = (el) => {
+      const target = el.dataset.text || (el.dataset.text = el.textContent);
+      clearInterval(el._scr);
+      const total = 9;                 // frames until fully settled
+      let frame = 0;
+      el._scr = setInterval(() => {
+        frame++;
+        let out = '';
+        for (let i = 0; i < target.length; i++) {
+          const ch = target[i];
+          if (ch === ' ') { out += ' '; continue; }
+          const settleAt = Math.floor((i / target.length) * total * 0.7);
+          out += frame > settleAt ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        }
+        el.textContent = out;
+        if (frame >= total) { clearInterval(el._scr); el.textContent = target; }
+      }, 22);
+    };
+    const restore = (el) => {
+      clearInterval(el._scr);
+      if (el.dataset.text) el.textContent = el.dataset.text;
+    };
+    document.querySelectorAll('.topnav a, .ov-nav a span').forEach((el) => {
+      el.addEventListener('mouseenter', () => scramble(el));
+      el.addEventListener('mouseleave', () => restore(el));
+      el.addEventListener('focus', () => scramble(el));
+      el.addEventListener('blur', () => restore(el));
+    });
+  }
 })();
