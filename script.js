@@ -447,6 +447,87 @@
     }
   }
 
+  /* ---------- hero atmospheric halftone fog ----------
+     Original: a slow value-noise field sampled on a coarse grid and drawn as
+     amber halftone dots. A radial weight makes the dots denser/larger toward
+     the hero's outer edges and fades them out toward the centre so the
+     headline, photo and buttons stay clean. Rendered at ~1/3 resolution and
+     softened in CSS so it reads as dither, not pixels. */
+  const fog = document.getElementById('herofog');
+  if (fog) {
+    const fx = fog.getContext('2d');
+    const SCALE = 0.5;                  // buffer resolution vs. display
+    const STEP = 5;                     // grid spacing in buffer px (~10px on screen)
+    let fw = 1, fh = 1, fRun = false, fLast = 0, fTime = Math.random() * 100;
+
+    const hash = (ix, iy) => {
+      let n = (ix * 374761393 + iy * 668265263) | 0;
+      n = (n ^ (n >>> 13)) * 1274126177;
+      return ((n ^ (n >>> 16)) >>> 0) / 4294967295;
+    };
+    const vnoise = (x, y) => {
+      const ix = Math.floor(x), iy = Math.floor(y);
+      const dx = x - ix, dy = y - iy;
+      const u = dx * dx * (3 - 2 * dx), v = dy * dy * (3 - 2 * dy);
+      const a = hash(ix, iy), b = hash(ix + 1, iy);
+      const c = hash(ix, iy + 1), d = hash(ix + 1, iy + 1);
+      return a * (1 - u) * (1 - v) + b * u * (1 - v) + c * (1 - u) * v + d * u * v;
+    };
+
+    const fPaint = () => {
+      fx.clearRect(0, 0, fw, fh);
+      const cx = fw / 2, cy = fh / 2;
+      const maxD = Math.hypot(cx, cy);
+      for (let y = STEP * 0.5; y < fh; y += STEP) {
+        for (let x = STEP * 0.5; x < fw; x += STEP) {
+          const nd = Math.hypot((x - cx) * 1.12, (y - cy)) / maxD;
+          let edge = (nd - 0.16) / 0.84;            // 0 near centre, 1 at edges
+          if (edge <= 0.02) continue;
+          edge = edge < 1 ? edge * edge * (3 - 2 * edge) : 1;
+          const n = 0.62 * vnoise(x * 0.055 + fTime, y * 0.055 + fTime * 0.3)
+                  + 0.38 * vnoise(x * 0.12 - fTime * 0.6, y * 0.12);
+          const rad = edge * (0.3 + 1.55 * n);
+          if (rad < 0.3) continue;
+          fx.fillStyle = 'rgba(232,177,90,' + (0.035 + 0.125 * edge * n).toFixed(3) + ')';
+          fx.beginPath();
+          fx.arc(x, y, rad, 0, 6.283);
+          fx.fill();
+        }
+      }
+    };
+
+    const fResize = () => {
+      const r = fog.getBoundingClientRect();
+      fw = Math.max(1, Math.round(r.width * SCALE));
+      fh = Math.max(1, Math.round(r.height * SCALE));
+      fog.width = fw; fog.height = fh;
+      fPaint();                         // never leave the canvas blank
+    };
+    if (window.ResizeObserver) new ResizeObserver(fResize).observe(fog);
+    fResize();
+
+    const fDraw = (t) => {
+      if (!fRun || reduced || document.hidden) return;
+      if (t - fLast >= 40) {            // ~25fps is plenty for this drift
+        fLast = t;
+        fTime += 0.0009;                // extremely slow drift
+        fPaint();
+      }
+      requestAnimationFrame(fDraw);
+    };
+
+    if (!reduced) {
+      const fStart = () => { if (!fRun) { fRun = true; fLast = 0; requestAnimationFrame(fDraw); } };
+      const fObs = new IntersectionObserver((es) => {
+        es.forEach((e) => { if (e.isIntersecting) fStart(); else fRun = false; });
+      }, { threshold: 0 });
+      fObs.observe(fog);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { fRun = false; } else { fStart(); }
+      });
+    }
+  }
+
   /* ---------- flagship dashboard: click-to-load gate ---------- */
   const dashWin = document.querySelector('.dashboard-window');
   const dashGate = dashWin?.querySelector('.dash-gate');

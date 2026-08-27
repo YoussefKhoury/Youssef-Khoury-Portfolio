@@ -250,6 +250,9 @@ html.booting .idcard > :not(.avatar) { animation: bootIn .34s var(--ease) .5s bo
 /* ---------- hero ---------- */
 .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
 .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+/* atmospheric halftone fog — rendered low-res and softened so it reads as
+   dither, not pixels; denser toward the hero's outer edges (see script.js) */
+.hero #herofog { filter: blur(0.6px); opacity: 0.85; }
 .hero-grid {
   position: relative; z-index: 1;
   display: grid; grid-template-columns: 240px 1fr; gap: 64px; align-items: start;
