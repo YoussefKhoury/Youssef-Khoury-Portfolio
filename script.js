@@ -351,7 +351,7 @@
   if (heroH1 && !reduced &&
       window.matchMedia('(pointer: fine)').matches &&
       window.matchMedia('(min-width: 721px)').matches) {
-    const REST = 700, MAX_ADD = 200, RADIUS = 190;
+    const W0 = 680, W1 = 900, WD0 = 100, WD1 = 148, RADIUS = 170;
 
     // split into per-letter spans, keeping the <em> wrapper and spaces intact
     const wrap = (node) => {
@@ -394,11 +394,13 @@
       for (const c of chars) {
         const d = Math.hypot(c.cx - mx, c.cy - my);
         const tgt = d < RADIUS ? (1 - d / RADIUS) ** 2 : 0;
-        c.cur += (tgt - c.cur) * 0.16;
+        c.cur += (tgt - c.cur) * 0.22;
         if (Math.abs(tgt - c.cur) > 0.001) moving = true;
-        c.el.style.fontWeight = (REST + c.cur * MAX_ADD).toFixed(0);
-        c.el.style.transform = c.cur > 0.002
-          ? `translateY(${(-2.5 * c.cur).toFixed(2)}px) scale(${(1 + 0.05 * c.cur).toFixed(3)})`
+        const p = c.cur;
+        c.el.style.fontVariationSettings =
+          `"wght" ${(W0 + p * (W1 - W0)).toFixed(0)}, "wdth" ${(WD0 + p * (WD1 - WD0)).toFixed(0)}`;
+        c.el.style.transform = p > 0.002
+          ? `translateY(${(-4 * p).toFixed(2)}px) scale(${(1 + 0.13 * p).toFixed(3)})`
           : '';
       }
       raf = (moving || active) ? requestAnimationFrame(loop) : 0;

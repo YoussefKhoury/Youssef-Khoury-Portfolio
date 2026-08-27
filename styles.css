@@ -254,13 +254,16 @@ html.booting .idcard > :not(.avatar) { animation: bootIn .34s var(--ease) .5s bo
 }
 .eyebrow { color: var(--faint); margin: 0 0 20px; }
 h1 {
-  font-family: var(--display); font-weight: 700;
+  font-family: "Roboto Flex", var(--display); font-weight: 700;
   font-size: clamp(34px, 5.6vw, 64px); line-height: 1.03; letter-spacing: -0.025em;
   text-wrap: balance; margin: 0 0 22px; max-width: 17ch;
 }
 h1 em { font-style: normal; color: var(--accent); }
-/* pressure-type: per-letter spans that lean toward the cursor (desktop, motion-safe) */
-h1 .tp-ch { display: inline-block; will-change: transform, font-weight; }
+/* pressure-type: per-letter spans that bulge toward the cursor (desktop, motion-safe) */
+h1 .tp-ch {
+  display: inline-block; will-change: transform, font-variation-settings;
+  font-variation-settings: "wght" 700, "wdth" 100;
+}
 .lead { color: var(--muted); max-width: 56ch; margin: 0 0 32px; font-size: 15.5px; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 14px 28px; }
@@ -272,24 +275,11 @@ h1 .tp-ch { display: inline-block; will-change: transform, font-weight; }
 .actions a:hover, .actions button:hover { border-color: var(--accent); }
 .actions .ar { color: var(--accent); margin-right: 8px; display: inline-block; }
 
-/* ---------- link arrows: larger glyph + shoot-through on hover ---------- */
+/* larger arrow glyph; alignment (the hover-slide lives after the component rules below) */
 .idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions .ar {
   font-size: 15px; line-height: 1; align-self: center;
 }
 .idlinks a, .fcol a, .ov-social a { align-items: center; }
-@keyframes arShoot {
-  0%   { transform: translate(0, 0);       opacity: 1; }
-  38%  { transform: translate(7px, -7px);  opacity: 0; }
-  39%  { transform: translate(-7px, 7px);  opacity: 0; }
-  100% { transform: translate(0, 0);       opacity: 1; }
-}
-.idlinks a:hover .ar,
-.fcol a:hover .ar,
-.ov-social a:hover .ar,
-.actions a:hover .ar,
-.actions button:hover .ar {
-  animation: arShoot .42s var(--ease);
-}
 
 .stackline { color: var(--faint); margin: 34px 0 0; font-size: 11px; }
 
@@ -660,6 +650,16 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 .fcol a { display: flex; gap: 8px; color: var(--muted); font-size: 12px; letter-spacing: 0.06em; padding: 4px 0; transition: color .2s ease; }
 .fcol a .ar { color: var(--accent); }
 .fcol a:hover { color: var(--ink); }
+
+/* arrow stays put; the label slides right on hover (defined late so it wins source order) */
+.idlinks a, .fcol a, .ov-social a, .actions a, .actions button {
+  transition: transform .28s var(--ease), color .2s ease, border-color .2s ease;
+}
+.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions .ar { transition: transform .28s var(--ease); }
+.idlinks a:hover, .fcol a:hover, .ov-social a:hover,
+.actions a:hover, .actions button:hover { transform: translateX(6px); }
+.idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,
+.actions a:hover .ar, .actions button:hover .ar { transform: translateX(-6px); }
 .stamp {
   display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
   color: var(--faint); font-size: 11px; letter-spacing: 0.12em;
@@ -771,8 +771,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .js .row.reveal .meta, .js .row.reveal .outcome { opacity: 1; transform: none; transition: none; }
   .work-rail span, .row .node { transition: none; }
   .case, .case-inner, .row .chev { transition: none; }
+  .idlinks a:hover, .fcol a:hover, .ov-social a:hover,
+  .actions a:hover, .actions button:hover,
   .idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,
-  .actions a:hover .ar, .actions button:hover .ar { animation: none; }
+  .actions a:hover .ar, .actions button:hover .ar { transform: none; }
   html.booting .frame,
   html.booting .avatar > img,
   html.booting .hero-copy > *,
