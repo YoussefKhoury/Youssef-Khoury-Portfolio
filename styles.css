@@ -738,6 +738,30 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   main section[id] { scroll-margin-top: 98px; }
 
+  /* --- collapse the long sections behind their heading; tap to open --- */
+  .section.collapsible .sec-head {
+    cursor: pointer; align-items: center; user-select: none; margin-bottom: 20px;
+  }
+  .section.collapsible:not(.open) .sec-head { margin-bottom: 0; }
+  .section.collapsible .sec-head > :last-child {
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .section.collapsible .sec-head > :last-child::after {
+    content: "+"; width: 22px; height: 22px; flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--line); border-radius: 6px;
+    color: var(--accent); font-size: 15px; line-height: 1;
+    transition: border-color .2s ease;
+  }
+  .section.collapsible.open .sec-head > :last-child::after {
+    content: "\2212"; border-color: var(--accent);
+  }
+  .js .section.collapsible .sec-body {
+    overflow: hidden; transition: height .4s var(--ease);
+  }
+  /* resting collapsed state is CSS-only, so a resize back to desktop always reveals */
+  .js .section.collapsible:not(.open) .sec-body { height: 0; }
+
   /* --- fewer words on a phone: keep collapsed rows to title + tags --- */
   .row .meta, .row .outcome { display: none; }
   .hero-copy .stackline { display: none; }
@@ -801,6 +825,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     clip-path: none; transform: none; opacity: 1; transition: none;
   }
   .secnav { transition: none; }
+  .section.collapsible .sec-body { transition: none; }
+  .section.collapsible .sec-head > :last-child::after { transition: none; }
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
