@@ -710,23 +710,34 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .dash-skeleton { padding: 16px; }
   .dash-skeleton .sk-kpis { grid-template-columns: 1fr 1fr; }
 
-  .method { grid-template-columns: 1fr; gap: 14px; }
+  /* calmer hero: centred, drop the 3-beat method list */
+  .hero-copy { text-align: center; }
+  .hero-copy .actions { justify-content: center; }
+  .method { display: none; }
+  .idcard { flex-direction: column; align-items: center; text-align: center; }
+  .idcard .avatar { width: 132px; }
+  .idcard .idlinks { justify-content: center; }
 
   .case-item { max-width: none; }
-  .row { max-width: none; grid-template-columns: 1fr; gap: 12px; padding-left: 22px; padding-right: 2px; }
-  .row .spark { order: 2; margin-top: 4px; transform: none; }
+  .row { max-width: none; grid-template-columns: 1fr; gap: 10px; padding-left: 2px; padding-right: 2px; }
   .row .go { opacity: 1; transform: none; order: 3; }
   .row .idx { display: inline-block; margin: 0 0 6px; }
   .row::before, .row::after { display: none; }
-  .case-inner { padding-left: 22px; padding-right: 2px; }
+  .case-inner { padding-left: 2px; padding-right: 2px; }
   .case dl > div { grid-template-columns: 1fr; gap: 4px; }
 
-  /* pull the scroll rail + nodes in off the screen edge on narrow viewports */
-  .work-rail { left: 8px; }
-  .row .node { left: 4px; }
+  /* strip the decorative layer that reads as clutter on a phone */
+  #motes { display: none; }
+  .work-rail { display: none; }
+  .row .node { display: none; }
+  .row .spark { display: none; }
 
   /* the fixed corner frames crowd content on small screens */
   .frame { display: none; }
+
+  /* centre the closing contact block too */
+  .contact .shell { text-align: center; }
+  .contact .actions { justify-content: center; }
 
   .xrow { grid-template-columns: 1fr; gap: 10px; }
   .xr-when { display: flex; align-items: center; gap: 12px; }
