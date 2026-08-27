@@ -345,4 +345,71 @@
       el.addEventListener('blur', () => restore(el));
     });
   }
+
+  /* ---------- pressure-type on the hero heading (desktop pointer, motion-safe) ---------- */
+  const heroH1 = document.querySelector('.hero-copy h1');
+  if (heroH1 && !reduced &&
+      window.matchMedia('(pointer: fine)').matches &&
+      window.matchMedia('(min-width: 721px)').matches) {
+    const REST = 700, MAX_ADD = 200, RADIUS = 190;
+
+    // split into per-letter spans, keeping the <em> wrapper and spaces intact
+    const wrap = (node) => {
+      [...node.childNodes].forEach((n) => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          for (const ch of n.textContent) {
+            if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); continue; }
+            const s = document.createElement('span');
+            s.className = 'tp-ch';
+            s.textContent = ch;
+            frag.appendChild(s);
+          }
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1) {
+          wrap(n);
+        }
+      });
+    };
+    if (!heroH1.hasAttribute('aria-label')) {
+      heroH1.setAttribute('aria-label', heroH1.textContent.replace(/\s+/g, ' ').trim());
+    }
+    wrap(heroH1);
+
+    const chars = [...heroH1.querySelectorAll('.tp-ch')].map((el) => ({ el, cx: 0, cy: 0, cur: 0 }));
+    const measure = () => chars.forEach((c) => {
+      const r = c.el.getBoundingClientRect();
+      c.cx = r.left + r.width / 2;
+      c.cy = r.top + r.height / 2;
+    });
+    measure();
+    document.fonts?.ready.then(measure);
+    window.addEventListener('scroll', measure, { passive: true });
+    window.addEventListener('resize', measure);
+
+    const hero = document.querySelector('.hero');
+    let mx = -9999, my = -9999, raf = 0, active = false;
+    const loop = () => {
+      let moving = false;
+      for (const c of chars) {
+        const d = Math.hypot(c.cx - mx, c.cy - my);
+        const tgt = d < RADIUS ? (1 - d / RADIUS) ** 2 : 0;
+        c.cur += (tgt - c.cur) * 0.16;
+        if (Math.abs(tgt - c.cur) > 0.001) moving = true;
+        c.el.style.fontWeight = (REST + c.cur * MAX_ADD).toFixed(0);
+        c.el.style.transform = c.cur > 0.002
+          ? `translateY(${(-2.5 * c.cur).toFixed(2)}px) scale(${(1 + 0.05 * c.cur).toFixed(3)})`
+          : '';
+      }
+      raf = (moving || active) ? requestAnimationFrame(loop) : 0;
+    };
+    hero.addEventListener('pointermove', (e) => {
+      mx = e.clientX; my = e.clientY; active = true;
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    hero.addEventListener('pointerleave', () => {
+      active = false; mx = my = -9999;
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+  }
 })();

@@ -259,6 +259,8 @@ h1 {
   text-wrap: balance; margin: 0 0 22px; max-width: 17ch;
 }
 h1 em { font-style: normal; color: var(--accent); }
+/* pressure-type: per-letter spans that lean toward the cursor (desktop, motion-safe) */
+h1 .tp-ch { display: inline-block; will-change: transform, font-weight; }
 .lead { color: var(--muted); max-width: 56ch; margin: 0 0 32px; font-size: 15.5px; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 14px 28px; }
