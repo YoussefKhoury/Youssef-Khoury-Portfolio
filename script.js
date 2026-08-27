@@ -38,6 +38,13 @@
       const span = Math.max(1, r.height - vh * 0.55);
       const p = Math.min(1, Math.max(0, (vh * 0.5 - r.top) / span));
       workRail.style.height = (p * 100) + '%';
+      // light a row's node once the rail fill has physically reached it
+      const railBox = workRail.parentElement.getBoundingClientRect();
+      const filled = railBox.top + railBox.height * p;
+      workRows.forEach((row) => {
+        const rr = row.getBoundingClientRect();
+        row.classList.toggle('rail-lit', rr.top + rr.height / 2 <= filled + 1);
+      });
     }
     if (workRows.length) {
       const focus = vh * 0.42;
