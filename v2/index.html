@@ -14,8 +14,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" />
-    <link rel="stylesheet" href="styles.css?v=1" />
-    <script src="script.js?v=1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=2" />
+    <script src="script.js?v=2" defer></script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"Person","name":"Youssef Khoury","jobTitle":"Data, Business and Operations Analyst","email":"mailto:youssefkhoury01@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"Matn University College"},"sameAs":["https://github.com/YoussefKhoury","https://www.linkedin.com/in/youssefkhoury/"]}
     </script>
@@ -29,22 +29,68 @@
     <header class="topbar" data-header>
       <div class="shell">
         <a class="id mono" href="#home"><b>Youssef Khoury</b> / Analyst</a>
-        <nav class="mono" id="nav">
+        <nav class="mono topnav">
           <a href="#work">Work</a><a href="#credentials">Credentials</a><a href="#experience">Experience</a>
           <a href="../downloads/Youssef-Khoury-CV.pdf" download>Résumé</a><a href="#contact">Contact</a>
         </nav>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">
-          <span></span><span></span><span class="sr-only">Menu</span>
+        <button class="index-btn mono" type="button" aria-expanded="false" aria-controls="overlay">
+          <span>Index</span><span class="ar">&#8599;</span>
         </button>
       </div>
     </header>
+
+    <div class="overlay" id="overlay" aria-hidden="true">
+      <div class="ov-inner">
+        <div class="ov-top mono">
+          <span>Index</span>
+          <button class="ov-close" type="button">Close &#215;</button>
+        </div>
+        <nav class="ov-nav">
+          <a href="#home"><i class="mono">00</i><span>Home</span></a>
+          <a href="#work"><i class="mono">01</i><span>Selected work</span></a>
+          <a href="#flagship"><i class="mono">02</i><span>Flagship</span></a>
+          <a href="#credentials"><i class="mono">03</i><span>Credentials</span></a>
+          <a href="#experience"><i class="mono">04</i><span>Experience</span></a>
+          <a href="#contact"><i class="mono">05</i><span>Contact</span></a>
+          <a href="../downloads/Youssef-Khoury-CV.pdf" download><i class="mono">06</i><span>Résumé &#8599;</span></a>
+        </nav>
+        <div class="ov-side mono">
+          <div><span>Location</span><b>Beirut, Lebanon</b></div>
+          <div><span>Coordinates</span><b>33.8938&#176; N &#183; 35.5018&#176; E</b></div>
+          <div><span>Local time</span><b data-clock>--:--:--</b></div>
+          <div><span>Status</span><b>Open to analyst roles</b></div>
+          <div class="ov-social">
+            <a href="https://github.com/YoussefKhoury" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>GitHub</a>
+            <a href="https://www.linkedin.com/in/youssefkhoury/" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>LinkedIn</a>
+            <a href="mailto:youssefkhoury01@gmail.com"><span class="ar">&#8599;</span>Email</a>
+          </div>
+          <p class="ov-stamp">V2.0 &#8212; 2026.08</p>
+        </div>
+      </div>
+    </div>
 
     <main>
       <section class="hero" id="home">
         <canvas id="motes" aria-hidden="true"></canvas>
         <div class="shell hero-grid">
+          <aside class="idcard reveal">
+            <div class="avatar">
+              <span class="pc tl"></span><span class="pc tr"></span><span class="pc bl"></span><span class="pc br"></span>
+              <img src="../assets/youssef-khoury-portrait.webp" width="1240" height="1283"
+                alt="Youssef Khoury" fetchpriority="high" />
+            </div>
+            <p class="idname">Youssef Khoury</p>
+            <p class="idrole mono">Data · Business · Operations Analyst</p>
+            <div class="idlinks mono">
+              <a href="https://github.com/YoussefKhoury" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>GitHub</a>
+              <a href="https://www.linkedin.com/in/youssefkhoury/" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>LinkedIn</a>
+              <a href="mailto:youssefkhoury01@gmail.com"><span class="ar">&#8599;</span>Email</a>
+              <a href="../downloads/Youssef-Khoury-CV.pdf" download><span class="ar">&#8599;</span>Résumé PDF</a>
+            </div>
+            <p class="idgeo mono">Beirut, Lebanon<br />33.89&#176; N &#183; 35.50&#176; E</p>
+          </aside>
           <div class="hero-copy">
-            <p class="mono eyebrow reveal">Data · Business · Operations Analyst</p>
+            <p class="mono eyebrow reveal">Portfolio &#8212; 2026</p>
             <h1 class="reveal">I turn operational data into <em>clear decisions.</em></h1>
             <p class="lead reveal">
               Order-to-delivery operations experience, turned into Power BI, SQL and Excel
@@ -55,11 +101,6 @@
               <a href="../downloads/Youssef-Khoury-CV.pdf" download><span class="ar">&#8599;</span>Download CV</a>
             </div>
             <p class="stackline mono reveal">Power BI · SQL Server · Excel · Power Query · DAX · Business Central · Xero</p>
-          </div>
-          <div class="portrait reveal">
-            <span class="pc tl"></span><span class="pc tr"></span><span class="pc bl"></span><span class="pc br"></span>
-            <img src="../assets/youssef-khoury-portrait.webp" width="1240" height="1283"
-              alt="Youssef Khoury" fetchpriority="high" />
           </div>
         </div>
       </section>
@@ -203,6 +244,15 @@
               <h3>Administrator <span class="co mono">UPM</span></h3>
               <p>Maintained the Excel tracker for ~30 client accounts, reported delivery and receivables
                 status, reconciled records against invoices and payments, owned daily client follow-up.</p>
+            </div>
+          </div>
+
+          <div class="xrow reveal">
+            <div class="xr-when"><time class="mono">Jan 2024 — Jun 2024</time><span class="bar" style="--fill:40%"></span></div>
+            <div class="xr-body">
+              <h3>Financial Consultant <span class="co mono">SNA</span></h3>
+              <p>Supported client needs assessments, underwriting submissions, policy documentation,
+                claims, renewals and audit-ready client files.</p>
             </div>
           </div>
 

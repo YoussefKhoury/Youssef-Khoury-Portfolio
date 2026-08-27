@@ -3,11 +3,8 @@
   // Content is visible by default; only allow the hidden/reveal state now that JS runs.
   document.documentElement.classList.add('js');
 
-  /* ---------- header + mobile nav ---------- */
+  /* ---------- header ---------- */
   const header = document.querySelector('[data-header]');
-  const menuBtn = document.querySelector('.menu-toggle');
-  const nav = document.getElementById('nav');
-
   const setHeader = () => header?.classList.toggle('scrolled', window.scrollY > 20);
   setHeader();
   let ticking = false;
@@ -17,15 +14,51 @@
     requestAnimationFrame(() => { setHeader(); ticking = false; });
   }, { passive: true });
 
-  menuBtn?.addEventListener('click', () => {
-    const open = menuBtn.getAttribute('aria-expanded') !== 'true';
-    menuBtn.setAttribute('aria-expanded', String(open));
-    nav?.classList.toggle('open', open);
+  /* ---------- full-screen index overlay ---------- */
+  const overlay = document.getElementById('overlay');
+  const indexBtn = document.querySelector('.index-btn');
+  const closeBtn = overlay?.querySelector('.ov-close');
+  const clockEl = overlay?.querySelector('[data-clock]');
+  let clockTimer = 0;
+
+  const tickClock = () => {
+    if (!clockEl) return;
+    try {
+      clockEl.textContent = new Date().toLocaleTimeString('en-GB', {
+        timeZone: 'Asia/Beirut', hour12: false
+      });
+    } catch {
+      clockEl.textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    }
+  };
+
+  const openOverlay = () => {
+    if (!overlay) return;
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    indexBtn?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    tickClock();
+    clockTimer = window.setInterval(tickClock, 1000);
+    closeBtn?.focus();
+  };
+  const closeOverlay = () => {
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    indexBtn?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    clearInterval(clockTimer);
+    indexBtn?.focus();
+  };
+
+  indexBtn?.addEventListener('click', openOverlay);
+  closeBtn?.addEventListener('click', closeOverlay);
+  overlay?.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(); });
+  overlay?.querySelectorAll('.ov-nav a').forEach((a) => a.addEventListener('click', closeOverlay));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay?.classList.contains('open')) closeOverlay();
   });
-  nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
-    menuBtn?.setAttribute('aria-expanded', 'false');
-    nav.classList.remove('open');
-  }));
 
   /* ---------- count-up with hard timeout fallback ---------- */
   const easeOut = (p) => 1 - Math.pow(1 - p, 3);
@@ -80,7 +113,7 @@
   }, 4000);
 
   /* ---------- nav active section ---------- */
-  const navLinks = [...document.querySelectorAll('#nav a[href^="#"]')];
+  const navLinks = [...document.querySelectorAll('.topnav a[href^="#"]')];
   const sections = navLinks
     .map((a) => document.querySelector(a.getAttribute('href')))
     .filter(Boolean);
