@@ -415,7 +415,7 @@ h2 {
   border-radius: 50%; background: var(--bg); border: 1.5px solid var(--faint); pointer-events: none;
   transition: border-color .3s ease, background .3s ease, box-shadow .3s ease, transform .3s var(--ease);
 }
-.row.is-active .node {
+.row.rail-lit .node {
   border-color: var(--accent); background: var(--accent);
   box-shadow: 0 0 12px var(--accent); transform: scale(1.2);
 }
