@@ -833,9 +833,15 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .idcard .idlinks { justify-content: center; }
 
   .case-item { max-width: none; }
-  .row { max-width: none; grid-template-columns: 1fr; gap: 10px; padding-left: 2px; padding-right: 2px; }
-  .row .go { opacity: 1; transform: none; order: 3; }
-  .row .idx { display: inline-block; margin: 0 0 6px; }
+  #work .sec-head { margin-bottom: 6px; }
+  .row {
+    max-width: none; grid-template-columns: 1fr; gap: 6px;
+    padding: 20px 2px;
+  }
+  .row .go { opacity: 1; transform: none; order: 3; margin-top: 4px; }
+  .row .idx { display: inline-block; margin: 0 0 4px; }
+  .row h3 { margin: 0; }
+  .row .tags { margin-top: 2px; }
   .row::before, .row::after { display: none; }
   .case-inner { padding-left: 2px; padding-right: 2px; }
   .case dl > div { grid-template-columns: 1fr; gap: 4px; }
