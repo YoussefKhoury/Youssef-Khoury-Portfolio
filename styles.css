@@ -343,12 +343,10 @@ h2 {
 
 /* ---------- work rows ---------- */
 .row {
-  position: relative; max-width: 940px;
+  position: relative; max-width: 1000px;
   display: grid; grid-template-columns: 132px 1fr 178px; column-gap: 28px; align-items: center;
   padding: 30px 6px; border-bottom: 1px solid var(--line);
-  transition: background .25s ease;
 }
-.row:hover { background: var(--surface); }
 
 /* corner-lock: brackets snap inward onto the row corners */
 .row::before, .row::after {
@@ -371,9 +369,9 @@ h2 {
   font-size: 11px; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 8px;
 }
 .row .tags b { color: var(--accent-2); font-weight: 500; }
-.row .meta { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 66ch; }
+.row .meta { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 74ch; }
 .row .outcome {
-  color: var(--ink); font-size: 13px; margin: 10px 0 0; max-width: 66ch;
+  color: var(--ink); font-size: 13px; margin: 10px 0 0; max-width: 74ch;
   padding-left: 12px; border-left: 2px solid var(--accent);
 }
 .row .outcome .mono {
@@ -397,11 +395,10 @@ h2 {
 
 .spark {
   display: block; width: 128px; height: 60px; color: var(--accent);
-  border: 1px solid transparent; border-radius: 5px; padding: 3px;
   transform-origin: left center;
-  transition: transform .3s var(--ease), border-color .3s ease, background .3s ease;
+  transition: transform .3s var(--ease), color .25s ease;
 }
-.row:hover .spark { transform: scale(1.09); border-color: var(--line); background: var(--surface-2); }
+.row:hover .spark { transform: scale(1.06); color: #f3c274; }
 .spark svg { width: 100%; height: 100%; overflow: visible; }
 .spark polygon { fill: color-mix(in srgb, var(--accent) 15%, transparent); }
 .spark polyline {
