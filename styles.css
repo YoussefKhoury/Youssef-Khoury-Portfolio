@@ -407,6 +407,24 @@ h2 {
 
 .case-item { position: relative; max-width: 1000px; border-bottom: 1px solid var(--line); }
 
+/* flagship case — visual primacy over the other three */
+.case-item.flagship {
+  background: linear-gradient(100deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 55%);
+}
+.case-item.flagship::before {
+  content: "[ flagship ]";
+  position: absolute; top: 18px; left: 54px; z-index: 2;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--accent);
+}
+.case-item.flagship .row { padding-top: 60px; }
+.case-item.flagship h3 { color: var(--accent); }
+.row .result {
+  margin: 14px 0 0; font-size: 12px; line-height: 1.6;
+  letter-spacing: 0.02em; color: var(--muted); max-width: 74ch;
+}
+.row .result b { color: var(--accent); font-weight: 600; }
+
 .row {
   position: relative; width: 100%;
   display: grid; grid-template-columns: 168px 1fr 178px; column-gap: 40px; align-items: center;
@@ -974,6 +992,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .row h3 { margin: 0; }
   .row .tags { margin-top: 2px; }
   .row::before, .row::after { display: none; }
+  .case-item.flagship::before { left: 2px; top: 2px; }
+  .case-item.flagship .row { padding-top: 26px; }
   .case-inner { padding-left: 2px; padding-right: 2px; }
   .case dl > div { grid-template-columns: 1fr; gap: 4px; }
 
