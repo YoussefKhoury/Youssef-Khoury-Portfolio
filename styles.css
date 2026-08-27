@@ -200,7 +200,7 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .ov-stamp { font-size: 11px; letter-spacing: 0.14em; color: var(--faint); margin: 8px 0 0; }
 
 /* ---------- reveal (only hidden once JS confirms it can un-hide them) ---------- */
-.js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+.js .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .js .reveal.visible { opacity: 1; transform: none; }
 
 /* section-aware scroll reveal: headings wipe in as you reach them */
@@ -504,19 +504,25 @@ h2 {
 }
 
 /* per-row staggered entrance */
-.js .row.reveal h3 { opacity: 0; transform: translateX(-18px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.js .row.reveal h3 { opacity: 0; transform: translateY(18px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
 .js .row.reveal.visible h3 { opacity: 1; transform: none; }
 .js .row.reveal .idx,
 .js .row.reveal .tags,
 .js .row.reveal .meta,
-.js .row.reveal .outcome { opacity: 0; transition: opacity .45s ease; }
-.js .row.reveal .tags { transition-delay: .10s; }
-.js .row.reveal .meta { transition-delay: .16s; }
-.js .row.reveal .outcome { transition-delay: .22s; }
+.js .row.reveal .result,
+.js .row.reveal .outcome {
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
+}
+.js .row.reveal .tags { transition-delay: .06s; }
+.js .row.reveal .meta { transition-delay: .12s; }
+.js .row.reveal .outcome { transition-delay: .18s; }
+.js .row.reveal .result { transition-delay: .24s; }
 .js .row.reveal.visible .idx,
 .js .row.reveal.visible .tags,
 .js .row.reveal.visible .meta,
-.js .row.reveal.visible .outcome { opacity: 1; }
+.js .row.reveal.visible .result,
+.js .row.reveal.visible .outcome { opacity: 1; transform: none; }
 .row .outcome .mono {
   color: var(--accent); font-size: 10px; letter-spacing: 0.16em;
   margin-right: 8px;
@@ -639,7 +645,6 @@ h2 {
   overflow: hidden; background: var(--surface); transition: border-color .25s ease, transform .25s ease;
 }
 .cert:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); transform: translateY(-3px); }
-.cred-grid .cert:nth-child(2) { transition-delay: .09s; }
 .cert-img { padding: 16px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
 .cert-img img { border: 1px solid var(--line); }
 .cert-copy { padding: 20px; }
@@ -1063,7 +1068,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .row .go { transition: opacity .15s ease; transform: none; }
   .sec-head::after { transition: none; transform: scaleX(1); }
   .js .row.reveal h3, .js .row.reveal .idx, .js .row.reveal .tags,
-  .js .row.reveal .meta, .js .row.reveal .outcome { opacity: 1; transform: none; transition: none; }
+  .js .row.reveal .meta, .js .row.reveal .result,
+  .js .row.reveal .outcome { opacity: 1; transform: none; transition: none; }
   .work-rail span, .row .node { transition: none; }
   .case, .case-inner, .row .chev { transition: none; }
   .idlinks a:hover, .fcol a:hover, .ov-social a:hover,
