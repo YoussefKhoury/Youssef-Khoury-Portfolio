@@ -765,41 +765,94 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   main section[id] { scroll-margin-top: 98px; }
 
-  /* === one master control; pressing it unfolds the three section rows === */
-  .dossier { padding: 34px 0; }
-  .dossier + .section { padding-top: 34px; }
-  .dossier-toggle {
-    display: flex; width: 100%; align-items: flex-start; justify-content: space-between;
-    gap: 14px; padding: 16px 14px; cursor: pointer;
-    background: var(--surface); border: 1px solid var(--line); border-top: 2px solid var(--accent);
-    border-radius: 10px; text-align: left; color: var(--ink);
+  /* === the file: a manila folder holding three documents === */
+  .dossier {
+    padding: 46px 0 34px;
+    --kraft: #C6AB68; --kraft-hi: #D6BD80; --kraft-lo: #A88E4E; --kraft-edge: #877039;
+    --kraft-ink: #2b2008;
   }
-  .dossier.open .dossier-toggle { border-radius: 10px 10px 0 0; margin-bottom: 0; }
+  .dossier + .section { padding-top: 34px; }
+
+  .dossier-toggle {
+    position: relative; display: block; width: 100%; margin-top: 6px;
+    padding: 17px 15px 16px; cursor: pointer; text-align: left;
+    color: var(--kraft-ink);
+    background: linear-gradient(158deg, var(--kraft-hi), var(--kraft) 44%, var(--kraft-lo));
+    border: 1px solid var(--kraft-edge);
+    border-radius: 3px 10px 10px 10px;
+    box-shadow:
+      0 3px 0 -1px #E4DAC0, 0 6px 0 -2px #CDC09A,   /* sheets peeking out the bottom */
+      0 12px 20px -10px rgba(0, 0, 0, .55);
+  }
+  /* the raised folder tab, top-left */
+  .dossier-toggle .folder-tab {
+    position: absolute; left: 0; top: -13px; padding: 4px 15px 6px;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    background: linear-gradient(var(--kraft-hi), var(--kraft));
+    border: 1px solid var(--kraft-edge); border-bottom: 0; border-radius: 7px 7px 0 0;
+  }
+  /* three index tabs poking out the top edge — the three files */
+  .dossier-toggle .folder-files { position: absolute; right: 15px; top: -9px; display: flex; gap: 5px; }
+  .dossier-toggle .folder-files i {
+    width: 28px; height: 12px; font-style: normal;
+    font-size: 8px; line-height: 11px; text-align: center;
+    color: color-mix(in srgb, var(--kraft-ink) 65%, transparent);
+    border: 1px solid var(--kraft-edge); border-bottom: 0; border-radius: 4px 4px 0 0;
+    transition: transform .3s var(--ease), opacity .3s var(--ease);
+  }
+  .dossier-toggle .folder-files i:nth-child(1) { background: #E0D5B5; }
+  .dossier-toggle .folder-files i:nth-child(2) { background: #D3C6A0; transform: translateY(-2px); }
+  .dossier-toggle .folder-files i:nth-child(3) { background: #C6B78A; transform: translateY(-4px); }
+  .dossier-toggle:hover .folder-files i:nth-child(1) { transform: translateY(-3px); }
+  .dossier-toggle:hover .folder-files i:nth-child(2) { transform: translateY(-6px); }
+  .dossier-toggle:hover .folder-files i:nth-child(3) { transform: translateY(-9px); }
+
+  .dossier-toggle .folder-face {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+  }
   .dossier-toggle .dt-main {
-    display: flex; flex-direction: column; gap: 4px;
-    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    display: flex; flex-direction: column; gap: 3px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase;
   }
   .dossier-toggle .dt-sub {
-    font-size: 10.5px; letter-spacing: 0.08em; color: var(--faint); text-transform: none;
+    font-size: 10px; font-weight: 400; letter-spacing: 0.06em; text-transform: none;
+    color: color-mix(in srgb, var(--kraft-ink) 60%, transparent);
   }
   .dossier-toggle .pull {
-    flex: 0 0 auto; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--accent); transition: letter-spacing .25s var(--ease);
+    flex: 0 0 auto; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #6b4d16; transition: letter-spacing .25s var(--ease);
   }
-  .dossier-toggle:hover .pull { letter-spacing: 0.24em; }
-  .dossier.open .dossier-toggle .pull { letter-spacing: 0.14em; }
+  .dossier-toggle:hover .pull { letter-spacing: 0.26em; }
 
+  /* opened: folder squares its bottom edge, the index tabs recede */
+  .dossier.open .dossier-toggle {
+    border-radius: 3px 10px 0 0;
+    box-shadow: 0 12px 20px -12px rgba(0, 0, 0, .5);
+  }
+  .dossier.open .dossier-toggle .folder-files i { opacity: 0; transform: translateY(5px); }
+
+  /* the open folder interior — a kraft liner cradling three dark documents */
   .js .dossier-body {
-    overflow: hidden;
-    border: 1px solid var(--line); border-top: 0; border-radius: 0 0 10px 10px;
-    transition: height .45s var(--ease);
+    overflow: hidden; padding: 10px;
+    background: linear-gradient(var(--kraft-lo), #9C8244);
+    border: 1px solid var(--kraft-edge); border-top: 0; border-radius: 0 0 10px 10px;
+    transition: height .5s var(--ease);
   }
-  .js .dossier:not(.open) .dossier-body { height: 0; border-width: 0; }
-  /* inner sections sit flush inside the unfolded file */
-  .dossier-body > .section.collapsible { padding: 20px 14px; }
-  .dossier-body > .section.collapsible + .section.collapsible {
-    border-top: 1px solid var(--line);
+  .js .dossier:not(.open) .dossier-body { height: 0; padding: 0; border-width: 0; }
+  .dossier-body > .section.collapsible {
+    margin: 0 0 8px; padding: 16px 13px;
+    background: var(--surface-2);
+    border: 1px solid var(--line); border-left: 2px solid var(--accent);
+    border-radius: 4px;
   }
+  .dossier-body > .section.collapsible:last-child { margin-bottom: 0; }
+  /* the three documents drop into the folder in sequence */
+  .js .dossier-body > .section.collapsible {
+    transition: opacity .4s var(--ease), transform .4s var(--ease);
+  }
+  .js .dossier:not(.open) .dossier-body > .section.collapsible { opacity: 0; transform: translateY(16px); }
+  .js .dossier.open .dossier-body > .section.collapsible:nth-child(2) { transition-delay: .07s; }
+  .js .dossier.open .dossier-body > .section.collapsible:nth-child(3) { transition-delay: .14s; }
 
   /* === each unfolded row: a spreadsheet strip, tap to fill & open === */
 
@@ -960,6 +1013,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .secnav { transition: none; }
   .to-top { transition: opacity .15s ease; transform: none; }
   .js .dossier-body { transition: none; }
+  .js .dossier-body > .section.collapsible { opacity: 1; transform: none; transition: none; }
+  .dossier-toggle .folder-files i { transition: none; }
   .section.collapsible .sec-body { transition: none; }
   .section.collapsible .sec-body > * { opacity: 1; transform: none; transition: none; }
   .section.collapsible .sec-metrics li { animation: none; }
