@@ -1,57 +1,4 @@
 (() => {
-  const heroHeadline = document.getElementById('hero-headline');
-  if (heroHeadline) {
-    const plainText = heroHeadline.dataset.plain || '';
-    const emText = heroHeadline.dataset.em || '';
-    const reducedForHeadline = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reducedForHeadline) {
-      const DECK = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      const pick = () => DECK[(Math.random() * DECK.length) | 0];
-      heroHeadline.textContent = '';
-      const plainSpan = document.createElement('span');
-      const emEl = document.createElement('em');
-      heroHeadline.appendChild(plainSpan);
-      heroHeadline.appendChild(emEl);
-      const chars = [...plainText].map((ch) => {
-        const s = document.createElement('span');
-        s.textContent = ch === ' ' ? ' ' : pick();
-        plainSpan.appendChild(s);
-        return s;
-      });
-      const total = plainText.length + emText.length;
-      const duration = 1000;
-      const fps = 24;
-      let t0 = null;
-      let lastSwap = 0;
-      const frame = (now) => {
-        if (t0 === null) t0 = now;
-        if (now - lastSwap >= 1000 / fps) {
-          lastSwap = now;
-          const ratio = Math.min(1, (now - t0) / duration);
-          const lockedCount = Math.floor(ratio * total);
-          for (let i = 0; i < plainText.length; i++) {
-            const ch = plainText[i];
-            chars[i].textContent = ch === ' ' ? ' ' : (i < lockedCount ? ch : pick());
-          }
-          let emOut = '';
-          for (let i = 0; i < emText.length; i++) {
-            const ch = emText[i];
-            const globalIdx = plainText.length + i;
-            emOut += ch === ' ' || globalIdx < lockedCount ? ch : pick();
-          }
-          emEl.textContent = emOut;
-        }
-        if (now - t0 < duration + 80) {
-          requestAnimationFrame(frame);
-        } else {
-          chars.forEach((s, i) => { s.textContent = plainText[i] === ' ' ? ' ' : plainText[i]; });
-          emEl.textContent = emText;
-        }
-      };
-      requestAnimationFrame(frame);
-    }
-  }
-
   const reducedForTilt = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reducedForTilt) {
     const TILT_MAX = 7;
@@ -182,12 +129,21 @@
       }
       const duration = 1100;
       const started = performance.now();
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        element.textContent = target + suffix;
+      };
       const step = (now) => {
+        if (done) return;
         const progress = Math.min(1, (now - started) / duration);
         element.textContent = Math.round(target * easeInOut(progress)) + suffix;
         if (progress < 1) requestAnimationFrame(step);
+        else finish();
       };
       requestAnimationFrame(step);
+      setTimeout(finish, duration + 400);
     };
     const countObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
