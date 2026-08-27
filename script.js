@@ -1,4 +1,17 @@
 (() => {
+  document.querySelectorAll('.show-more-toggle').forEach((button) => {
+    const grid = button.previousElementSibling;
+    if (!grid || !grid.hasAttribute('data-collapsible')) return;
+    const label = (button.firstChild.textContent || '').trim();
+    const altLabel = label.replace('Show all', 'Show fewer');
+    button.addEventListener('click', () => {
+      const expanded = grid.classList.toggle('is-expanded');
+      button.classList.toggle('is-expanded', expanded);
+      button.firstChild.textContent = (expanded ? altLabel : label) + ' ';
+      if (!expanded) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
   const reducedForTilt = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reducedForTilt) {
     const TILT_MAX = 7;
