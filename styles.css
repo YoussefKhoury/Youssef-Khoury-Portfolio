@@ -338,6 +338,9 @@ h1 em { font-style: normal; color: var(--accent); }
 
 /* ---------- sections ---------- */
 .section { padding-block: clamp(66px, 10vw, 108px); }
+/* consecutive sections stack two large paddings — tighten the seam both sides */
+.section + .section { padding-top: clamp(34px, 5vw, 54px); }
+.section:has(+ .section) { padding-bottom: clamp(34px, 5vw, 54px); }
 .sec-head {
   position: relative;
   display: flex; justify-content: space-between; align-items: baseline;
