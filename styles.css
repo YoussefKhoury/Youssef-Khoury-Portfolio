@@ -589,37 +589,34 @@ h2 {
 .spark.dots circle { fill: currentColor; opacity: .85; }
 .spark.dots circle.hollow { fill: none; stroke: currentColor; stroke-width: 1.6; opacity: .5; }
 
-/* desktop: Selected work as a 2×2 grid of case files (01 02 / 03 04).
-   Each card stacks chart over text; an opened case takes the full row so
-   its detail reads across the whole width. Mobile keeps the single stack. */
+/* desktop: Selected work as a 2×2 grid (01 02 / 03 04). Cards are set apart
+   by whitespace, not rules. Each case opens inside its own cell so the detail
+   appears right where it was clicked. Mobile keeps the single stack. */
 @media (min-width: 900px) {
   #work .work-rail { display: none; }
   .cases {
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: start;
-    border-top: 1px solid var(--line);
+    column-gap: clamp(48px, 6vw, 88px);
+    row-gap: 12px;
   }
   .cases .case-item {
     max-width: none;
-    border-bottom: 1px solid var(--line);
-  }
-  .cases .case-item:nth-child(odd) { border-right: 1px solid var(--line); }
-  .cases .case-item:has(.row[aria-expanded="true"]) {
-    grid-column: 1 / -1;
-    border-right: 0;
+    border-bottom: 0;
   }
   .cases .row {
     grid-template-columns: 1fr;
     justify-items: start;
-    padding: 40px 40px 40px 44px;
+    padding: 34px 8px 34px 8px;
   }
-  .cases .case-item.flagship .row { padding-top: 52px; }
-  .cases .case-item.flagship::before { left: 44px; }
+  .cases .case-item.flagship .row { padding-top: 46px; }
+  .cases .case-item.flagship::before { left: 8px; }
   .cases .row .node { display: none; }
-  .cases .spark { width: 118px; height: 54px; margin-bottom: 20px; }
-  .cases .row .go { margin-top: 20px; }
-  .cases .case-inner { padding: 0 40px 40px 44px; }
+  .cases .spark { width: 116px; height: 52px; margin-bottom: 18px; }
+  .cases .row .go { margin-top: 18px; }
+  .cases .case-inner { padding: 4px 8px 30px 8px; }
+  .cases .case dl > div { grid-template-columns: 116px 1fr; gap: 16px; }
 }
 
 /* ---------- flagship ---------- */
