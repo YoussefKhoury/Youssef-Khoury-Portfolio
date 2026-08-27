@@ -246,7 +246,7 @@
     const scramble = (el) => {
       const target = el.dataset.text || (el.dataset.text = el.textContent);
       clearInterval(el._scr);
-      const total = 9;                 // frames until fully settled
+      const total = 16;                // frames until fully settled (~500ms)
       let frame = 0;
       el._scr = setInterval(() => {
         frame++;
@@ -254,12 +254,12 @@
         for (let i = 0; i < target.length; i++) {
           const ch = target[i];
           if (ch === ' ') { out += ' '; continue; }
-          const settleAt = Math.floor((i / target.length) * total * 0.7);
+          const settleAt = Math.floor((i / target.length) * total * 0.75);
           out += frame > settleAt ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0];
         }
         el.textContent = out;
         if (frame >= total) { clearInterval(el._scr); el.textContent = target; }
-      }, 22);
+      }, 32);
     };
     const restore = (el) => {
       clearInterval(el._scr);

@@ -259,6 +259,7 @@ h1 em { font-style: normal; color: var(--accent); }
   object-fit: cover; object-position: 50% 0;
   transform: scale(1.32); transform-origin: 50% 8%;
   filter: grayscale(1) contrast(1.05) brightness(.97);
+  pointer-events: none; user-select: none; -webkit-user-drag: none;
 }
 
 .pc { position: absolute; z-index: 2; width: 10px; height: 10px; border: 1px solid var(--accent); }
