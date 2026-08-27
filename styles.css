@@ -416,10 +416,7 @@ h2 {
 
 .case-item { position: relative; max-width: 1000px; border-bottom: 1px solid var(--line); }
 
-/* flagship case — visual primacy over the other three */
-.case-item.flagship {
-  background: linear-gradient(100deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 55%);
-}
+/* flagship case — marked only by the label, not a permanent highlight */
 .case-item.flagship::before {
   content: "[ flagship ]";
   position: absolute; top: 18px; left: 54px; z-index: 2;
@@ -427,7 +424,6 @@ h2 {
   text-transform: uppercase; color: var(--accent);
 }
 .case-item.flagship .row { padding-top: 60px; }
-.case-item.flagship h3 { color: var(--accent); }
 .row .result {
   margin: 14px 0 0; font-size: 12px; line-height: 1.6;
   letter-spacing: 0.02em; color: var(--muted); max-width: 74ch;
@@ -440,6 +436,14 @@ h2 {
   padding: 46px 6px 46px 54px;
   font: inherit; color: inherit; text-align: left;
   background: none; border: 0; cursor: pointer; -webkit-appearance: none; appearance: none;
+  transition: background .3s var(--ease);
+}
+/* hover: a faded amber wash, no frame — fades out to the right */
+.row:hover {
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--accent) 7%, transparent),
+    color-mix(in srgb, var(--accent) 2%, transparent) 60%,
+    transparent);
 }
 
 /* expandable case detail */
@@ -474,17 +478,6 @@ h2 {
   box-shadow: 0 0 12px var(--accent); transform: scale(1.2);
 }
 .row.is-active .idx { color: var(--accent); }
-
-/* corner-lock: brackets snap inward onto the row corners on hover */
-.row::before, .row::after {
-  content: ""; position: absolute; width: 15px; height: 15px;
-  border: 1.5px solid var(--accent); opacity: 0; pointer-events: none;
-  transition: opacity .22s ease, transform .3s var(--ease);
-}
-/* clear of the scroll rail, which sits at the shell's left edge */
-.row::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; transform: translate(-6px, -6px); }
-.row::after { bottom: 16px; right: 0; border-left: 0; border-top: 0; transform: translate(6px, 6px); }
-.row:hover::before, .row:hover::after { opacity: 1; transform: translate(0, 0); }
 
 .row .idx { color: var(--faint); display: block; margin-bottom: 14px; font-size: 13px; transition: color .3s ease; }
 .row h3 {
@@ -1005,7 +998,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .row .idx { display: inline-block; margin: 0 0 4px; }
   .row h3 { margin: 0; }
   .row .tags { margin-top: 2px; }
-  .row::before, .row::after { display: none; }
   .case-item.flagship::before { left: 2px; top: 2px; }
   .case-item.flagship .row { padding-top: 26px; }
   .case-inner { padding-left: 2px; padding-right: 2px; }
@@ -1062,8 +1054,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
-  .row::before, .row::after,
   .ov-nav a::before, .ov-nav a::after { transition: opacity .15s ease; transform: none; }
+  .row:hover { transition: none; }
   .row:hover .spark { transform: none; }
   .row .go { transition: opacity .15s ease; transform: none; }
   .sec-head::after { transition: none; transform: scaleX(1); }
