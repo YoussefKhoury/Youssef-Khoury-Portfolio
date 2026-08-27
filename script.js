@@ -158,6 +158,33 @@
   }, { threshold: 0.14 });
   document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
+  /* ---------- expandable case detail ---------- */
+  const caseToggles = [...document.querySelectorAll('.row[aria-controls]')];
+  const setCase = (btn, panel, open) => {
+    btn.setAttribute('aria-expanded', String(open));
+    panel.classList.toggle('open', open);
+    panel.style.height = panel.scrollHeight + 'px';
+    if (open) {
+      const done = () => { panel.style.height = 'auto'; panel.removeEventListener('transitionend', done); };
+      panel.addEventListener('transitionend', done);
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) done();
+    } else {
+      requestAnimationFrame(() => { panel.style.height = '0px'; });
+    }
+  };
+  caseToggles.forEach((btn) => {
+    const panel = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!panel) return;
+    btn.addEventListener('click', () => {
+      const willOpen = btn.getAttribute('aria-expanded') !== 'true';
+      caseToggles.forEach((other) => {
+        if (other === btn || other.getAttribute('aria-expanded') !== 'true') return;
+        setCase(other, document.getElementById(other.getAttribute('aria-controls')), false);
+      });
+      setCase(btn, panel, willOpen);
+    });
+  });
+
   // Fallback: if IntersectionObserver never delivers (rare edge cases), un-hide
   // everything so nothing is stuck invisible.
   setTimeout(() => {

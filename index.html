@@ -21,8 +21,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" />
-    <link rel="stylesheet" href="styles.css?v=14" />
-    <script src="script.js?v=14" defer></script>
+    <link rel="stylesheet" href="styles.css?v=15" />
+    <script src="script.js?v=15" defer></script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"Person","name":"Youssef Khoury","jobTitle":"Data, Business and Operations Analyst","email":"mailto:youssefkhoury01@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"Matn University College"},"sameAs":["https://github.com/YoussefKhoury","https://www.linkedin.com/in/youssefkhoury/"]}
     </script>
@@ -132,65 +132,126 @@
           <div class="work-rail" aria-hidden="true"><span></span></div>
           <div class="sec-head mono reveal"><h2 class="sk">Selected work</h2><span>2026</span></div>
 
-          <a class="row reveal" href="downloads/Order-to-Delivery-Control-Tower-Case-Study.pdf" target="_blank" rel="noreferrer">
-            <span class="node" aria-hidden="true"></span>
-            <span class="spark" aria-hidden="true">
-              <svg viewBox="0 0 128 60"><polygon points="0,60 0,44 22,36 44,40 66,22 90,27 110,12 128,9 128,60"></polygon><polyline points="0,44 22,36 44,40 66,22 90,27 110,12 128,9"></polyline></svg>
-            </span>
-            <span class="row-body">
-              <span class="idx mono">01</span>
-              <h3>Order-to-Delivery Control Tower</h3>
-              <span class="tags mono"><b>Power BI</b> · SQL Server · Excel · DAX</span>
-              <p class="meta">420-order model, data dictionary, star schema, 8 governed KPIs and a live interactive dashboard.</p>
-              <p class="outcome"><span class="mono">Output</span> delivery-risk, supplier and overdue-cash exposure in one weekly view — every figure traceable to source.</p>
-            </span>
-            <span class="go" aria-hidden="true"><b>Access case file</b><span class="ar">&#8599;</span></span>
-          </a>
+          <div class="case-item reveal">
+            <button class="row" type="button" aria-expanded="false" aria-controls="case-01">
+              <span class="node" aria-hidden="true"></span>
+              <span class="spark" aria-hidden="true">
+                <svg viewBox="0 0 128 60"><polygon points="0,60 0,44 22,36 44,40 66,22 90,27 110,12 128,9 128,60"></polygon><polyline points="0,44 22,36 44,40 66,22 90,27 110,12 128,9"></polyline></svg>
+              </span>
+              <span class="row-body">
+                <span class="idx mono">01</span>
+                <h3>Order-to-Delivery Control Tower</h3>
+                <span class="tags mono"><b>Power BI</b> · SQL Server · Excel · DAX</span>
+                <p class="meta">420-order model, data dictionary, star schema, 8 governed KPIs and a live interactive dashboard.</p>
+                <p class="outcome"><span class="mono">Output</span> delivery-risk, supplier and overdue-cash exposure in one weekly view — every figure traceable to source.</p>
+              </span>
+              <span class="go" aria-hidden="true"><b>Open case file</b><span class="chev">+</span></span>
+            </button>
+            <div class="case" id="case-01" role="region" aria-label="Order-to-Delivery Control Tower — case detail">
+              <div class="case-inner">
+                <dl>
+                  <div><dt class="mono">Situation</dt><dd>420 orders across projects, suppliers, delivery milestones, invoices and payments — with no single view of where delivery or cash was at risk.</dd></div>
+                  <div><dt class="mono">What I built</dt><dd>A star schema and data dictionary, 8 governed KPIs, an Excel control tower, a Power BI report, and an interactive web dashboard with a transparent Urgent / High / Watch action queue.</dd></div>
+                  <div><dt class="mono">What it showed</dt><dd>On-time delivery of 69.4%. Supplier lead time drove 45.7% of delayed order value ($1.24m) — the largest single root cause. $1.29m of receivables were overdue. 25 delayed orders had no recorded blocker, surfaced as a data-quality exception rather than a guess.</dd></div>
+                </dl>
+                <p class="case-links mono">
+                  <a href="downloads/Order-to-Delivery-Control-Tower-Case-Study.pdf" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>Case study PDF</a>
+                  <a href="downloads/Order-to-Delivery-Control-Tower.xlsx"><span class="ar">&#8599;</span>Excel workbook</a>
+                  <a href="https://youssefkhoury.github.io/dashboard/" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>Live dashboard</a>
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <a class="row reveal" href="downloads/Youssef-Khoury-Receivables-Collections-Case-Study.pdf" target="_blank" rel="noreferrer">
-            <span class="node" aria-hidden="true"></span>
-            <span class="spark bars" aria-hidden="true">
-              <svg viewBox="0 0 128 60"><rect x="6" y="42" width="16" height="18"></rect><rect x="30" y="34" width="16" height="26"></rect><rect x="54" y="26" width="16" height="34"></rect><rect x="78" y="16" width="16" height="44"></rect><rect x="102" y="8" width="16" height="52"></rect></svg>
-            </span>
-            <span class="row-body">
-              <span class="idx mono">02</span>
-              <h3>Receivables &amp; Collections Command Center</h3>
-              <span class="tags mono"><b>Excel</b> · Power Query</span>
-              <p class="meta">360 invoices turned into aging, a DSO proxy, promise coverage and a cash-priority queue.</p>
-              <p class="outcome"><span class="mono">Output</span> a ranked list of which invoices to chase first, by expected cash and customer risk.</p>
-            </span>
-            <span class="go" aria-hidden="true"><b>Access case file</b><span class="ar">&#8599;</span></span>
-          </a>
+          <div class="case-item reveal">
+            <button class="row" type="button" aria-expanded="false" aria-controls="case-02">
+              <span class="node" aria-hidden="true"></span>
+              <span class="spark bars" aria-hidden="true">
+                <svg viewBox="0 0 128 60"><rect x="6" y="42" width="16" height="18"></rect><rect x="30" y="34" width="16" height="26"></rect><rect x="54" y="26" width="16" height="34"></rect><rect x="78" y="16" width="16" height="44"></rect><rect x="102" y="8" width="16" height="52"></rect></svg>
+              </span>
+              <span class="row-body">
+                <span class="idx mono">02</span>
+                <h3>Receivables &amp; Collections Command Center</h3>
+                <span class="tags mono"><b>Excel</b> · Power Query</span>
+                <p class="meta">360 invoices turned into aging, a DSO proxy, promise coverage and a cash-priority queue.</p>
+                <p class="outcome"><span class="mono">Output</span> a ranked list of which invoices to chase first, by expected cash and customer risk.</p>
+              </span>
+              <span class="go" aria-hidden="true"><b>Open case file</b><span class="chev">+</span></span>
+            </button>
+            <div class="case" id="case-02" role="region" aria-label="Receivables &amp; Collections Command Center — case detail">
+              <div class="case-inner">
+                <dl>
+                  <div><dt class="mono">Situation</dt><dd>360 invoices across 48 customers, with collections chasing by invoice age rather than by recoverable cash.</dd></div>
+                  <div><dt class="mono">What I built</dt><dd>A formula-driven Excel command center — aging, overdue exposure, a DSO proxy, promise coverage and a cash-priority queue — plus a customer risk summary, a governed metric dictionary and reusable SQL.</dd></div>
+                  <div><dt class="mono">What it showed</dt><dd>Disputes, broken promises and aging risk separated out, so the team works the invoices with the most expected cash and the highest customer risk first.</dd></div>
+                </dl>
+                <p class="case-links mono">
+                  <a href="downloads/Youssef-Khoury-Receivables-Collections-Case-Study.pdf" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>Case study PDF</a>
+                  <a href="downloads/Youssef-Khoury-Receivables-Collections-Command-Center.xlsx"><span class="ar">&#8599;</span>Excel workbook</a>
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <a class="row reveal" href="downloads/Youssef-Khoury-Supplier-Procurement-Case-Study.pdf" target="_blank" rel="noreferrer">
-            <span class="node" aria-hidden="true"></span>
-            <span class="spark gauge" aria-hidden="true">
-              <svg viewBox="0 0 128 60"><circle class="track" cx="64" cy="34" r="21"></circle><circle class="val" cx="64" cy="34" r="21" pathLength="100"></circle></svg>
-            </span>
-            <span class="row-body">
-              <span class="idx mono">03</span>
-              <h3>Supplier Procurement &amp; Delivery Performance</h3>
-              <span class="tags mono"><b>Power BI</b> · Excel</span>
-              <p class="meta">300 purchase orders scored for spend, OTIF, fill rate, price variance, defects and supplier risk.</p>
-              <p class="outcome"><span class="mono">Output</span> every supplier sorted into a risk tier, with the drivers behind each score.</p>
-            </span>
-            <span class="go" aria-hidden="true"><b>Access case file</b><span class="ar">&#8599;</span></span>
-          </a>
+          <div class="case-item reveal">
+            <button class="row" type="button" aria-expanded="false" aria-controls="case-03">
+              <span class="node" aria-hidden="true"></span>
+              <span class="spark gauge" aria-hidden="true">
+                <svg viewBox="0 0 128 60"><circle class="track" cx="64" cy="34" r="21"></circle><circle class="val" cx="64" cy="34" r="21" pathLength="100"></circle></svg>
+              </span>
+              <span class="row-body">
+                <span class="idx mono">03</span>
+                <h3>Supplier Procurement &amp; Delivery Performance</h3>
+                <span class="tags mono"><b>Power BI</b> · Excel</span>
+                <p class="meta">300 purchase orders scored for spend, OTIF, fill rate, price variance, defects and supplier risk.</p>
+                <p class="outcome"><span class="mono">Output</span> every supplier sorted into a risk tier, with the drivers behind each score.</p>
+              </span>
+              <span class="go" aria-hidden="true"><b>Open case file</b><span class="chev">+</span></span>
+            </button>
+            <div class="case" id="case-03" role="region" aria-label="Supplier Procurement &amp; Delivery Performance — case detail">
+              <div class="case-inner">
+                <dl>
+                  <div><dt class="mono">Situation</dt><dd>300 purchase orders across 20 suppliers, with supplier reviews argued from anecdotes rather than evidence.</dd></div>
+                  <div><dt class="mono">What I built</dt><dd>A scorecard rating spend, OTIF, fill rate, delay, price variance and defects. Price, delivery and quality stay separate before combining into a transparent risk score. Plus a category-spend view and reusable SQL.</dd></div>
+                  <div><dt class="mono">What it showed</dt><dd>Every supplier sorted into a risk tier with the drivers behind each score exposed — supporting fair reviews and targeted corrective action instead of blanket pressure.</dd></div>
+                </dl>
+                <p class="case-links mono">
+                  <a href="downloads/Youssef-Khoury-Supplier-Procurement-Case-Study.pdf" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>Case study PDF</a>
+                  <a href="downloads/Youssef-Khoury-Supplier-Procurement-Performance.xlsx"><span class="ar">&#8599;</span>Excel workbook</a>
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <a class="row reveal" href="downloads/Youssef-Khoury-Service-Request-UAT-Case-Study.pdf" target="_blank" rel="noreferrer">
-            <span class="node" aria-hidden="true"></span>
-            <span class="spark dots" aria-hidden="true">
-              <svg viewBox="0 0 128 60"><circle cx="12" cy="30" r="5"></circle><circle cx="31" cy="30" r="5"></circle><circle cx="50" cy="30" r="5"></circle><circle cx="69" cy="30" r="5"></circle><circle cx="88" cy="30" r="5"></circle><circle class="hollow" cx="107" cy="30" r="5"></circle></svg>
-            </span>
-            <span class="row-body">
-              <span class="idx mono">04</span>
-              <h3>Service Request Requirements &amp; UAT</h3>
-              <span class="tags mono"><b>Business Analysis</b> · UAT · RAID</span>
-              <p class="meta">24 requirements with acceptance criteria, traceability, 30 UAT cases and readiness reporting.</p>
-              <p class="outcome"><span class="mono">Output</span> 24 requirements as tested, signed-off, fully traceable delivery evidence.</p>
-            </span>
-            <span class="go" aria-hidden="true"><b>Access case file</b><span class="ar">&#8599;</span></span>
-          </a>
+          <div class="case-item reveal">
+            <button class="row" type="button" aria-expanded="false" aria-controls="case-04">
+              <span class="node" aria-hidden="true"></span>
+              <span class="spark dots" aria-hidden="true">
+                <svg viewBox="0 0 128 60"><circle cx="12" cy="30" r="5"></circle><circle cx="31" cy="30" r="5"></circle><circle cx="50" cy="30" r="5"></circle><circle cx="69" cy="30" r="5"></circle><circle cx="88" cy="30" r="5"></circle><circle class="hollow" cx="107" cy="30" r="5"></circle></svg>
+              </span>
+              <span class="row-body">
+                <span class="idx mono">04</span>
+                <h3>Service Request Requirements &amp; UAT</h3>
+                <span class="tags mono"><b>Business Analysis</b> · UAT · RAID</span>
+                <p class="meta">24 requirements with acceptance criteria, traceability, 30 UAT cases and readiness reporting.</p>
+                <p class="outcome"><span class="mono">Output</span> 24 requirements as tested, signed-off, fully traceable delivery evidence.</p>
+              </span>
+              <span class="go" aria-hidden="true"><b>Open case file</b><span class="chev">+</span></span>
+            </button>
+            <div class="case" id="case-04" role="region" aria-label="Service Request Requirements &amp; UAT — case detail">
+              <div class="case-inner">
+                <dl>
+                  <div><dt class="mono">Situation</dt><dd>Service requests arriving with inconsistent fields, unclear ownership and unreliable SLA handling.</dd></div>
+                  <div><dt class="mono">What I built</dt><dd>24 requirements with testable acceptance criteria, a requirements traceability matrix, 30 UAT cases with pass / fail / blocked evidence, a RAID log and a go-live readiness summary — all linked in one Excel workbook.</dd></div>
+                  <div><dt class="mono">What it showed</dt><dd>One audit trail from business need to requirement to acceptance criteria to test evidence to defect to go-live decision.</dd></div>
+                </dl>
+                <p class="case-links mono">
+                  <a href="downloads/Youssef-Khoury-Service-Request-UAT-Case-Study.pdf" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>Case study PDF</a>
+                  <a href="downloads/Youssef-Khoury-Service-Request-Requirements-UAT.xlsx"><span class="ar">&#8599;</span>Excel workbook</a>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
