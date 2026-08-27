@@ -589,6 +589,39 @@ h2 {
 .spark.dots circle { fill: currentColor; opacity: .85; }
 .spark.dots circle.hollow { fill: none; stroke: currentColor; stroke-width: 1.6; opacity: .5; }
 
+/* desktop: Selected work as a 2×2 grid of case files (01 02 / 03 04).
+   Each card stacks chart over text; an opened case takes the full row so
+   its detail reads across the whole width. Mobile keeps the single stack. */
+@media (min-width: 900px) {
+  #work .work-rail { display: none; }
+  .cases {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    border-top: 1px solid var(--line);
+  }
+  .cases .case-item {
+    max-width: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .cases .case-item:nth-child(odd) { border-right: 1px solid var(--line); }
+  .cases .case-item:has(.row[aria-expanded="true"]) {
+    grid-column: 1 / -1;
+    border-right: 0;
+  }
+  .cases .row {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 40px 40px 40px 44px;
+  }
+  .cases .case-item.flagship .row { padding-top: 52px; }
+  .cases .case-item.flagship::before { left: 44px; }
+  .cases .row .node { display: none; }
+  .cases .spark { width: 118px; height: 54px; margin-bottom: 20px; }
+  .cases .row .go { margin-top: 20px; }
+  .cases .case-inner { padding: 0 40px 40px 44px; }
+}
+
 /* ---------- flagship ---------- */
 .flag-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 40px; align-items: start; margin-top: 8px; }
 .flag-copy p { color: var(--muted); }
