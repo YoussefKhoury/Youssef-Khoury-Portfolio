@@ -22,6 +22,7 @@
   /* ---------- header + scroll progress + work rail ---------- */
   const header = document.querySelector('[data-header]');
   const progress = document.querySelector('.scroll-progress');
+  const secnav = document.querySelector('.secnav');
   const workSec = document.getElementById('work');
   const workRail = workSec?.querySelector('.work-rail span');
   const workRows = [...(workSec ? workSec.querySelectorAll('.row') : [])];
@@ -29,6 +30,11 @@
   const onScroll = () => {
     const vh = window.innerHeight;
     header?.classList.toggle('scrolled', window.scrollY > 20);
+    if (secnav) {
+      const heroBottom = (document.querySelector('.hero')?.getBoundingClientRect().bottom ?? 0);
+      secnav.classList.toggle('show', heroBottom < 54);
+      secnav.setAttribute('aria-hidden', heroBottom < 54 ? 'false' : 'true');
+    }
     if (progress) {
       const max = document.documentElement.scrollHeight - vh;
       progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
@@ -202,7 +208,7 @@
   }, 4000);
 
   /* ---------- nav active section ---------- */
-  const navLinks = [...document.querySelectorAll('.topnav a[href^="#"]')];
+  const navLinks = [...document.querySelectorAll('.topnav a[href^="#"], .secnav a[href^="#"]')];
   const sections = navLinks
     .map((a) => document.querySelector(a.getAttribute('href')))
     .filter(Boolean);
