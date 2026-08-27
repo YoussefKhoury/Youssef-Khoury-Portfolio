@@ -387,9 +387,8 @@ h1 .tp-ch {
 /* draw the divider in with the reveal, but only when JS can also un-hide it */
 .js .sec-head.reveal:not(.visible)::after { transform: scaleX(0); }
 .sec-head span:first-child { color: var(--accent); }
-/* collapsed-section metric row + the phone-only master "open the file" toggle */
+/* phone-only chrome: the metric row and the drawer front */
 .sec-metrics { display: none; }
-.dossier-toggle { display: none; }
 .drawer-front { display: none; }
 /* section label doubles as the a11y/SEO heading — keep it visually a label */
 .sec-head h2.sk {
@@ -694,7 +693,7 @@ h2 {
 }
 .cert:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); transform: translateY(-3px); }
 .cert-img { padding: 16px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
-.cert-img img { border: 1px solid var(--line); }
+.cert-img img { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
 .cert-copy { padding: 20px; }
 .cert-copy > span { color: var(--accent); font-size: 11px; letter-spacing: .13em; }
 .cert-copy h3 {
@@ -822,6 +821,21 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* let the heading use the full centred width and breathe a little smaller */
   h1 { font-size: clamp(27px, 8vw, 34px); max-width: none; }
 
+  /* thumb targets: these are all 11–12px text links, so pad them out to a
+     comfortable tap height without letting the padding change the layout */
+  .idlinks a, .ov-social a, .case-links a, .fcol a, .actions a, .actions button {
+    padding-block: 11px;
+  }
+  .idlinks { gap: 0; margin-top: 0; }
+  .idcard .idlinks { gap: 0 16px; }
+  .ov-social { gap: 0 !important; }
+  .case-links { gap: 0 22px; }
+  .actions { gap: 0 24px; }
+  .ov-close { padding: 12px 0 12px 14px; margin-right: -14px; }
+  .topbar .id { padding-block: 12px; }
+  .window-bar { align-items: center; }
+  .window-bar a { display: flex; align-items: center; padding-left: 14px; min-height: 42px; }
+
   /* --- section strip: slides in under the header once past the hero --- */
   .secnav {
     display: flex; gap: 6px;
@@ -837,7 +851,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .secnav::-webkit-scrollbar { display: none; }
   .secnav.show { transform: none; opacity: 1; }
   .secnav a {
-    flex: 0 0 auto; padding: 6px 12px;
+    flex: 0 0 auto; padding: 10px 13px;
     border: 1px solid var(--line); border-radius: 999px;
     font-size: 12px; color: var(--muted); white-space: nowrap;
     transition: color .2s ease, background .2s ease, border-color .2s ease;
@@ -853,7 +867,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     --kraft-hi: #26211A; --kraft-lo: #1A140E;
   }
   .dossier + .section { padding-top: 34px; }
-  .dossier-toggle { display: none; }              /* the drawer needs no master latch */
+
   .js .dossier-body { display: block; height: auto; }
 
   /* each folder: a kraft front with a raised index tab, staggered across
@@ -1069,9 +1083,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .marquee { -webkit-mask-image: none; mask-image: none; }
   .marquee > .mq-track:nth-child(2) { display: none; }
   .mq-track li:last-child::after { content: none; }
-  .js .dossier-body { transition: none; }
-  .js .dossier-body > .section.collapsible { opacity: 1; transform: none; transition: none; }
-  .dossier-toggle .folder-files i { transition: none; }
+  .section.collapsible .sec-head,
+  .section.collapsible .sec-head > :first-child,
+  .section.collapsible .sec-head > :last-child::after { transition: none; }
   .section.collapsible .sec-body { transition: none; }
   .section.collapsible .sec-body > * { opacity: 1; transform: none; transition: none; }
   .section.collapsible .sec-metrics li { animation: none; }
