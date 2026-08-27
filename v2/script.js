@@ -236,9 +236,17 @@
     }
   }
 
-  /* ---------- dashboard skeleton hide (safety) ---------- */
-  const frame = document.querySelector('.dashboard-window iframe');
-  frame?.addEventListener('load', () => frame.classList.add('is-loaded'), { once: true });
+  /* ---------- flagship dashboard: click-to-load gate ---------- */
+  const dashWin = document.querySelector('.dashboard-window');
+  const dashGate = dashWin?.querySelector('.dash-gate');
+  const dashFrame = dashWin?.querySelector('iframe');
+  dashGate?.addEventListener('click', () => {
+    if (dashFrame && !dashFrame.src && dashFrame.dataset.src) {
+      dashFrame.src = dashFrame.dataset.src;
+    }
+    dashWin.classList.remove('is-gated');
+    dashFrame?.focus();
+  });
 
   /* ---------- decrypt-on-hover for menu links ---------- */
   if (!reduced) {

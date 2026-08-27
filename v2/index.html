@@ -20,8 +20,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" />
-    <link rel="stylesheet" href="styles.css?v=9" />
-    <script src="script.js?v=9" defer></script>
+    <link rel="stylesheet" href="styles.css?v=10" />
+    <script src="script.js?v=10" defer></script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"Person","name":"Youssef Khoury","jobTitle":"Data, Business and Operations Analyst","email":"mailto:youssefkhoury01@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"Matn University College"},"sameAs":["https://github.com/YoussefKhoury","https://www.linkedin.com/in/youssefkhoury/"]}
     </script>
@@ -199,9 +199,21 @@
               </div>
               <p class="fineprint mono">Dataset is synthetic. Model, analysis and deliverables are original work.</p>
             </div>
-            <div class="dashboard-window reveal">
+            <div class="dashboard-window reveal is-gated">
               <div class="window-bar mono"><span>&#9679; &#9679; &#9679;</span><span>LIVE ANALYTICS</span><a href="../dashboard/" target="_blank" rel="noreferrer">Full screen &#8599;</a></div>
-              <iframe src="../dashboard/?theme=dark" title="Interactive Order-to-Delivery Control Tower dashboard" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              <div class="dash-stage">
+                <div class="dash-skeleton" aria-hidden="true">
+                  <div class="sk-kpis"><span></span><span></span><span></span><span></span></div>
+                  <div class="sk-chart"></div>
+                  <div class="sk-split"><span></span><span></span></div>
+                </div>
+                <iframe data-src="../dashboard/?theme=dark" title="Interactive Order-to-Delivery Control Tower dashboard" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <button class="dash-gate" type="button" aria-label="Load and view the live Order-to-Delivery Control Tower dashboard">
+                  <span class="play" aria-hidden="true">&#9658;</span>
+                  <span class="gate-label">View live dashboard</span>
+                  <span class="gate-hint">Loads the interactive report</span>
+                </button>
+              </div>
               <a class="mobile-dash" href="../dashboard/" target="_blank" rel="noreferrer"><strong>Open interactive dashboard</strong><span>Best viewed full screen &#8599;</span></a>
             </div>
           </div>
