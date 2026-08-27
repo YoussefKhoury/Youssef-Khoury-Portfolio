@@ -280,9 +280,10 @@ h1 .tp-ch {
 .actions a:hover, .actions button:hover { border-color: var(--accent); }
 .actions .ar { color: var(--accent); display: inline-block; }
 
-/* larger arrow glyph; alignment (the hover-slide lives after the component rules below) */
+/* larger arrow glyph; alignment (the hover-slide lives after the component rules below).
+   line-height 1 clips the ↗ head on some faces, so give the glyph its own room. */
 .idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions .ar {
-  font-size: 15px; line-height: 1; align-self: center;
+  font-size: 15px; line-height: 1.25; align-self: center; overflow: visible;
 }
 .idlinks a, .fcol a, .ov-social a { align-items: center; }
 .actions a, .actions button { display: inline-flex; align-items: center; gap: 7px; }
@@ -450,7 +451,8 @@ h2 {
   border: 1.5px solid var(--accent); opacity: 0; pointer-events: none;
   transition: opacity .22s ease, transform .3s var(--ease);
 }
-.row::before { top: 16px; left: 0; border-right: 0; border-bottom: 0; transform: translate(-6px, -6px); }
+/* clear of the scroll rail, which sits at the shell's left edge */
+.row::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; transform: translate(-6px, -6px); }
 .row::after { bottom: 16px; right: 0; border-left: 0; border-top: 0; transform: translate(6px, 6px); }
 .row:hover::before, .row:hover::after { opacity: 1; transform: translate(0, 0); }
 
@@ -671,12 +673,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 .idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,
 .actions a:hover .ar, .actions button:hover .ar { transform: translateX(4px); }
 
-/* Keep the ↗ only where it means something — a link that leaves the site or
-   downloads a file. In-page jumps, mailto and copy buttons lose the decoration. */
-.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions a .ar, .actions button .ar { display: none; }
-.fcol a[href^="http"] .ar, .fcol a[download] .ar,
-.ov-social a[href^="http"] .ar,
-.actions a[href^="http"] .ar, .actions a[download] .ar, .actions a[target="_blank"] .ar { display: inline-block; }
+/* The ↗ marks a link. Buttons are not links, so they stay bare. */
+.actions button .ar { display: none; }
 
 .stamp {
   display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
