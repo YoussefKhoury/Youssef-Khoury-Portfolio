@@ -707,6 +707,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 @media (max-width: 720px) {
   :root { --shell: calc(100% - 28px); }
 
+  /* let the heading use the full centred width and breathe a little smaller */
+  h1 { font-size: clamp(27px, 8vw, 34px); max-width: none; }
+
   .dashboard-window { min-height: 0; }
   .dash-stage { min-height: 280px; }
   .dash-skeleton { padding: 16px; }
