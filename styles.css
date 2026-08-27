@@ -602,8 +602,6 @@ h2 {
 .dash-gate .gate-hint { font-size: 10px; letter-spacing: 0.1em; color: var(--muted); }
 .dashboard-window:not(.is-gated) .dash-gate { opacity: 0; pointer-events: none; visibility: hidden; }
 
-.mobile-dash { display: none; }
-
 /* ---------- credentials ---------- */
 .cred-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
 .cert {
@@ -825,12 +823,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .dash-stage { min-height: 300px; }
   .dash-skeleton .sk-kpis { grid-template-columns: repeat(2, 1fr); }
   .dash-gate .play { width: 48px; height: 48px; font-size: 14px; }
-  .mobile-dash {
-    display: flex; flex-direction: column; gap: 2px;
-    padding: 12px 14px; border-top: 1px solid var(--line);
-    color: var(--muted); font-size: 11px; letter-spacing: 0.06em;
-  }
-  .mobile-dash strong { color: var(--ink); font-size: 12px; }
+  /* a blur filter inside the height-animating, overflow-hidden section body makes
+     iOS Safari composite a layer it then fails to repaint (content renders half
+     painted). Fake the softness with opacity instead — no filter, no layer. */
+  .dash-skeleton { filter: none; opacity: .5; }
 
   /* calmer hero: centred, drop the 3-beat method list */
   .hero-copy { text-align: center; }

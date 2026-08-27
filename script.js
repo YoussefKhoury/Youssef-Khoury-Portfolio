@@ -227,35 +227,45 @@
   applyHeadRole();
   mqMobile.addEventListener('change', applyHeadRole);
 
-  collSecs.forEach((sec) => {
+  const setSection = (sec, open) => {
+    if (!mqMobile.matches || sec.classList.contains('open') === open) return;
     const head = sec.querySelector('.sec-head');
     const body = sec.querySelector('.sec-body');
     if (!head || !body) return;
-
-    const toggle = () => {
-      if (!mqMobile.matches) return;
-      const open = !sec.classList.contains('open');
-      if (open) body.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
-      body.style.height = (open ? 0 : body.scrollHeight) + 'px';
-      void body.offsetHeight;                         // reflow so the start height sticks
-      sec.classList.toggle('open', open);
-      head.setAttribute('aria-expanded', String(open));
-      body.style.height = (open ? body.scrollHeight : 0) + 'px';
-      let t;
-      const done = () => {
-        body.style.height = '';                       // hand resting state back to CSS
-        body.removeEventListener('transitionend', done);
-        clearTimeout(t);
-      };
-      body.addEventListener('transitionend', done);
-      t = setTimeout(done, 500);                        // fallback if transitionend never fires
-      if (reduced) done();
+    if (open) body.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+    body.style.height = (open ? 0 : body.scrollHeight) + 'px';
+    void body.offsetHeight;                           // reflow so the start height sticks
+    sec.classList.toggle('open', open);
+    head.setAttribute('aria-expanded', String(open));
+    body.style.height = (open ? body.scrollHeight : 0) + 'px';
+    let t;
+    const done = () => {
+      body.style.height = '';                         // hand resting state back to CSS
+      body.removeEventListener('transitionend', done);
+      clearTimeout(t);
     };
+    body.addEventListener('transitionend', done);
+    t = setTimeout(done, 500);                        // fallback if transitionend never fires
+    if (reduced) done();
+  };
 
+  collSecs.forEach((sec) => {
+    const head = sec.querySelector('.sec-head');
+    if (!head) return;
+    const toggle = () => setSection(sec, !sec.classList.contains('open'));
     head.addEventListener('click', toggle);
     head.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
     });
+  });
+
+  // Any in-page link to a collapsed section (hero action, strip pill, menu item)
+  // opens it, so the jump never lands the visitor on a closed heading.
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest?.('a[href^="#"]');
+    if (!link) return;
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target?.classList.contains('collapsible')) setSection(target, true);
   });
 
   // Fallback: if IntersectionObserver never delivers (rare edge cases), un-hide
