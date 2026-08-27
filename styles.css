@@ -791,23 +791,56 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible.open .sec-head::after { animation: fileOpenSweep .55s var(--ease); }
   @keyframes fileOpenSweep { from { background: var(--accent); } to { background: var(--line); } }
 
+  /* the opened file reads as a small terminal screen powering on */
   .js .section.collapsible .sec-body {
-    overflow: hidden; transition: height .42s var(--ease);
-    /* opened file is bound along an amber spine and indented off it */
-    padding-left: 16px; border-left: 2px solid var(--accent);
+    position: relative; overflow: hidden;
+    transition: height .42s var(--ease);
+  }
+  .js .section.collapsible.open .sec-body {
+    border: 1px solid var(--line);
+    border-left: 2px solid var(--accent);
+    border-radius: 4px;
+    padding: 44px 15px 20px;                 /* top room for the window bar */
+    background: repeating-linear-gradient(
+      to bottom, transparent 0 3px,
+      color-mix(in srgb, var(--ink) 3%, transparent) 3px 4px);
   }
   /* resting collapsed state is CSS-only, so a resize back to desktop always reveals */
-  .js .section.collapsible:not(.open) .sec-body { height: 0; border-left-color: transparent; }
-  /* contents cascade in as the file opens */
-  .js .section.collapsible .sec-body > * {
-    opacity: 0; transform: translateY(16px);
-    transition: opacity .5s var(--ease), transform .5s var(--ease);
+  .js .section.collapsible:not(.open) .sec-body { height: 0; padding: 0; }
+
+  /* window chrome: dots + filename, same language as the live-dashboard bar */
+  .js .section.collapsible.open .sec-body::before {
+    content: "\25CF  \25CF  \25CF     " attr(data-log);
+    position: absolute; inset: 0 0 auto 0; height: 29px;
+    display: flex; align-items: center; padding: 0 12px;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface) 75%, transparent);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted);
   }
-  .js .section.collapsible.open .sec-body > * { opacity: 1; transform: none; }
-  .js .section.collapsible.open .sec-body > :nth-child(2) { transition-delay: .05s; }
-  .js .section.collapsible.open .sec-body > :nth-child(3) { transition-delay: .10s; }
-  .js .section.collapsible.open .sec-body > :nth-child(4) { transition-delay: .15s; }
-  .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .20s; }
+  /* amber scan-line sweeps down once as the screen comes up */
+  .js .section.collapsible.open .sec-body::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 29px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent);
+    animation: fileScan .72s var(--ease) forwards; pointer-events: none;
+  }
+  @keyframes fileScan {
+    0%   { transform: translateY(0);     opacity: 0; }
+    12%  { opacity: 1; }
+    100% { transform: translateY(440px); opacity: 0; }
+  }
+
+  /* contents populate after the scan-line gets going */
+  .js .section.collapsible .sec-body > * {
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .45s var(--ease), transform .45s var(--ease);
+  }
+  .js .section.collapsible.open .sec-body > * { opacity: 1; transform: none; transition-delay: .14s; }
+  .js .section.collapsible.open .sec-body > :nth-child(2) { transition-delay: .20s; }
+  .js .section.collapsible.open .sec-body > :nth-child(3) { transition-delay: .26s; }
+  .js .section.collapsible.open .sec-body > :nth-child(4) { transition-delay: .32s; }
+  .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .38s; }
 
   /* --- fewer words on a phone: keep collapsed rows to title + tags --- */
   .row .meta, .row .outcome { display: none; }
@@ -897,6 +930,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head > :last-child::after { transition: none; }
   .section.collapsible .sec-head:hover > :last-child::after { letter-spacing: 0.14em; }
   .section.collapsible.open .sec-head::after { animation: none; }
+  .section.collapsible.open .sec-body::after { animation: none; display: none; }
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
