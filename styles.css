@@ -833,8 +833,14 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .hero-copy .actions { justify-content: center; }
   .method { display: none; }
   .idcard { flex-direction: column; align-items: center; text-align: center; }
-  .idcard .avatar { width: 132px; border-color: color-mix(in srgb, var(--line) 45%, transparent); }
-  .idcard .avatar .pc { opacity: 0.28; }
+  /* no frame on the phone — the portrait just fades into the page */
+  .idcard .avatar {
+    width: 150px; border: 0; background: none;
+    -webkit-mask-image: radial-gradient(130% 108% at 50% 32%, #000 46%, transparent 100%);
+            mask-image: radial-gradient(130% 108% at 50% 32%, #000 46%, transparent 100%);
+  }
+  .idcard .avatar .pc { display: none; }
+  .idcard .avatar img { filter: grayscale(1) contrast(1.03) brightness(.92); }
   .idcard .idlinks { justify-content: center; }
 
   .case-item { max-width: none; }
