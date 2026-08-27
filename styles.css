@@ -701,25 +701,8 @@ h2 {
 #contact { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(52px, 7vw, 78px); }
 #experience { padding-bottom: clamp(40px, 6vw, 60px); }
 .contact h2 { margin-top: 8px; }
-.contact .contact-lead > p { color: var(--muted); max-width: 46ch; }
+.contact > .shell > p { color: var(--muted); max-width: 52ch; }
 .contact .actions { margin-top: 24px; }
-
-/* two-up: the pitch on the left, a compact readout filling the right */
-.contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) 248px; gap: 24px 56px; align-items: start; }
-.contact-card { align-self: start; margin: 6px 0 0; border-top: 1px solid var(--line); }
-.contact-card > div {
-  display: flex; justify-content: space-between; gap: 16px;
-  padding: 11px 0; border-bottom: 1px solid var(--line);
-}
-.contact-card dt {
-  color: var(--faint); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
-}
-.contact-card dd {
-  margin: 0; color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-align: right;
-}
-.contact-card dd a { color: var(--muted); transition: color .2s ease; }
-.contact-card dd a:hover { color: var(--accent); }
-.contact-card dd span[aria-hidden] { color: var(--faint); margin: 0 4px; }
 
 /* ---------- footer ---------- */
 footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
@@ -1056,8 +1039,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* centre the closing contact block too */
   .contact .shell { text-align: center; }
   .contact .actions { justify-content: center; }
-  .contact-grid { grid-template-columns: 1fr; gap: 28px; }
-  .contact-card { text-align: left; max-width: 340px; margin-inline: auto; }
 
   .xrow { grid-template-columns: 1fr; gap: 10px; }
   .xr-when { display: flex; align-items: center; gap: 12px; }
