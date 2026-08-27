@@ -351,20 +351,27 @@
   if (heroH1 && !reduced &&
       window.matchMedia('(pointer: fine)').matches &&
       window.matchMedia('(min-width: 721px)').matches) {
-    const W0 = 680, W1 = 900, WD0 = 100, WD1 = 148, RADIUS = 170;
+    const W0 = 700, W1 = 900, WD0 = 100, WD1 = 136, RADIUS = 155;
 
-    // split into per-letter spans, keeping the <em> wrapper and spaces intact
+    // per-letter spans, grouped into non-breaking word wrappers so lines only
+    // break at real spaces; keeps the <em> wrapper intact
     const wrap = (node) => {
       [...node.childNodes].forEach((n) => {
         if (n.nodeType === 3) {
           const frag = document.createDocumentFragment();
-          for (const ch of n.textContent) {
-            if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); continue; }
-            const s = document.createElement('span');
-            s.className = 'tp-ch';
-            s.textContent = ch;
-            frag.appendChild(s);
-          }
+          n.textContent.split(/(\s+)/).forEach((part) => {
+            if (part === '') return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            const word = document.createElement('span');
+            word.className = 'tp-word';
+            for (const ch of part) {
+              const s = document.createElement('span');
+              s.className = 'tp-ch';
+              s.textContent = ch;
+              word.appendChild(s);
+            }
+            frag.appendChild(word);
+          });
           n.replaceWith(frag);
         } else if (n.nodeType === 1) {
           wrap(n);
