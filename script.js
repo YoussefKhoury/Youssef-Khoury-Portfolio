@@ -227,53 +227,13 @@
   applyHeadRole();
   mqMobile.addEventListener('change', applyHeadRole);
 
-  /* the three sections live inside one collapsed "file" on a phone; pressing the
-     master toggle unfolds them, and opening any row also unfolds the file. */
-  const dossier = document.querySelector('.dossier');
-  const dBody = dossier?.querySelector('.dossier-body');
-  const dToggle = dossier?.querySelector('.dossier-toggle');
-
-  const animateHeight = (el, open, onclass) => {
-    el.style.height = (open ? 0 : el.scrollHeight) + 'px';
-    void el.offsetHeight;
-    onclass(open);
-    el.style.height = (open ? el.scrollHeight : 0) + 'px';
-    let t;
-    const done = () => {
-      el.style.height = '';
-      el.removeEventListener('transitionend', done);
-      clearTimeout(t);
-    };
-    el.addEventListener('transitionend', done);
-    t = setTimeout(done, 600);
-    if (reduced) done();
-  };
-
-  const setDossier = (open) => {
-    if (!mqMobile.matches || !dossier || !dBody || dossier.classList.contains('open') === open) return;
-    if (open) dBody.querySelectorAll('.sec-head.reveal').forEach((el) => el.classList.add('visible'));
-    animateHeight(dBody, open, (o) => {
-      dossier.classList.toggle('open', o);
-      dToggle.setAttribute('aria-expanded', String(o));
-      const pull = dToggle.querySelector('.pull');
-      if (pull) pull.textContent = o ? '[ close ]' : '[ open ]';
-    });
-  };
-  dToggle?.addEventListener('click', () => setDossier(!dossier.classList.contains('open')));
-
+  /* on a phone the three sections are folders in a drawer: each one's front is
+     the .sec-head bar, and pressing it draws that folder's file open. */
   const setSection = (sec, open) => {
     if (!mqMobile.matches || sec.classList.contains('open') === open) return;
     const head = sec.querySelector('.sec-head');
     const body = sec.querySelector('.sec-body');
     if (!head || !body) return;
-    // opening a row while the file is still folded: snap the file open first
-    if (open && dossier && !dossier.classList.contains('open')) {
-      dossier.classList.add('open');
-      dBody.style.height = '';
-      dToggle.setAttribute('aria-expanded', 'true');
-      const pull = dToggle.querySelector('.pull');
-      if (pull) pull.textContent = '[ close ]';
-    }
     if (open) body.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
     body.style.height = (open ? 0 : body.scrollHeight) + 'px';
     void body.offsetHeight;                           // reflow so the start height sticks
@@ -477,11 +437,13 @@
     const fPaint = () => {
       fx.clearRect(0, 0, fw, fh);
       const cx = fw / 2, cy = fh / 2;
-      const maxD = Math.hypot(cx, cy);
       for (let y = STEP * 0.5; y < fh; y += STEP) {
         for (let x = STEP * 0.5; x < fw; x += STEP) {
-          const nd = Math.hypot((x - cx) * 1.12, (y - cy)) / maxD;
-          let edge = (nd - 0.16) / 0.84;            // 0 near centre, 1 at edges
+          // normalise per axis so the clearing hugs the hero's own shape —
+          // otherwise a tall phone viewport reads as an all-over dot screen
+          const ux = (x - cx) / cx, uy = (y - cy) / cy;
+          const nd = Math.min(1, Math.hypot(ux, uy) / 1.414);
+          let edge = (nd - 0.42) / 0.58;            // 0 near centre, 1 at corners
           if (edge <= 0.02) continue;
           edge = edge < 1 ? edge * edge * (3 - 2 * edge) : 1;
           const n = 0.62 * vnoise(x * 0.055 + fTime, y * 0.055 + fTime * 0.3)
