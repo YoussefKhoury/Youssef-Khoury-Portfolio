@@ -330,7 +330,7 @@ h1 .tp-ch {
 .idlinks a { display: flex; gap: 7px; color: var(--muted); font-size: 11px; letter-spacing: 0.06em; transition: color .2s ease; }
 .idlinks a .ar { color: var(--accent); }
 .idlinks a:hover { color: var(--ink); }
-.idgeo { color: var(--faint); font-size: 11px; line-height: 1.7; margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--line); }
+.idgeo { color: var(--faint); font-size: 11px; line-height: 1.7; margin: 14px 0 0; }
 
 /* ---------- stats band ---------- */
 .stats {
@@ -674,7 +674,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 /* Keep the ↗ only where it means something — a link that leaves the site or
    downloads a file. In-page jumps, mailto and copy buttons lose the decoration. */
 .idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions a .ar, .actions button .ar { display: none; }
-.idlinks a[href^="http"] .ar,
 .fcol a[href^="http"] .ar, .fcol a[download] .ar,
 .ov-social a[href^="http"] .ar,
 .actions a[href^="http"] .ar, .actions a[download] .ar, .actions a[target="_blank"] .ar { display: inline-block; }
@@ -834,7 +833,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .idcard { flex-direction: column; align-items: center; text-align: center; }
   .idcard .avatar { width: 132px; border-color: color-mix(in srgb, var(--line) 45%, transparent); }
   .idcard .avatar .pc { opacity: 0.28; }
-  .idcard .idgeo { border-top-color: color-mix(in srgb, var(--line) 45%, transparent); }
   .idcard .idlinks { justify-content: center; }
 
   .case-item { max-width: none; }
