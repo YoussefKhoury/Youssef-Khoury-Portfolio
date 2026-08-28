@@ -21,8 +21,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&family=Roboto+Flex:wdth,wght@60..150,100..900&display=swap" />
-    <link rel="stylesheet" href="styles.css?v=94" />
-    <script src="script.js?v=94" defer></script>
+    <link rel="stylesheet" href="styles.css?v=95" />
+    <script src="script.js?v=95" defer></script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"Person","name":"Youssef Khoury","jobTitle":"Data, Business and Operations Analyst","email":"mailto:youssefkhoury01@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"Matn University College"},"sameAs":["https://github.com/YoussefKhoury","https://www.linkedin.com/in/youssefkhoury/"]}
     </script>
@@ -212,6 +212,10 @@
         <div class="shell">
           <div class="work-rail" aria-hidden="true"><span></span></div>
           <div class="sec-head mono reveal"><h2 class="sk">Selected work</h2><span>2026</span></div>
+          <p class="work-intro reveal">Four self-directed analytics projects, each built end-to-end &mdash; data model,
+            governed metrics and a decision-ready deliverable. Datasets are synthetic and modeled on real
+            order-to-delivery operations; the modeling, analysis and artifacts are original, and every
+            project ships a case-study PDF and its working file.</p>
 
           <div class="cases">
           <div class="case-item flagship reveal">
@@ -258,6 +262,7 @@
                 <span class="tags mono"><b>Excel</b> · Power Query</span>
                 <p class="meta">360 invoices turned into aging, a DSO proxy, promise coverage and a cash-priority queue.</p>
                 <p class="outcome"><span class="mono">Output</span> a ranked list of which invoices to chase first, by expected cash and customer risk.</p>
+                <p class="result mono">Separates <b>dispute</b>, <b>broken-promise</b> and <b>aging</b> risk, so collections work expected cash rather than invoice age.</p>
               </span>
               <span class="go" aria-hidden="true"><b>Open case file</b><span class="chev">+</span></span>
             </button>
@@ -288,6 +293,7 @@
                 <span class="tags mono"><b>Power BI</b> · Excel</span>
                 <p class="meta">300 purchase orders scored for spend, OTIF, fill rate, price variance, defects and supplier risk.</p>
                 <p class="outcome"><span class="mono">Output</span> every supplier sorted into a risk tier, with the drivers behind each score.</p>
+                <p class="result mono">Keeps <b>price</b>, <b>delivery</b> and <b>quality</b> scored separately before combining, so reviews cite evidence, not anecdotes.</p>
               </span>
               <span class="go" aria-hidden="true"><b>Open case file</b><span class="chev">+</span></span>
             </button>
@@ -318,6 +324,7 @@
                 <span class="tags mono"><b>Business Analysis</b> · UAT · RAID</span>
                 <p class="meta">24 requirements with acceptance criteria, traceability, 30 UAT cases and readiness reporting.</p>
                 <p class="outcome"><span class="mono">Output</span> 24 requirements as tested, signed-off, fully traceable delivery evidence.</p>
+                <p class="result mono">One audit trail from <b>business need</b> to <b>requirement</b> to <b>test evidence</b> to <b>go-live decision</b>.</p>
               </span>
               <span class="go" aria-hidden="true"><b>Open case file</b><span class="chev">+</span></span>
             </button>
@@ -484,12 +491,34 @@
       <section class="section contact" id="contact">
         <div class="shell reveal">
           <div class="sec-head mono reveal"><span>Contact</span><span>Open to roles</span></div>
-          <h2>Someone who understands both the numbers and the workflow.</h2>
-          <p>Open to data, business, reporting and operations analyst opportunities. Based in Lebanon,
-            Lebanon-authorized, professional English.</p>
-          <div class="actions">
-            <a href="downloads/Youssef-Khoury-CV.pdf" download><span class="ar">&#8599;</span>Download CV</a>
-            <button type="button" data-copy-email><span class="ar">&#8599;</span>Copy email</button>
+          <div class="contact-grid">
+            <div class="contact-copy">
+              <h2>Someone who understands both the numbers and the workflow.</h2>
+              <p>Open to data, business, reporting and operations analyst opportunities. Based in Lebanon,
+                Lebanon-authorized, professional English.</p>
+              <div class="actions">
+                <a href="downloads/Youssef-Khoury-CV.pdf" download><span class="ar">&#8599;</span>Download CV</a>
+                <button type="button" data-copy-email><span class="ar">&#8599;</span>Copy email</button>
+              </div>
+            </div>
+
+            <figure class="contact-fig reveal">
+              <figcaption class="cf-label mono">Verified outcome &middot; lighting-industry operations</figcaption>
+              <svg class="cf-svg" viewBox="0 0 300 96" role="img"
+                aria-label="Order-to-delivery lead time fell from two to three months to about two weeks, roughly an 80 percent reduction.">
+                <line class="cf-axis" x1="66" y1="8" x2="66" y2="88" />
+                <text class="cf-k" x="58" y="28">Before</text>
+                <rect class="cf-bar cf-before" x="66" y="17" width="228" height="16" rx="2" />
+                <text class="cf-v" x="290" y="28" text-anchor="end">2&ndash;3 months</text>
+                <text class="cf-k" x="58" y="70">After</text>
+                <rect class="cf-bar cf-after" x="66" y="59" width="40" height="16" rx="2" />
+                <text class="cf-v cf-v-after" x="114" y="70">~2 weeks</text>
+              </svg>
+              <p class="cf-headline"><b>~80%</b> faster, order to sign-off</p>
+              <p class="cf-note">Mapped the process as-is / to-be, traced recurring delays to three root
+                causes, and rebuilt supplier follow-up &mdash; across 40+ concurrent orders and 20+ suppliers
+                on a USD&nbsp;1M+ operation.</p>
+            </figure>
           </div>
         </div>
       </section>

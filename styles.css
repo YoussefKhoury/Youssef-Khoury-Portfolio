@@ -583,6 +583,11 @@ h2 {
   transition: height .12s linear;
 }
 
+.work-intro {
+  color: var(--muted); font-size: 14px; line-height: 1.7;
+  max-width: 70ch; margin: 14px 0 6px;
+}
+
 .case-item { position: relative; max-width: 1000px; border-bottom: 1px solid var(--line); }
 
 /* scroll-scrubbed entrance: each case tilts up out of depth and settles as it
@@ -899,8 +904,55 @@ h2 {
 #contact { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(52px, 7vw, 78px); }
 #experience { padding-bottom: clamp(40px, 6vw, 60px); }
 .contact h2 { margin-top: 8px; }
-.contact > .shell > p { color: var(--muted); max-width: 52ch; }
+.contact-copy > p { color: var(--muted); max-width: 52ch; }
 .contact .actions { margin-top: 24px; }
+
+.contact-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 372px);
+  gap: clamp(30px, 6vw, 78px); align-items: center; margin-top: 20px;
+}
+
+/* verified-outcome figure */
+.contact-fig {
+  position: relative; margin: 0; padding: 18px 22px 20px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+}
+.contact-fig::before, .contact-fig::after {
+  content: ""; position: absolute; width: 10px; height: 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 58%, transparent);
+}
+.contact-fig::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.contact-fig::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+.cf-label { color: var(--faint); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; }
+.cf-svg { display: block; width: 100%; height: auto; margin: 14px 0 4px; overflow: visible; }
+.cf-svg .cf-axis { stroke: var(--line); stroke-width: 1; }
+.cf-svg .cf-k {
+  fill: var(--faint); font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase; text-anchor: end;
+}
+.cf-svg .cf-v { fill: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em; }
+.cf-svg .cf-before { fill: color-mix(in srgb, var(--accent) 22%, transparent); }
+.cf-svg .cf-after { fill: var(--accent); }
+
+/* bars fade in on scroll (geometry is fixed; only opacity animates —
+   CSS width/transform on <rect> is unreliable across engines) */
+.js .contact-fig.reveal .cf-bar { opacity: 0; transition: opacity .6s var(--ease); }
+.js .contact-fig.reveal.visible .cf-before { opacity: 1; transition-delay: .15s; }
+.js .contact-fig.reveal.visible .cf-after { opacity: 1; transition-delay: .42s; }
+
+.cf-headline {
+  margin: 12px 0 0; font-family: var(--display); font-weight: 600;
+  font-size: 17px; letter-spacing: -0.01em; color: var(--ink);
+}
+.cf-headline b { color: var(--accent); font-weight: 700; }
+.cf-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+@media (max-width: 860px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 26px; }
+  .contact-fig { max-width: 440px; }
+}
 
 /* ---------- footer ---------- */
 footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
@@ -1229,6 +1281,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* centre the closing contact block too */
   .contact .shell { text-align: center; }
   .contact .actions { justify-content: center; }
+  .contact-grid { justify-items: center; }
+  .contact-fig { text-align: left; }
 
   .xrow { grid-template-columns: 1fr; gap: 10px; }
   .xr-when { display: flex; align-items: center; gap: 12px; }
@@ -1268,6 +1322,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head::after { animation: none; }
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
+  .js .contact-fig.reveal .cf-bar { opacity: 1; transition: none; }
   .xr-when .bar::after { transition: none; }
   .ov-nav a::before, .ov-nav a::after { transition: opacity .15s ease; transform: none; }
   .row:hover { transition: none; }
