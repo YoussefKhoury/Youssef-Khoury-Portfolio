@@ -284,10 +284,8 @@ h1 em { font-style: normal; color: var(--accent); }
 .hero-copy h1 { cursor: default; user-select: none; -webkit-user-select: none; }
 h1 .tp-word { display: inline-block; white-space: nowrap; }
 h1 .tp-ch {
-  display: inline-block; will-change: transform, font-variation-settings;
+  display: inline-block; will-change: font-variation-settings;
   font-variation-settings: "wght" 700, "wdth" 100;
-  /* smooths the integer weight steps the script writes each frame */
-  transition: transform .14s var(--ease), font-variation-settings .14s linear;
 }
 .lead { color: var(--muted); max-width: 56ch; margin: 0 0 32px; font-size: 15.5px; }
 
@@ -327,15 +325,21 @@ h1 .tp-ch {
 
 /* ---------- hero ID card ---------- */
 .idcard { display: flex; flex-direction: column; gap: 12px; margin-top: 46px; }
+/* the folder tab riding on top of the portrait — a literal case file */
+.filetab {
+  align-self: flex-start; margin: 0 0 -1px 12px; position: relative; z-index: 2;
+  padding: 5px 12px 7px;
+  font-size: 8.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint);
+  background: linear-gradient(180deg, #1d1916, #131010);
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  border-bottom: 0; border-radius: 7px 7px 0 0;
+}
+.filetab b { color: var(--accent); font-weight: 500; margin: 0 1px; }
 .avatar {
   position: relative; width: 168px; aspect-ratio: 4 / 5; overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
   background: var(--surface-2);
-  /* case-file frame: a mat gap, then an amber hairline around it */
-  box-shadow:
-    0 0 0 5px var(--bg),
-    0 0 0 6px color-mix(in srgb, var(--accent) 34%, var(--line)),
-    0 0 0 7px var(--bg);
+  box-shadow: 0 18px 34px -22px rgba(0, 0, 0, .8);
 }
 .avatar img {
   position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
@@ -886,14 +890,14 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* === the drawer: three folders whose files pull open === */
   .dossier {
-    padding: 16px 0 34px;
+    padding: 12px 0 24px;
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #191512; --kraft-lo: #100e0c;
   }
   .dossier + .section { padding-top: 34px; }
 
   /* the top padding is headroom for the first folder's index tab */
-  .js .dossier-body { display: block; height: auto; padding-top: 24px; }
+  .js .dossier-body { display: block; height: auto; padding-top: 18px; }
 
   /* the folders butt into one continuous stack — adjacent 1px borders
      overlap into a single shared rule, no gap between fronts */
@@ -908,7 +912,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* .sec-head is the folder front — the whole bar is the tap target */
   .section.collapsible .sec-head {
     position: relative; display: flex; align-items: center; gap: 10px;
-    margin: 0; padding: 13px 14px 12px; min-height: 47px;
+    margin: 0; padding: 10px 13px 9px; min-height: 38px;
     cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, var(--kraft-hi), var(--kraft-lo));
     border: 1px solid var(--line); border-radius: 0;
@@ -923,10 +927,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head > :first-child {
     position: absolute; bottom: 100%; margin-bottom: -1px;
     display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
-    padding: 5px 11px 6px;
+    padding: 4px 9px 5px;
     background: linear-gradient(180deg, #1d1916, #131010);
     border: 1px solid var(--line); border-bottom: 0; border-radius: 7px 7px 0 0;
-    font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
+    font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
     transition: color .3s var(--ease), border-color .3s var(--ease);
   }
   .dossier-body > .section.collapsible:nth-child(1) .sec-head > :first-child { left: auto; right: 2%; }
@@ -988,7 +992,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     transition: height .42s var(--ease);
   }
   .js .section.collapsible.open .sec-body {
-    padding: 20px 14px 22px;
+    padding: 16px 13px 18px;
     background: #12100d;
     border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line)); border-top: 0;
     border-radius: 0 0 8px 8px;
@@ -1021,7 +1025,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* the drawer front, butting directly under the last folder to close the stack */
   .drawer-front {
-    position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 60px;
+    position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 44px;
     display: flex; align-items: center; justify-content: center;
     background: linear-gradient(180deg, #191512, #100e0c);
     border: 1px solid var(--line); border-radius: 0 0 10px 10px;
@@ -1073,6 +1077,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
             mask-image: radial-gradient(130% 108% at 50% 32%, #000 46%, transparent 100%);
   }
   .idcard .avatar .pc { display: none; }
+  .idcard .filetab { display: none; }
   .idcard .avatar img { filter: grayscale(1) contrast(1.03) brightness(.92); }
   .idcard .idlinks { justify-content: center; }
 
