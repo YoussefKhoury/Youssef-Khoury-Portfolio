@@ -887,8 +887,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* === the drawer: three folders whose files pull open === */
   .dossier {
     padding: 16px 0 34px;
-    /* warm dark base tied to the amber hero; amber carries the open state */
-    --kraft-hi: #261c11; --kraft-lo: #150f09;
+    /* same charcoal as the rest of the site; amber only on the accents */
+    --kraft-hi: #191512; --kraft-lo: #100e0c;
   }
   .dossier + .section { padding-top: 34px; }
 
@@ -918,17 +918,13 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* only the ends of the stack are rounded */
   .dossier-body > .section.collapsible:first-child .sec-head { border-radius: 8px 8px 0 0; }
   .dossier-body > .section.collapsible:last-child:not(.open) .sec-head { border-radius: 0 0 3px 3px; }
-  .section.collapsible .sec-head::after {
-    display: block; content: ""; position: absolute;
-    left: 14px; right: 14px; top: 8px; bottom: auto;
-    height: 1px; background: color-mix(in srgb, var(--accent) 24%, transparent); transform: none;
-  }
+  .section.collapsible .sec-head::after { display: none; }
   /* the index tab riding above the front, one step further left each time */
   .section.collapsible .sec-head > :first-child {
     position: absolute; bottom: 100%; margin-bottom: -1px;
     display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
     padding: 5px 11px 6px;
-    background: linear-gradient(180deg, #2a2013, #150f09);
+    background: linear-gradient(180deg, #1d1916, #131010);
     border: 1px solid var(--line); border-bottom: 0; border-radius: 7px 7px 0 0;
     font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
     transition: color .3s var(--ease), border-color .3s var(--ease);
@@ -950,7 +946,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .section.collapsible.open .sec-head {
     border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
-    background: linear-gradient(180deg, #322510, #1a1209);
+    background: linear-gradient(180deg, #201b15, #15120e);
     box-shadow: inset 3px 0 0 var(--accent), inset 0 1px 0 rgba(255, 255, 255, .05);
   }
   .section.collapsible.open .sec-head > :first-child {
@@ -1027,15 +1023,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .drawer-front {
     position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 60px;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(180deg, #241a10, #140e08);
+    background: linear-gradient(180deg, #191512, #100e0c);
     border: 1px solid var(--line); border-radius: 0 0 10px 10px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
     font: 400 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
     color: var(--faint);
-  }
-  .drawer-front::before {
-    content: ""; position: absolute; left: 16px; right: 16px; top: 10px;
-    height: 1px; background: var(--line);
   }
   .drawer-front b { color: var(--accent); font-weight: 500; }
 
