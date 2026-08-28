@@ -362,8 +362,9 @@ h1 .tp-ch {
 .casecard {
   position: relative; width: 100%; overflow: hidden;
   background: linear-gradient(180deg, var(--surface), var(--surface-2));
-  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--line));
   border-radius: 0.5em;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 3%, transparent);
 }
 
 /* corner brackets — thin muted gold, just outside the silhouette.
@@ -420,13 +421,15 @@ h1 .tp-ch {
   position: relative; height: 23em; overflow: hidden; background: var(--surface-2);
 }
 .dsr-photo::before {
-  content: ""; position: absolute; inset: 0; z-index: 1;
-  background: radial-gradient(70% 48% at 50% 82%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 72%);
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(44% 34% at 50% 34%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 74%),
+    radial-gradient(68% 46% at 50% 96%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 74%);
 }
 .dsr-photo img {
-  position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%;
+  position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 12%;
-  transform: scale(1.07); transform-origin: 50% 0;
+  transform: translateY(0.95em) scale(1.07); transform-origin: 50% 0;
   filter: grayscale(1) contrast(1.05) brightness(.98) sepia(.1);
   pointer-events: none; user-select: none; -webkit-user-drag: none;
 }
@@ -453,7 +456,7 @@ h1 .tp-ch {
 .dsr-name {
   font-family: var(--display); font-weight: 800; font-size: 2.4em; line-height: 0.97;
   letter-spacing: 0.004em; text-transform: uppercase; color: var(--ink);
-  margin: 0; max-width: 8.5em; text-wrap: balance;
+  margin: 0; max-width: none; white-space: nowrap;
 }
 .dsr-role  { color: var(--accent); font-size: 0.8em; letter-spacing: 0.15em; text-transform: uppercase; margin: 0.85em 0 0; }
 .dsr-role2 { color: var(--ink); font-size: 0.8em; letter-spacing: 0.3em; text-transform: uppercase; margin: 0.35em 0 0; opacity: .92; }
@@ -478,21 +481,20 @@ h1 .tp-ch {
 .dsr-meta dd { flex: none; color: var(--ink); margin: 0; }
 .dsr-meta dd.ok { color: var(--accent); }
 
-/* footer links — icon + label + arrow, evenly split */
+/* footer links — visible icon + label, evenly split */
 .dsr-links {
   display: flex; align-items: stretch; margin: 1.15em 0 0; padding: 0.95em 0 0;
   border-top: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
 }
 .dsr-links a {
-  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.5em;
-  font-size: 0.72em; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted);
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.7em;
+  font-size: 0.9em; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
   transition: color .2s ease;
 }
 .dsr-links a + a { border-left: 1px solid color-mix(in srgb, var(--accent) 18%, transparent); }
 .dsr-links a:hover { color: var(--ink); }
-.dsr-links svg { flex: none; width: 1.05em; height: 1.05em; color: var(--faint); transition: color .2s ease; }
+.dsr-links svg { flex: none; width: 1.55em; height: 1.55em; color: var(--faint); transition: color .2s ease; }
 .dsr-links a:hover svg { color: var(--accent); }
-.dsr-links .ar { color: var(--accent); font-size: 1.1em; margin-left: 0.15em; }
 
 /* ---------- skills marquee ---------- */
 .skillstrip {
