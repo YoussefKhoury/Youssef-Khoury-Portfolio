@@ -281,17 +281,6 @@
       body.style.height = target + 'px';
       body.style.paddingTop = '';
       body.style.paddingBottom = '';
-
-      // With a folder already open above it, the tapped head sits far down the
-      // page and its file appears to unfold from off-screen. Pull the head up
-      // under the sticky nav so this section opens from its top, like the first
-      // one does. scroll-margin-top on the section owns the 98px offset; skip
-      // the move when the head is already sitting there.
-      requestAnimationFrame(() => {
-        if (Math.abs(head.getBoundingClientRect().top - 98) > 8) {
-          sec.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
-        }
-      });
     } else {
       body.style.transition = 'none';
       body.style.height = body.offsetHeight + 'px';
@@ -325,47 +314,15 @@
     if (!open.length) return;
     const step = reduced ? 0 : 110;
 
-    /* The page ends up shorter than the current scroll position once these
-       fold shut, and the browser snaps scrollY down to fit the instant that
-       happens — synchronously, with no animation, wherever in the sequence
-       it happens to land. Peek at the final layout first (toggle the closed
-       state with no transition, measure, put it back) so we know exactly
-       where that landing spot is, then drive a real smooth scroll there in
-       parallel with the fold, pre-empting the hard snap instead of eating it. */
-    let targetY = null;
-    if (!reduced) {
-      const startY = window.scrollY;
-      const topSec = open[open.length - 1];          // topmost of the open folders
-      open.forEach((sec) => sec.classList.remove('open'));
-      void document.body.offsetHeight;
-      const maxY = document.documentElement.scrollHeight - window.innerHeight;
-      // Preserving the raw scroll position drops the visitor onto whatever the
-      // collapsed content left behind — the footer. Land on the filed-away
-      // folders instead: the top of the highest one, under the sticky nav.
-      const seen = topSec.getBoundingClientRect().top + window.scrollY - 98;
-      targetY = Math.max(0, Math.min(seen, maxY));
-      open.forEach((sec) => sec.classList.add('open'));
-      void document.body.offsetHeight;
-      // Shrinking the page for the peek forces the browser to clamp scrollY,
-      // then growing it back doesn't reliably restore the original position —
-      // scroll anchoring can push it past the start instead (blocked by this
-      // stack's own overflow-anchor:none, but forcing it back is still the
-      // point). behavior:'auto' here would NOT be instant — per spec 'auto'
-      // defers to the CSS scroll-behavior, which is smooth on <html>, so this
-      // would silently animate and race the real scroll started below, and
-      // scrollY wouldn't reflect it synchronously either. 'instant' is the
-      // one value that actually bypasses CSS and applies (and reads) at once.
-      window.scrollTo({ top: startY, left: 0, behavior: 'instant' });
-    }
-
+    /* Stay put: the visitor wants to watch the folders fold shut from wherever
+       they are, not be scrolled anywhere. No scroll handling here on purpose —
+       if they're near the top (the normal case) nothing moves; if they were
+       scrolled deep the rising page floor carries them up, which is the browser
+       doing the least it can and still better than a scripted jump. */
     open.forEach((sec, i) => {
       if (step) setTimeout(() => setSection(sec, false), i * step);
       else setSection(sec, false);
     });
-
-    if (targetY !== null && targetY < window.scrollY - 2) {
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
-    }
 
     if (reduced) return;
     setTimeout(() => {
