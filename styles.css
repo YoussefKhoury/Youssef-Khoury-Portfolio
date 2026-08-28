@@ -1071,14 +1071,17 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* === the drawer: three folders whose files pull open === */
   .dossier {
-    padding: 12px 0 24px;
+    padding: 0 0 24px;
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #191512; --kraft-lo: #100e0c;
   }
   .dossier + .section { padding-top: 34px; }
+  /* the drawer hangs off the box above it, so that box drops its bottom padding */
+  .section:has(+ .dossier) { padding-bottom: 0; }
 
-  /* the top padding is headroom for the first folder's index tab */
-  .js .dossier-body { display: block; height: auto; padding-top: 18px; }
+  /* headroom is exactly one index tab (22.8px), so the first folder front butts
+     the box above with the tab sitting in the gap rather than overrunning it */
+  .js .dossier-body { display: block; height: auto; padding-top: 24px; }
 
   /* the folders butt into one continuous stack — adjacent 1px borders
      overlap into a single shared rule, no gap between fronts */
@@ -1097,12 +1100,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, var(--kraft-hi), var(--kraft-lo));
     border: 1px solid var(--line); border-radius: 0;
-    box-shadow: inset 0 0 0 rgba(232, 177, 90, 0), inset 0 1px 0 rgba(255, 255, 255, .04);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
     transition: border-color .35s var(--ease), background .35s var(--ease), box-shadow .4s var(--ease);
   }
   /* only the ends of the stack are rounded */
   .dossier-body > .section.collapsible:first-child .sec-head { border-radius: 8px 8px 0 0; }
-  .dossier-body > .section.collapsible:last-child:not(.open) .sec-head { border-radius: 0 0 3px 3px; }
   .section.collapsible .sec-head::after { display: none; }
   /* the index tab riding above the front, one step further left each time */
   .section.collapsible .sec-head > :first-child {
@@ -1130,12 +1132,12 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     display: inline-block; transition: transform .4s var(--ease), color .3s var(--ease);
   }
   .section.collapsible.open .sec-head {
-    border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
     background: linear-gradient(180deg, #201b15, #15120e);
-    box-shadow: inset 3px 0 0 var(--accent), inset 0 1px 0 rgba(255, 255, 255, .05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
   }
   .section.collapsible.open .sec-head > :first-child {
-    color: var(--ink); border-color: color-mix(in srgb, var(--accent) 46%, var(--line));
+    color: var(--ink); border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
   }
   .section.collapsible.open .sec-head > :last-child::after {
     transform: rotate(90deg); color: var(--accent);
@@ -1144,10 +1146,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* the file inside the folder: hidden at rest, drawn out when pressed */
   .section.collapsible .sec-metrics {
     display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 1px; padding: 1px; margin: 8px 3px 0;
+    gap: 1px; padding: 1px; margin: -1px 0 0;
     list-style: none; cursor: pointer;
-    background: var(--line); border: 1px solid var(--line);
-    border-radius: 8px 8px 0 0; overflow: hidden;
+    background: var(--line);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+    border-radius: 0; overflow: hidden;
   }
   .js .section.collapsible:not(.open) .sec-metrics { display: none; }
   .section.collapsible .sec-metrics li {
@@ -1169,21 +1172,22 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible.open .sec-metrics li::before { transform: scaleX(0); }
 
   .js .section.collapsible .sec-body {
-    position: relative; overflow: hidden; margin: 0 3px;
+    position: relative; overflow: hidden; margin: 0;
     transition: height .42s var(--ease);
   }
   .js .section.collapsible.open .sec-body {
     padding: 16px 13px 18px;
     background: #12100d;
     border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line)); border-top: 0;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0;
     box-shadow: 0 26px 46px -22px rgba(0, 0, 0, .82);
     animation: fileDraw .5s var(--ease);
   }
-  /* experience has no metric strip to cap the file, so give the body its own top edge */
+  /* experience has no metric strip to cap the file: it takes its own top edge and
+     pulls up 1px so that edge sits on the folder front's border, not beside it */
   .js #experience.section.collapsible.open .sec-body {
+    margin-top: -1px;
     border-top: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
-    border-radius: 0 0 8px 8px;
   }
   /* an amber light sweeps down the file as it draws open */
   .js .section.collapsible.open .sec-body::after {
@@ -1209,7 +1213,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 44px;
     display: flex; align-items: center; justify-content: center;
     background: linear-gradient(180deg, #191512, #100e0c);
-    border: 1px solid var(--line); border-radius: 0 0 10px 10px;
+    border: 1px solid var(--line); border-radius: 0 0 8px 8px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
     font: 400 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
     color: var(--faint);
