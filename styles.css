@@ -1216,10 +1216,13 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* resting collapsed state is CSS-only, so a resize back to desktop always reveals */
   .js .section.collapsible:not(.open) .sec-body { height: 0; padding: 0; }
 
-  /* the drawer front, butting directly under the last folder to close the stack */
+  /* the drawer front, butting directly under the last folder to close the stack.
+     With files drawn out it becomes the control that files them all back in. */
   .drawer-front {
     position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 44px;
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    appearance: none; -webkit-appearance: none; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, #191512, #100e0c);
     border: 1px solid var(--line); border-radius: 0 0 8px 8px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
@@ -1227,6 +1230,24 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     color: var(--faint);
   }
   .drawer-front b { color: var(--accent); font-weight: 500; }
+  .drawer-front:disabled { cursor: default; }
+  /* the prompt only exists while there is something to file back */
+  .df-shut { display: none; color: var(--accent); }
+  .dossier:has(.section.collapsible.open) .drawer-front {
+    color: var(--muted);
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+  }
+  .dossier:has(.section.collapsible.open) .df-shut { display: inline; }
+  .df-shut .ar { color: var(--accent); margin-right: 5px; }
+  /* the front knocks shut once the last file has slid back in */
+  .drawer-front.shutting { animation: drawerShut .46s var(--ease); }
+  @keyframes drawerShut {
+    0%   { transform: translateY(0); }
+    40%  { transform: translateY(5px); box-shadow: 0 -12px 20px -16px rgba(0, 0, 0, .9); }
+    100% { transform: translateY(0); }
+  }
+  /* the closed stack is short, so landing on its top shows the whole drawer */
+  .dossier { scroll-margin-top: 78px; }
   /* the last file drawn out ends the stack, so the front becomes its own bar */
   #dossier-body:has(> .section.collapsible:last-child.open) + .drawer-front {
     margin-top: var(--tab-band); border-radius: 8px;
@@ -1332,6 +1353,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-body::after { animation: none; display: none; }
   .section.collapsible .sec-body > * { opacity: 1; transform: none; transition: none; }
   .section.collapsible .sec-metrics li { animation: none; }
+  .drawer-front.shutting { animation: none; }
   .section.collapsible .sec-metrics li span { opacity: 1; transition: none; }
   .section.collapsible .sec-metrics li::before { transition: none; transform: scaleX(0); }
   .section.collapsible .sec-head > :last-child::after { transition: none; }
