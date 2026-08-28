@@ -1039,7 +1039,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .ov-social { gap: 0 !important; }
   .case-links { gap: 0 22px; }
   .actions { gap: 0 24px; }
-  .ov-close { padding: 12px 0 12px 14px; margin-right: -14px; }
+  /* Close was pinned to the right edge, over the overlay's scroll gutter —
+     swap the row so it leads on the left and the scrollbar stays reachable */
+  .ov-top { flex-direction: row-reverse; }
+  .ov-close { padding: 12px 14px; margin-left: -14px; }
   .topbar .id { padding-block: 12px; }
   .window-bar { align-items: center; }
   .window-bar a { display: flex; align-items: center; padding-left: 14px; min-height: 42px; }
@@ -1083,10 +1086,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
      the box above with the tab sitting in the gap rather than overrunning it */
   .js .dossier-body { display: block; height: auto; padding-top: 24px; }
 
-  /* the folders butt into one continuous stack — adjacent 1px borders
-     overlap into a single shared rule, no gap between fronts */
+  /* each folder stands on its own: the gap above it is the index tab's band, so
+     the tab never lands on the file above */
   .dossier-body > .section.collapsible {
-    position: relative; margin: -1px 0 0; padding: 0;
+    position: relative; margin: 24px 0 0; padding: 0;
   }
   .dossier-body > .section.collapsible:first-child { margin-top: 0; }
   /* #experience carries an id-level padding-bottom off the base sheet — null it
@@ -1099,12 +1102,12 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     margin: 0; padding: 10px 13px 9px; min-height: 38px;
     cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, var(--kraft-hi), var(--kraft-lo));
-    border: 1px solid var(--line); border-radius: 0;
+    border: 1px solid var(--line); border-radius: 8px 8px 0 0;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
     transition: border-color .35s var(--ease), background .35s var(--ease), box-shadow .4s var(--ease);
   }
-  /* only the ends of the stack are rounded */
-  .dossier-body > .section.collapsible:first-child .sec-head { border-radius: 8px 8px 0 0; }
+  /* a closed folder is just its front, so it rounds on all four corners */
+  .js .section.collapsible:not(.open) .sec-head { border-radius: 8px; }
   .section.collapsible .sec-head::after { display: none; }
   /* the index tab riding above the front, one step further left each time */
   .section.collapsible .sec-head > :first-child {
@@ -1179,7 +1182,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     padding: 16px 13px 18px;
     background: #12100d;
     border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line)); border-top: 0;
-    border-radius: 0;
+    border-radius: 0 0 8px 8px;
     box-shadow: 0 26px 46px -22px rgba(0, 0, 0, .82);
     animation: fileDraw .5s var(--ease);
   }
@@ -1188,6 +1191,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .js #experience.section.collapsible.open .sec-body {
     margin-top: -1px;
     border-top: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+    border-radius: 0 0 8px 8px;
   }
   /* an amber light sweeps down the file as it draws open */
   .js .section.collapsible.open .sec-body::after {
@@ -1210,10 +1214,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* the drawer front, butting directly under the last folder to close the stack */
   .drawer-front {
-    position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 44px;
+    position: relative; width: calc(100% - 28px); margin: 24px auto 0; height: 44px;
     display: flex; align-items: center; justify-content: center;
     background: linear-gradient(180deg, #191512, #100e0c);
-    border: 1px solid var(--line); border-radius: 0 0 8px 8px;
+    border: 1px solid var(--line); border-radius: 8px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
     font: 400 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
     color: var(--faint);
