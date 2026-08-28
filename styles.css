@@ -662,10 +662,41 @@ h2 {
 .case-inner { padding: 0 6px 44px 262px; }
 .js .case-inner { opacity: 0; transition: opacity .3s ease; }
 .js .case.open > .case-inner { opacity: 1; }
-.case dl { margin: 0 0 22px; display: grid; gap: 16px; max-width: 78ch; }
-.case dl > div { display: grid; grid-template-columns: 132px 1fr; gap: 18px; }
-.case dt { color: var(--faint); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding-top: 3px; }
-.case dd { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+/* case detail: one section at a time behind bracket tabs — the panel used to
+   stack Situation / Built / Showed as three paragraphs, which nobody read */
+.case-tabs { display: none; }
+.js .case-tabs {
+  display: flex; flex-wrap: wrap; gap: 26px;
+  margin: 0 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--line);
+}
+.ct-tab {
+  position: relative; padding: 0; background: none; border: 0; cursor: pointer;
+  font: inherit; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--faint); transition: color .22s ease;
+}
+.ct-tab::before,
+.ct-tab::after { content: ""; opacity: 0; transition: opacity .22s ease; }
+.ct-tab::before { content: "[ "; }
+.ct-tab::after { content: " ]"; }
+.ct-tab:hover { color: var(--ink); }
+.ct-tab.on { color: var(--accent); }
+.ct-tab.on::before, .ct-tab.on::after { opacity: 1; }
+/* the seam under the active tab */
+.ct-tab.on { box-shadow: 0 13px 0 -12px var(--accent); }
+
+.ct-panels { margin: 0 0 22px; max-width: 74ch; }
+.ct-panel { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+/* stack every panel in one grid cell so the container is sized by the tallest
+   one — switching tabs then never reflows the case height */
+.js .ct-panels { display: grid; }
+.js .ct-panel {
+  grid-area: 1 / 1; opacity: 0; visibility: hidden; transform: translateY(6px);
+  transition: opacity .28s var(--ease), transform .28s var(--ease), visibility .28s;
+}
+.js .ct-panel.on { opacity: 1; visibility: visible; transform: none; }
+/* no-JS: panels stack and read as plain paragraphs */
+.ct-panel + .ct-panel { margin-top: 14px; }
+.js .ct-panel + .ct-panel { margin-top: 0; }
 .case-links { display: flex; flex-wrap: wrap; gap: 22px; font-size: 12px; }
 .case-links a { color: var(--accent); display: inline-flex; align-items: center; gap: 7px; }
 .case-links a:hover { text-decoration: underline; }
@@ -1459,6 +1490,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .js .row.reveal .outcome { opacity: 1; transform: none; transition: none; }
   .work-rail span, .row .node { transition: none; }
   .case, .case-inner, .row .chev { transition: none; }
+  .js .ct-panel { transition: none; transform: none; }
+  .ct-tab, .ct-tab::before, .ct-tab::after { transition: none; }
   .idlinks a:hover, .fcol a:hover, .ov-social a:hover,
   .actions a:hover, .actions button:hover,
   .idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,

@@ -147,16 +147,18 @@
     el.dataset.counted = '1';
     const target = Number(el.getAttribute('data-count-to')) || 0;
     const suffix = el.getAttribute('data-count-suffix') || '';
-    if (reduced) { el.textContent = target + suffix; return; }
+    const dp = Number(el.getAttribute('data-count-decimals')) || 0;
+    const fmt = (n) => n.toFixed(dp) + suffix;
+    if (reduced) { el.textContent = fmt(target); return; }
     const duration = 1100;
     const start = performance.now();
     let done = false;
-    const finish = () => { if (done) return; done = true; el.textContent = target + suffix; };
-    el.textContent = '0' + suffix;
+    const finish = () => { if (done) return; done = true; el.textContent = fmt(target); };
+    el.textContent = fmt(0);
     const step = (now) => {
       if (done) return;
       const p = Math.min(1, (now - start) / duration);
-      el.textContent = Math.round(target * easeOut(p)) + suffix;
+      el.textContent = fmt(target * easeOut(p));
       if (p < 1) requestAnimationFrame(step); else finish();
     };
     requestAnimationFrame(step);
@@ -212,6 +214,33 @@
         setCase(other, document.getElementById(other.getAttribute('aria-controls')), false);
       });
       setCase(btn, panel, willOpen);
+    });
+  });
+
+  /* ---------- case detail: Situation / Built / Showed tabs ----------
+     Panels are grid-stacked in CSS, so selecting one never changes the height
+     of the .case container the accordion above is animating. */
+  document.querySelectorAll('.case-tabs').forEach((list) => {
+    const tabs = [...list.querySelectorAll('.ct-tab')];
+    const select = (tab, focus) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.classList.toggle('on', on);
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        const p = document.getElementById(t.getAttribute('aria-controls'));
+        if (p) p.classList.toggle('on', on);
+      });
+      if (focus) tab.focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(tab));
+      tab.addEventListener('keydown', (e) => {
+        const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (step) { e.preventDefault(); select(tabs[(i + step + tabs.length) % tabs.length], true); }
+        else if (e.key === 'Home') { e.preventDefault(); select(tabs[0], true); }
+        else if (e.key === 'End') { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+      });
     });
   });
 
