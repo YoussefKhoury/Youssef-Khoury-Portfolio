@@ -146,10 +146,6 @@
 
   const openOverlay = () => {
     if (!overlay) return;
-    // reserve the width the page scrollbar leaves behind, so locking scroll
-    // doesn't reflow the layout (the jolt on menu open/close)
-    const sbw = window.innerWidth - document.documentElement.clientWidth;
-    if (sbw > 0) document.documentElement.style.setProperty('--sbw', sbw + 'px');
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
     indexBtn?.setAttribute('aria-expanded', 'true');
@@ -164,7 +160,6 @@
     overlay.setAttribute('aria-hidden', 'true');
     indexBtn?.setAttribute('aria-expanded', 'false');
     document.documentElement.classList.remove('menu-open');
-    document.documentElement.style.removeProperty('--sbw');
     if (indexBtnLabel) indexBtnLabel.textContent = 'Menu';
     indexBtn?.focus();
   };
