@@ -355,9 +355,9 @@ h1 .tp-ch {
    is fixed; it only shrinks on narrower viewports. */
 .idcard {
   position: relative;
-  width: 37em;
-  margin-top: 34px;
-  font-size: clamp(8.4px, 0.46vw + 8px, 13px);
+  width: 30.5em;
+  margin-top: 30px;
+  font-size: clamp(7.6px, 0.34vw + 7px, 11.4px);
 }
 .casecard {
   position: relative; width: 100%; overflow: hidden;
@@ -417,7 +417,7 @@ h1 .tp-ch {
 
 /* portrait — ~58% of the card height */
 .dsr-photo {
-  position: relative; height: 34em; overflow: hidden; background: var(--surface-2);
+  position: relative; height: 23em; overflow: hidden; background: var(--surface-2);
 }
 .dsr-photo::before {
   content: ""; position: absolute; inset: 0; z-index: 1;
@@ -438,7 +438,7 @@ h1 .tp-ch {
 
 /* the angled seam between portrait and information panel */
 .dsr-seam {
-  position: absolute; z-index: 5; left: 0; top: 34em; width: 102%; height: 0;
+  position: absolute; z-index: 5; left: 0; top: 23em; width: 102%; height: 0;
   border-top: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
   transform: rotate(-5deg); transform-origin: left center; pointer-events: none;
 }
@@ -446,20 +446,20 @@ h1 .tp-ch {
 /* information panel — diagonal top edge picks up the seam */
 .dsr-body {
   position: relative; z-index: 2;
-  margin-top: -3.2em; padding: 3.5em 2em 1.6em;
-  clip-path: polygon(0 3.2em, 100% 0, 100% 100%, 0 100%);
+  margin-top: -2.6em; padding: 2.7em 1.9em 1.4em;
+  clip-path: polygon(0 2.6em, 100% 0, 100% 100%, 0 100%);
   background: linear-gradient(180deg, var(--surface), var(--surface-2));
 }
 .dsr-name {
-  font-family: var(--display); font-weight: 800; font-size: 2.85em; line-height: 0.96;
+  font-family: var(--display); font-weight: 800; font-size: 2.4em; line-height: 0.97;
   letter-spacing: 0.004em; text-transform: uppercase; color: var(--ink);
   margin: 0; max-width: 8.5em; text-wrap: balance;
 }
-.dsr-role  { color: var(--accent); font-size: 0.82em; letter-spacing: 0.15em; text-transform: uppercase; margin: 0.95em 0 0; }
-.dsr-role2 { color: var(--ink); font-size: 0.82em; letter-spacing: 0.3em; text-transform: uppercase; margin: 0.4em 0 0; opacity: .92; }
+.dsr-role  { color: var(--accent); font-size: 0.8em; letter-spacing: 0.15em; text-transform: uppercase; margin: 0.85em 0 0; }
+.dsr-role2 { color: var(--ink); font-size: 0.8em; letter-spacing: 0.3em; text-transform: uppercase; margin: 0.35em 0 0; opacity: .92; }
 
 .dsr-rule {
-  display: block; position: relative; height: 1px; margin: 1.5em 0 1.4em;
+  display: block; position: relative; height: 1px; margin: 1.05em 0 1em;
   background: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 .dsr-rule::before {
@@ -467,7 +467,7 @@ h1 .tp-ch {
 }
 
 /* metadata — generous row spacing */
-.dsr-meta { display: grid; gap: 1.45em; margin: 0.3em 0 0; }
+.dsr-meta { display: grid; gap: 0.95em; margin: 0.2em 0 0; }
 .dsr-meta > div {
   display: flex; align-items: center; gap: 0.9em;
   font-size: 0.82em; letter-spacing: 0.13em; text-transform: uppercase;
@@ -480,7 +480,7 @@ h1 .tp-ch {
 
 /* footer links — icon + label + arrow, evenly split */
 .dsr-links {
-  display: flex; align-items: stretch; margin: 1.6em 0 0; padding: 1.15em 0 0;
+  display: flex; align-items: stretch; margin: 1.15em 0 0; padding: 0.95em 0 0;
   border-top: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
 }
 .dsr-links a {
