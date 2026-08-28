@@ -333,13 +333,13 @@ h1 .tp-ch {
 
 /* larger arrow glyph; alignment (the hover-slide lives after the component rules below).
    line-height 1 clips the ↗ head on some faces, so give the glyph its own room. */
-.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions .ar {
+.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions .ar, .case-links a .ar {
   font-size: 15px; line-height: 1.25; align-self: center; overflow: visible;
 }
 .idlinks a, .fcol a, .ov-social a { align-items: center; }
 .actions a, .actions button { display: inline-flex; align-items: center; gap: 7px; }
 /* arrow trails the label, so every link's text starts at the same left edge */
-.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions a .ar, .actions button .ar {
+.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions a .ar, .actions button .ar, .case-links a .ar {
   order: 9; margin: 0;
 }
 
@@ -698,7 +698,7 @@ h2 {
 .ct-panel + .ct-panel { margin-top: 14px; }
 .js .ct-panel + .ct-panel { margin-top: 0; }
 .case-links { display: flex; flex-wrap: wrap; gap: 22px; font-size: 12px; }
-.case-links a { color: var(--accent); display: inline-flex; align-items: center; gap: 7px; }
+.case-links a { color: var(--accent); display: inline-flex; align-items: center; gap: 7px; border-bottom: 1px solid transparent; padding-bottom: 2px; }
 .row .chev {
   display: inline-block; width: 1em; text-align: center;
   font-size: 16px; line-height: 1; color: var(--accent);
@@ -1008,6 +1008,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 .idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions .ar, .case-links a .ar { transition: transform .28s var(--ease); }
 .idlinks a:hover, .fcol a:hover, .ov-social a:hover,
 .actions a:hover, .actions button:hover, .case-links a:hover { transform: translateX(5px); color: var(--accent); }
+.case-links a:hover { border-color: var(--accent); }
 .idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,
 .actions a:hover .ar, .actions button:hover .ar, .case-links a:hover .ar { transform: translateX(4px); }
 

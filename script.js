@@ -53,12 +53,15 @@
       const span = Math.max(1, lastCenter - firstCenter);
       const p = Math.min(1, Math.max(0, (focusY - firstCenter) / span));
       workRail.style.height = (p * 100) + '%';
-      // light a row's node once the rail fill has physically reached it
-      const railBox = workRail.parentElement.getBoundingClientRect();
-      const filled = railBox.top + railBox.height * p;
+      // light a row's node once the fill fraction reaches that row's own
+      // position on the same first/last-center scale used for p, so the
+      // last dot lights exactly when p hits 1 regardless of the rail
+      // track's actual on-screen geometry
       workRows.forEach((row) => {
         const rr = row.getBoundingClientRect();
-        row.classList.toggle('rail-lit', rr.top + rr.height / 2 <= filled + 1);
+        const rowCenter = rr.top + rr.height / 2;
+        const rowFrac = (rowCenter - firstCenter) / span;
+        row.classList.toggle('rail-lit', p >= rowFrac - 0.01);
       });
     }
     if (workRows.length) {
