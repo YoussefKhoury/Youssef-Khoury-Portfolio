@@ -379,18 +379,22 @@ h1 .tp-ch {
   box-shadow: 0 1.6em 3.6em rgba(0, 0, 0, .3);
 }
 
-/* one L-bracket only: a registration mark low on the portrait's left side */
+/* one L-bracket only: a registration mark mirroring the photo's top-right
+   corner mark (.dsr-photo::after) — same 1em inset, opposite corner, so the
+   two read as a facing pair across the photo's diagonal */
 .dsr-frame { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
 .dsr-frame::before {
   content: ""; position: absolute; width: 1.15em; height: 1.15em;
   border: 0 solid var(--accent); opacity: .7;
-  left: 1.75em; top: calc(var(--seam) - 4.5em);
+  left: 1em; top: calc(var(--photo-h) - 2.15em);
   border-left-width: 1px; border-bottom-width: 1px;
 }
 
-/* folder tab — a closed tab sealed onto the card's top edge */
+/* folder tab — sealed flush onto the card's top edge: the tab's bottom sits
+   exactly on the card's top border (no overlap, no gap), so the two borders
+   meet in one clean line instead of a stray corner past the seam */
 .dsr-tab {
-  position: absolute; top: -2.7em; left: 0.7em; z-index: 5;
+  position: absolute; top: -2.95em; left: 0.7em; z-index: 5;
   display: flex; align-items: center; gap: 0.7em;
   height: 2.95em; padding: 0 1.5em 0 1.35em;
   background: var(--surface);
@@ -437,8 +441,10 @@ h1 .tp-ch {
     radial-gradient(82% 66% at 50% 50%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 80%);
 }
 .dsr-photo img {
+  /* anchored to the bottom, so shrinking the width is what opens headroom at
+     the top — at 65% the hair was clipped flush against the card's border */
   position: absolute; z-index: 1; bottom: 0; left: 50%;
-  width: 65%; height: auto; transform: translateX(-50%);
+  width: 62%; height: auto; transform: translateX(-50%);
   object-fit: contain; object-position: 50% 100%;
   filter: grayscale(1) contrast(1.06) brightness(.97);
   pointer-events: none; user-select: none; -webkit-user-drag: none;
