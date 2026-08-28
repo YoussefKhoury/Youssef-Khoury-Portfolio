@@ -277,23 +277,35 @@
   drawerFront?.addEventListener('click', () => {
     const open = collSecs.filter((s) => s.classList.contains('open')).reverse();
     if (!open.length) return;
-    const step = reduced ? 0 : 110;
-    open.forEach((sec, i) => {
-      if (step) setTimeout(() => setSection(sec, false), i * step);
-      else setSection(sec, false);
-    });
-    const settled = (open.length - 1) * step + (reduced ? 0 : 300);
-    setTimeout(() => {
-      if (!reduced) {
+
+    const fileAway = () => {
+      const step = reduced ? 0 : 110;
+      open.forEach((sec, i) => {
+        if (step) setTimeout(() => setSection(sec, false), i * step);
+        else setSection(sec, false);
+      });
+      if (reduced) return;
+      setTimeout(() => {
         drawerFront.classList.add('shutting');
         drawerFront.addEventListener('animationend', () => drawerFront.classList.remove('shutting'), { once: true });
-      }
-      // the stack just lost most of its height, so bring the closed drawer back
-      // under the visitor rather than leaving them wherever the reflow landed
-      document.getElementById('dossier')?.scrollIntoView({
-        behavior: reduced ? 'auto' : 'smooth', block: 'start',
-      });
-    }, settled);
+      }, (open.length - 1) * step + 300);
+    };
+
+    /* Closing shortens the page under the viewport's feet, and part of that
+       loss isn't animated (the metric strip and the file's padding go at once),
+       so from further down the stack it reads as a twitch. Ride up to the top
+       of the drawer first: everything that collapses is then below the viewport
+       top, the scroll position stays put, and the files shut in plain view. */
+    const dossier = document.getElementById('dossier');
+    if (reduced || !dossier || dossier.getBoundingClientRect().top >= -2) {
+      fileAway();
+      return;
+    }
+    dossier.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    let started = false;
+    const go = () => { if (!started) { started = true; fileAway(); } };
+    window.addEventListener('scrollend', go, { once: true });
+    setTimeout(go, 620);
   });
 
   collSecs.forEach((sec) => {
