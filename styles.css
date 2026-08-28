@@ -247,7 +247,7 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- one-time hero boot sequence (~950ms, once per session) ---------- */
 html.booting .frame { animation: bootFrame .32s var(--ease) both; }
-html.booting .avatar > img { animation: bootWipe .4s var(--ease) .16s both; }
+html.booting .dsr-photo > img { animation: bootWipe .4s var(--ease) .16s both; }
 html.booting .hero .reveal { transition: none; }
 html.booting .hero-copy > * { animation: bootIn .34s var(--ease) both; }
 html.booting .hero-copy > :nth-child(1) { animation-delay: .42s; }
@@ -255,7 +255,7 @@ html.booting .hero-copy > :nth-child(2) { animation-delay: .50s; }
 html.booting .hero-copy > :nth-child(3) { animation-delay: .58s; }
 html.booting .hero-copy > :nth-child(4) { animation-delay: .66s; }
 html.booting .hero-copy > :nth-child(5) { animation-delay: .74s; }
-html.booting .idcard > :not(.casefile) { animation: bootIn .34s var(--ease) .5s both; }
+html.booting .idcard .dsr-body { animation: bootIn .34s var(--ease) .5s both; }
 
 @keyframes bootFrame { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes bootWipe {
@@ -282,7 +282,7 @@ html.booting .idcard > :not(.casefile) { animation: bootIn .34s var(--ease) .5s 
 }
 .hero-grid {
   position: relative; z-index: 1;
-  display: grid; grid-template-columns: 240px 1fr; gap: 64px; align-items: start;
+  display: grid; grid-template-columns: 300px 1fr; gap: 52px; align-items: start;
   padding-top: calc(54px + clamp(40px, 6vw, 66px)); padding-bottom: clamp(52px, 9vw, 88px);
 }
 .eyebrow { color: var(--faint); margin: 0 0 20px; }
@@ -351,42 +351,125 @@ h1 .tp-ch {
 .method span.mono { font-size: 11px; color: var(--accent); letter-spacing: 0.16em; }
 .method p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.55; }
 
-/* ---------- hero ID card ---------- */
-.idcard { display: flex; flex-direction: column; gap: 12px; margin-top: 46px; }
-/* portrait labelled like a case file — plain photo, no frame or borders */
-.casefile { align-self: flex-start; width: 168px; }
-.filetab {
-  display: block; width: fit-content; margin: 0 0 9px 2px;
-  font-size: 8.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--faint);
+/* ---------- hero dossier card ---------- */
+.idcard { margin-top: 40px; }
+.dossier {
+  position: relative;
+  padding: 15px 15px 13px;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 12px;
 }
-.filetab b { color: var(--accent); font-weight: 500; margin: 0 3px; }
+/* four L-brackets sitting just outside the panel edge */
+.dsr-frame { position: absolute; inset: 0; pointer-events: none; }
+.dsr-frame::before, .dsr-frame::after,
+.dossier::before, .dossier::after {
+  content: ""; position: absolute; width: 12px; height: 12px;
+  border: 1px solid var(--accent); opacity: .85;
+}
+.dsr-frame::before { top: -5px; left: -5px; border-right: 0; border-bottom: 0; }
+.dsr-frame::after { top: -5px; right: -5px; border-left: 0; border-bottom: 0; }
+.dossier::before { bottom: -5px; left: -5px; border-right: 0; border-top: 0; }
+.dossier::after { bottom: -5px; right: -5px; border-left: 0; border-top: 0; }
 
-.avatar {
-  position: relative; width: 168px; aspect-ratio: 4 / 5; overflow: hidden;
-  background: var(--surface-2);
+/* folder tab */
+.dsr-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 0 11px; margin: 1px 0 0;
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+  border-bottom: 1px solid var(--line);
 }
-.avatar img {
+.dsr-tab b { color: var(--faint); font-weight: 500; margin: 0 2px; }
+.dsr-tab svg { flex: none; color: var(--accent); }
+
+/* vertical caption up the right edge */
+.dsr-side {
+  position: absolute; top: 46px; right: 7px;
+  writing-mode: vertical-rl; text-orientation: mixed;
+  font-size: 7.5px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--faint);
+}
+.dsr-side::before { content: "\2022"; display: block; margin-bottom: 7px; color: var(--accent); }
+.dsr-side::after {
+  content: ""; display: block; margin-top: 8px; width: 1px; height: 24px;
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* decorative dot matrices */
+.dsr-dots {
+  position: absolute; pointer-events: none;
+  background-image: radial-gradient(color-mix(in srgb, var(--accent) 38%, transparent) 1px, transparent 1.5px);
+  background-size: 10px 10px;
+}
+.dsr-dots-a { top: 62px; left: 13px; width: 44px; height: 80px; opacity: .5; }
+.dsr-dots-b { right: 20px; bottom: 118px; width: 38px; height: 56px; opacity: .32; }
+
+/* portrait */
+.dsr-photo {
+  position: relative; margin: 13px 0 0; aspect-ratio: 4 / 5; overflow: hidden;
+  border-radius: 4px; background: var(--surface-2);
+}
+.dsr-photo::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: radial-gradient(68% 52% at 50% 80%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+}
+.dsr-photo img {
   position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 0;
   transform: scale(1.32); transform-origin: 50% 8%;
-  filter: grayscale(1) contrast(1.06) brightness(.96) sepia(.14);
+  filter: grayscale(1) contrast(1.06) brightness(.98) sepia(.12);
   pointer-events: none; user-select: none; -webkit-user-drag: none;
 }
-/* subtle top-down tonal cast so the portrait reads with depth (no border) */
-.avatar::after {
-  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 42%),
-    radial-gradient(128% 96% at 50% 16%, transparent 58%, rgba(9, 7, 5, .40));
+.dsr-photo::after {
+  content: ""; position: absolute; z-index: 2; left: 7px; bottom: 7px;
+  width: 11px; height: 11px;
+  border-left: 1px solid var(--accent); border-bottom: 1px solid var(--accent); opacity: .8;
 }
 
-.idname { font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: -0.01em; margin: 6px 0 0; }
-.idrole { color: var(--accent); font-size: 11px; margin: 0; line-height: 1.5; }
-.idlinks { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 0; }
-.idlinks a { display: flex; gap: 7px; color: var(--muted); font-size: 11px; letter-spacing: 0.06em; transition: color .2s ease; }
-.idlinks a .ar { color: var(--accent); }
-.idlinks a:hover { color: var(--ink); }
-.idgeo { color: var(--faint); font-size: 11px; line-height: 1.7; margin: 14px 0 0; }
+/* identity block */
+.dsr-body { position: relative; }
+.dsr-name {
+  font-family: var(--display); font-weight: 700; font-size: 18px;
+  letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink);
+  margin: 14px 0 0; text-wrap: balance;
+}
+.dsr-role { color: var(--accent); font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase; margin: 7px 0 0; }
+.dsr-role2 { color: var(--muted); font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; margin: 3px 0 0; }
+
+.dsr-rule {
+  display: block; position: relative; height: 1px; margin: 12px 0 11px;
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.dsr-rule::before {
+  content: ""; position: absolute; left: 0; top: -1px; width: 42px; height: 3px; background: var(--accent);
+}
+
+/* metadata table */
+.dsr-meta { display: grid; gap: 8px; margin: 0; }
+.dsr-meta > div {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 9.5px; letter-spacing: 0.11em; text-transform: uppercase;
+}
+.dsr-ic { flex: none; color: var(--accent); font-size: 10px; line-height: 1; }
+.dsr-meta dt { flex: none; color: var(--muted); margin: 0; }
+.dsr-led { flex: 1; height: 0; border-bottom: 1px dotted color-mix(in srgb, var(--accent) 40%, transparent); }
+.dsr-meta dd { flex: none; color: var(--ink); margin: 0; }
+.dsr-meta dd.ok { color: var(--accent); }
+
+/* footer links */
+.dsr-links {
+  display: flex; align-items: stretch; margin: 13px 0 0; padding: 10px 0 0;
+  border-top: 1px solid var(--line);
+}
+.dsr-links a {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 8.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+  transition: color .2s ease;
+}
+.dsr-links a + a { border-left: 1px solid var(--line); }
+.dsr-links a:hover { color: var(--ink); }
+.dsr-links svg { flex: none; color: var(--faint); transition: color .2s ease; }
+.dsr-links a:hover svg { color: var(--accent); }
+.dsr-links .ar { color: var(--accent); font-size: 11px; }
 
 /* ---------- skills marquee ---------- */
 .skillstrip {
@@ -853,18 +936,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
 @media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr; gap: 30px; }
-  .idcard {
-    order: -1; margin-top: 0; flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 8px 20px;
-  }
-  .idcard .casefile, .idcard .avatar { width: 120px; }
-  /* no case-file frame outside the desktop layout — plain portrait */
-  .idcard .avatar { border: 0; background: none; box-shadow: none; }
-  .idcard .avatar::before, .idcard .avatar::after { display: none; }
-  .idcard .avatar .pc { display: none; }
-  .idcard .idname { width: 100%; margin-top: 12px; }
-  .idcard .idrole { width: 100%; margin-bottom: 4px; }
-  .idcard .idlinks { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
-  .idcard .idgeo { width: 100%; }
+  .idcard { order: -1; margin-top: 0; display: flex; justify-content: center; }
+  .dossier { width: 100%; max-width: 340px; }
   h1 { max-width: 20ch; }
   .flag-grid { grid-template-columns: 1fr; }
   .flag-copy .actions { flex-direction: row; flex-wrap: wrap; }
@@ -882,8 +955,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .idlinks a, .ov-social a, .case-links a, .fcol a, .actions a, .actions button {
     padding-block: 11px;
   }
+  .dsr-links a { padding-block: 12px; }
   .idlinks { gap: 0; margin-top: 0; }
-  .idcard .idlinks { gap: 0 16px; }
   .ov-social { gap: 0 !important; }
   .case-links { gap: 0 22px; }
   .actions { gap: 0 24px; }
@@ -1098,18 +1171,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .hero-copy { text-align: center; }
   .hero-copy .actions { justify-content: center; }
   .method { display: none; }
-  .idcard { flex-direction: column; align-items: center; text-align: center; }
-  /* no frame on the phone — the portrait just fades into the page */
-  .idcard .avatar {
-    width: 150px; border: 0; background: none; box-shadow: none;
-    -webkit-mask-image: radial-gradient(130% 108% at 50% 32%, #000 46%, transparent 100%);
-            mask-image: radial-gradient(130% 108% at 50% 32%, #000 46%, transparent 100%);
-  }
-  .idcard .avatar .pc { display: none; }
-  .idcard .casefile { align-self: center; width: 150px; }
-  .idcard .filetab { display: none; }
-  .idcard .avatar img { filter: grayscale(1) contrast(1.03) brightness(.92); }
-  .idcard .idlinks { justify-content: center; }
+  .dossier { max-width: 320px; }
+  .dsr-side { display: none; }
+  .dsr-dots-b { display: none; }
 
   .case-item { max-width: none; }
   #work { --case-rise: 26px; --case-tilt: 0deg; }
@@ -1194,9 +1258,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,
   .actions a:hover .ar, .actions button:hover .ar { transform: none; }
   html.booting .frame,
-  html.booting .avatar > img,
+  html.booting .dsr-photo > img,
   html.booting .hero-copy > *,
-  html.booting .idcard > :not(.casefile) { animation: none !important; }
+  html.booting .idcard .dsr-body { animation: none !important; }
   .scroll-progress { box-shadow: none; }
   .overlay { transition: opacity .12s ease, visibility .12s; clip-path: none; }
   .overlay .ov-nav a { transition: color .2s ease; }
