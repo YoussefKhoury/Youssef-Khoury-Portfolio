@@ -444,7 +444,7 @@ h1 .tp-ch {
   /* anchored to the bottom, so shrinking the width is what opens headroom at
      the top — at 65% the hair was clipped flush against the card's border */
   position: absolute; z-index: 1; bottom: 0; left: 50%;
-  width: 62%; height: auto; transform: translateX(-50%);
+  width: 58%; height: auto; transform: translateX(-50%);
   object-fit: contain; object-position: 50% 100%;
   filter: grayscale(1) contrast(1.06) brightness(.97);
   pointer-events: none; user-select: none; -webkit-user-drag: none;
@@ -1142,6 +1142,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     /* no bottom padding: the next section's own padding-top already matches the
        --tab-band headroom above the stack, so the drawer sits evenly spaced */
     padding: 0;
+    /* "File all back" measures this stack's collapsed height by toggling it
+       shut and open again in one synchronous pass, then corrects scrollY —
+       scroll anchoring reacting to that pass would fight the correction */
+    overflow-anchor: none;
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #191512; --kraft-lo: #100e0c;
     /* clear space an index tab (22.8px) drops into, plus room to breathe */
