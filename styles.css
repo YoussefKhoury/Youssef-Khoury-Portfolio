@@ -1145,12 +1145,15 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     /* scroll anchoring stays ON here: with it suppressed the browser had to
        anchor to #contact below the drawer, so opening a folder while another
        was open above scrolled the viewport down by the new folder's height.
-       Letting nodes inside the drawer anchor keeps the tapped head put. */
+       Letting nodes inside the drawer anchor keeps the tapped head put.
+       "File all back" adds .filing for the length of the fold: while the
+       stack is shrinking, anchoring would instead chase the viewport down. */
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #191512; --kraft-lo: #100e0c;
     /* clear space an index tab (22.8px) drops into, plus room to breathe */
     --tab-band: 44px;
   }
+  .dossier.filing { overflow-anchor: none; }
   .dossier + .section { padding-top: 34px; }
   /* the drawer hangs off the box above it, so that box drops its bottom padding */
   .section:has(+ .dossier) { padding-bottom: 0; }

@@ -314,17 +314,23 @@
     if (!open.length) return;
     const step = reduced ? 0 : 110;
 
-    /* Stay put: the visitor wants to watch the folders fold shut from wherever
-       they are, not be scrolled anywhere. No scroll handling here on purpose —
-       if they're near the top (the normal case) nothing moves; if they were
-       scrolled deep the rising page floor carries them up, which is the browser
-       doing the least it can and still better than a scripted jump. */
+    /* Stay put while they fold shut. Scroll anchoring (kept on so opening a
+       second folder doesn't jump) would, as the page shrinks, chase a node
+       below the collapse and ride the viewport down to the footer — the bug.
+       Suppress anchoring on the drawer for the duration of the fold, then
+       hand it back. No scripted scroll: near the top nothing moves; scrolled
+       deep, the rising floor carries the viewport up, which is fine. */
+    const dossier = drawerFront.closest('.dossier');
+    dossier?.classList.add('filing');
+    const foldMs = (open.length - 1) * step + 700;
+    setTimeout(() => dossier?.classList.remove('filing'), foldMs);
+
     open.forEach((sec, i) => {
       if (step) setTimeout(() => setSection(sec, false), i * step);
       else setSection(sec, false);
     });
 
-    if (reduced) return;
+    if (reduced) { dossier?.classList.remove('filing'); return; }
     setTimeout(() => {
       drawerFront.classList.add('shutting');
       drawerFront.addEventListener('animationend', () => drawerFront.classList.remove('shutting'), { once: true });
