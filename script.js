@@ -399,7 +399,7 @@
           // normalise per axis so the clearing hugs the hero's own shape
           const ux = (x - cx) / cx, uy = (y - cy) / cy;
           const nd = Math.min(1, Math.hypot(ux, uy) / 1.414);
-          let edge = (nd - 0.30) / 0.70;          // dots reach a little further in now
+          let edge = (nd - 0.24) / 0.76;          // dots reach a little further in now
           if (edge <= 0.02) continue;
           edge = edge < 1 ? edge * edge * (3 - 2 * edge) : 1;
 
