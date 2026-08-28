@@ -217,16 +217,6 @@
     });
   });
 
-  /* the flagship case starts open on wide screens: the ledger stays scannable
-     and the section still shows one case in full without a click */
-  const flagship = document.querySelector('.case-item.flagship .row[aria-controls]');
-  const flagPanel = flagship && document.getElementById(flagship.getAttribute('aria-controls'));
-  if (flagPanel && matchMedia('(min-width: 900px)').matches) {
-    flagship.setAttribute('aria-expanded', 'true');
-    flagPanel.classList.add('open');
-    flagPanel.style.height = 'auto';
-  }
-
   /* ---------- case detail: Situation / Built / Showed tabs ----------
      Panels are grid-stacked in CSS, so selecting one never changes the height
      of the .case container the accordion above is animating. */
