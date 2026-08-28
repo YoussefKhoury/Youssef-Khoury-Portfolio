@@ -397,12 +397,19 @@
       for (let y = STEP * 0.5; y < fh; y += STEP) {
         for (let x = STEP * 0.5; x < fw; x += STEP) {
           // normalise per axis so the clearing hugs the hero's own shape
-          // on a phone the hero is tall + narrow, so the round clear-centre
-          // collapses to two thin side strips; flatten it vertically and let the
-          // dots run almost edge to edge left-right
-          const ux = (x - cx) / cx, uy = (y - cy) / cy * (fNarrow ? 0.32 : 1);
-          const nd = Math.min(1, Math.hypot(ux, uy) / 1.414);
-          let edge = (nd - (fNarrow ? 0.02 : 0.24)) / (fNarrow ? 0.98 : 0.76);
+          // clear the centre so the headline/photo/buttons stay readable.
+          // on a phone the hero is tall + narrow, so a round vignette shrinks to
+          // two thin side strips — drive it mostly off the horizontal axis
+          // instead, so dots run full-strength right out to both edges even as
+          // the wave pushes them around.
+          const ux = (x - cx) / cx, uy = (y - cy) / cy;
+          let edge;
+          if (fNarrow) {
+            edge = Math.max((Math.abs(ux) - 0.02) / 0.72, (Math.abs(uy) - 0.34) / 0.66);
+          } else {
+            const nd = Math.min(1, Math.hypot(ux, uy) / 1.414);
+            edge = (nd - 0.24) / 0.76;
+          }
           if (edge <= 0.02) continue;
           edge = edge < 1 ? edge * edge * (3 - 2 * edge) : 1;
 
