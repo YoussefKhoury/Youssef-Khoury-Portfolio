@@ -1142,10 +1142,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     /* no bottom padding: the next section's own padding-top already matches the
        --tab-band headroom above the stack, so the drawer sits evenly spaced */
     padding: 0;
-    /* "File all back" measures this stack's collapsed height by toggling it
-       shut and open again in one synchronous pass, then corrects scrollY —
-       scroll anchoring reacting to that pass would fight the correction */
-    overflow-anchor: none;
+    /* scroll anchoring stays ON here: with it suppressed the browser had to
+       anchor to #contact below the drawer, so opening a folder while another
+       was open above scrolled the viewport down by the new folder's height.
+       Letting nodes inside the drawer anchor keeps the tapped head put. */
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #191512; --kraft-lo: #100e0c;
     /* clear space an index tab (22.8px) drops into, plus room to breathe */
