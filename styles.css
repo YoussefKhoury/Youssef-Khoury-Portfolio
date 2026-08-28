@@ -1027,8 +1027,12 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   color: var(--faint); font-size: 11px; letter-spacing: 0.12em;
   padding-top: 20px; border-top: 1px solid var(--line);
 }
-.stamp .fmark { display: inline-flex; color: var(--accent); opacity: .85; }
-.stamp .fmark svg { width: 12px; height: 12px; }
+.stamp .fmark {
+  width: 10px; height: 10px;
+  background: var(--accent); opacity: .85;
+  -webkit-mask: url("assets/logo-x.png") center / contain no-repeat;
+  mask: url("assets/logo-x.png") center / contain no-repeat;
+}
 
 /* ---------- toast ---------- */
 .toast {
