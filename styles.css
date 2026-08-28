@@ -881,6 +881,8 @@ h2 {
   display: grid; grid-template-columns: 190px 1fr; gap: 26px;
   padding: 22px 0; border-bottom: 1px solid var(--line);
 }
+/* the last row's rule has nothing under it but the section's own edge */
+.xrow:last-child { border-bottom: 0; }
 .xr-when time { display: block; color: var(--muted); font-size: 11px; margin-bottom: 10px; }
 .xr-when .bar { display: block; height: 3px; background: var(--line); position: relative; }
 .xr-when .bar::after {
