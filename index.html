@@ -21,8 +21,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&family=Roboto+Flex:wdth,wght@60..150,100..900&display=swap" />
-    <link rel="stylesheet" href="styles.css?v=20260829q" />
-    <script src="script.js?v=20260829q" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260829r" />
+    <script src="script.js?v=20260829r" defer></script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"Person","name":"Youssef Khoury","jobTitle":"Data, Business and Operations Analyst","email":"mailto:youssefkhoury01@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"Matn University College"},"sameAs":["https://github.com/YoussefKhoury","https://www.linkedin.com/in/youssefkhoury/"]}
     </script>
@@ -398,7 +398,7 @@
                   <div class="sk-chart"></div>
                   <div class="sk-split"><span></span><span></span></div>
                 </div>
-                <iframe data-src="dashboard/?theme=dark&v=3" title="Interactive Order-to-Delivery Control Tower dashboard" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe data-src="dashboard/?theme=dark&v=4" title="Interactive Order-to-Delivery Control Tower dashboard" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 <button class="dash-gate" type="button" aria-label="Load and view the live Order-to-Delivery Control Tower dashboard">
                   <span class="play" aria-hidden="true">
                     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
@@ -530,26 +530,12 @@
             </div>
 
             <figure class="contact-fig reveal">
-              <figcaption class="cf-label mono">Question &rarr; measure &rarr; answer</figcaption>
-              <div class="tr-step">
-                <span class="tr-k mono">Asked</span>
-                <p class="tr-q">&ldquo;How much of the order book is sitting behind a late delivery right now?&rdquo;</p>
-              </div>
-              <div class="tr-step">
-                <span class="tr-k mono">Wrote</span>
-                <pre class="tr-code mono"><code><b>At-Risk Order Value</b> =
+              <figcaption class="cf-label mono">From the Control Tower model</figcaption>
+              <pre class="tr-code mono"><code><b>At-Risk Order Value</b> =
 CALCULATE(
     [Total Order Value],
     FactOrder[DelayDays] &gt; 0
 )</code></pre>
-              </div>
-              <div class="tr-step">
-                <span class="tr-k mono">Returned</span>
-                <p class="tr-a">One governed figure on the weekly view &mdash; drillable to the order rows and
-                  the supplier behind them.</p>
-              </div>
-              <p class="cf-note">A live measure from the Order-to-Delivery Control Tower model. Turning the
-                question someone actually asks into a number that survives being audited is most of the work.</p>
             </figure>
           </div>
         </div>
