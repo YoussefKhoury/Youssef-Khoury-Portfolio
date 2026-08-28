@@ -250,14 +250,10 @@
         if (matchMedia('(max-width: 720px)').matches) {
           // on a phone the panel opens below the fold — bring its head back up
           btn.scrollIntoView({ block: 'start', behavior: 'smooth' });
-        } else {
-          // decorative only — the rail already snapped to this row above,
-          // this just brings it up to the focus line to read comfortably
-          const rowRect = btn.getBoundingClientRect();
-          const rowCenter = rowRect.top + rowRect.height / 2;
-          const focusY = window.innerHeight * 0.5;
-          window.scrollBy({ top: rowCenter - focusY, behavior: 'smooth' });
         }
+        // desktop: no auto-scroll here — it fired scroll events mid-animation
+        // that made onScroll() re-fight the rail fill syncRailTo already set,
+        // producing a visible twitch under the dot
       };
       panel.addEventListener('transitionend', done);
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) done();
