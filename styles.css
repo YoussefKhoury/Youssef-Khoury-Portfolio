@@ -605,7 +605,7 @@ h2 {
   max-width: 70ch; margin: 14px 0 6px;
 }
 
-.case-item { position: relative; max-width: 1000px; border-bottom: 1px solid var(--line); }
+.case-item { position: relative; max-width: 1080px; border-bottom: 1px solid var(--line); }
 
 /* scroll-scrubbed entrance: each case tilts up out of depth and settles as it
    scrolls into view. Native scroll-timeline only — GPU-composited, no JS. Browsers
@@ -635,12 +635,11 @@ h2 {
   text-transform: uppercase; color: var(--accent);
 }
 .case-item.flagship .row { padding-top: 60px; }
-.row .result {
-  margin: 14px 0 0; font-size: 12px; line-height: 1.6;
-  letter-spacing: 0.02em; color: var(--muted); max-width: 62ch;
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+.result {
+  margin: 0 0 20px; font-size: 12px; line-height: 1.6;
+  letter-spacing: 0.02em; color: var(--muted); max-width: 74ch;
 }
-.row .result b { color: var(--accent); font-weight: 600; }
+.result b { color: var(--accent); font-weight: 600; }
 
 .row {
   position: relative; width: 100%;
@@ -733,9 +732,8 @@ h2 {
   font-size: 11px; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 12px;
 }
 .row .tags b { color: var(--accent-2); font-weight: 500; }
-.row .meta {
-  color: var(--muted); font-size: 13.5px; line-height: 1.65; margin: 0; max-width: 62ch;
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+.case-dek {
+  color: var(--muted); font-size: 13.5px; line-height: 1.65; margin: 0 0 16px; max-width: 74ch;
 }
 .case-inner .outcome {
   color: var(--ink); font-size: 13px; line-height: 1.6; margin: 0 0 22px; max-width: 74ch;
@@ -750,18 +748,13 @@ h2 {
 .js .row.reveal.visible h3 { opacity: 1; transform: none; }
 .js .row.reveal .idx,
 .js .row.reveal .tags,
-.js .row.reveal .meta,
-.js .row.reveal .result {
+.js .row.reveal .tags {
   opacity: 0; transform: translateY(8px);
   transition: opacity .45s var(--ease), transform .45s var(--ease);
 }
-.js .row.reveal .tags { transition-delay: .06s; }
-.js .row.reveal .meta { transition-delay: .12s; }
-.js .row.reveal .result { transition-delay: .18s; }
+.js .row.reveal .tags { transition-delay: .08s; }
 .js .row.reveal.visible .idx,
-.js .row.reveal.visible .tags,
-.js .row.reveal.visible .meta,
-.js .row.reveal.visible .result { opacity: 1; transform: none; }
+.js .row.reveal.visible .tags { opacity: 1; transform: none; }
 
 .row .go {
   justify-self: start; align-self: center;
@@ -814,29 +807,24 @@ h2 {
    by whitespace, not rules. Each case opens inside its own cell so the detail
    appears right where it was clicked. Mobile keeps the single stack. */
 @media (min-width: 900px) {
-  #work .work-rail { display: none; }
-  .cases {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-    column-gap: clamp(48px, 6vw, 88px);
-    row-gap: 12px;
-  }
-  .cases .case-item {
-    max-width: none;
-    border-bottom: 0;
-  }
+  .cases .case-item { max-width: none; }
   .cases .row {
-    grid-template-columns: 1fr;
-    justify-items: start;
-    padding: 34px 8px 34px 8px;
+    grid-template-columns: 92px minmax(0, 1fr) 132px;
+    column-gap: 34px; align-items: center;
+    padding: 24px 10px 24px 34px;
   }
-  .cases .case-item.flagship .row { padding-top: 46px; }
-  .cases .case-item.flagship::before { left: 8px; }
-  .cases .row .node { display: none; }
-  .cases .spark { width: 116px; height: 52px; margin-bottom: 18px; }
-  .cases .row .go { margin-top: 18px; }
-  .cases .case-inner { padding: 4px 8px 30px 8px; }
+  .cases .case-item.flagship .row { padding-top: 40px; }
+  .cases .case-item.flagship::before { left: 34px; top: 12px; }
+  .cases .spark { width: 84px; height: 34px; }
+  .cases .row-body {
+    display: grid; align-items: baseline;
+    grid-template-columns: 40px minmax(0, 1fr) minmax(0, 40%);
+    column-gap: 24px;
+  }
+  .cases .row .idx { margin: 0; }
+  .cases .row h3 { margin: 0; font-size: clamp(17px, 1.65vw, 21px); }
+  .cases .row .tags { margin: 0; justify-self: end; text-align: right; }
+  .cases .case-inner { padding: 2px 10px 34px 224px; }
   .cases .case dl > div { grid-template-columns: 116px 1fr; gap: 16px; }
 }
 
@@ -1377,7 +1365,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .44s; }
 
   /* --- fewer words on a phone: keep collapsed rows to title + tags --- */
-  .row .meta { display: none; }
   .hero-copy .stackline { display: none; }
   .flag-copy .fineprint { display: none; }
   /* Experience is behind a folder the visitor chose to open, so the roles read
@@ -1485,8 +1472,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .row .go { transition: opacity .15s ease; transform: none; }
   .sec-head::after { transition: none; transform: scaleX(1); }
   .js .row.reveal h3, .js .row.reveal .idx, .js .row.reveal .tags,
-  .js .row.reveal .meta,
-  .js .row.reveal .result { opacity: 1; transform: none; transition: none; }
+  .js .row.reveal .tags { opacity: 1; transform: none; transition: none; }
   .work-rail span, .row .node { transition: none; }
   .case, .case-inner, .row .chev { transition: none; }
   .js .ct-panel { transition: none; transform: none; }
