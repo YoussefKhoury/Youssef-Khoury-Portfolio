@@ -238,6 +238,7 @@
 
   /* on a phone the three sections are folders in a drawer: each one's front is
      the .sec-head bar, and pressing it draws that folder's file open. */
+  let syncDrawer = () => {};
   const setSection = (sec, open) => {
     if (!mqMobile.matches || sec.classList.contains('open') === open) return;
     const head = sec.querySelector('.sec-head');
@@ -258,7 +259,42 @@
     body.addEventListener('transitionend', done);
     t = setTimeout(done, 500);                        // fallback if transitionend never fires
     if (reduced) done();
+    syncDrawer();
   };
+
+  /* the drawer front is only a control while something is drawn out of it */
+  const drawerFront = document.querySelector('.drawer-front');
+  syncDrawer = () => {
+    if (drawerFront) {
+      drawerFront.disabled = !(mqMobile.matches && collSecs.some((s) => s.classList.contains('open')));
+    }
+  };
+  syncDrawer();
+  mqMobile.addEventListener('change', syncDrawer);
+
+  /* pressing it files everything back in: the open folders slide shut in turn,
+     bottom one first, and the front knocks closed behind the last of them */
+  drawerFront?.addEventListener('click', () => {
+    const open = collSecs.filter((s) => s.classList.contains('open')).reverse();
+    if (!open.length) return;
+    const step = reduced ? 0 : 110;
+    open.forEach((sec, i) => {
+      if (step) setTimeout(() => setSection(sec, false), i * step);
+      else setSection(sec, false);
+    });
+    const settled = (open.length - 1) * step + (reduced ? 0 : 300);
+    setTimeout(() => {
+      if (!reduced) {
+        drawerFront.classList.add('shutting');
+        drawerFront.addEventListener('animationend', () => drawerFront.classList.remove('shutting'), { once: true });
+      }
+      // the stack just lost most of its height, so bring the closed drawer back
+      // under the visitor rather than leaving them wherever the reflow landed
+      document.getElementById('dossier')?.scrollIntoView({
+        behavior: reduced ? 'auto' : 'smooth', block: 'start',
+      });
+    }, settled);
+  });
 
   collSecs.forEach((sec) => {
     const head = sec.querySelector('.sec-head');
