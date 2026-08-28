@@ -281,6 +281,17 @@
       body.style.height = target + 'px';
       body.style.paddingTop = '';
       body.style.paddingBottom = '';
+
+      // With a folder already open above it, the tapped head sits far down the
+      // page and its file appears to unfold from off-screen. Pull the head up
+      // under the sticky nav so this section opens from its top, like the first
+      // one does. scroll-margin-top on the section owns the 98px offset; skip
+      // the move when the head is already sitting there.
+      requestAnimationFrame(() => {
+        if (Math.abs(head.getBoundingClientRect().top - 98) > 8) {
+          sec.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
+        }
+      });
     } else {
       body.style.transition = 'none';
       body.style.height = body.offsetHeight + 'px';
@@ -324,10 +335,15 @@
     let targetY = null;
     if (!reduced) {
       const startY = window.scrollY;
+      const topSec = open[open.length - 1];          // topmost of the open folders
       open.forEach((sec) => sec.classList.remove('open'));
       void document.body.offsetHeight;
       const maxY = document.documentElement.scrollHeight - window.innerHeight;
-      targetY = Math.max(0, Math.min(startY, maxY));
+      // Preserving the raw scroll position drops the visitor onto whatever the
+      // collapsed content left behind — the footer. Land on the filed-away
+      // folders instead: the top of the highest one, under the sticky nav.
+      const seen = topSec.getBoundingClientRect().top + window.scrollY - 98;
+      targetY = Math.max(0, Math.min(seen, maxY));
       open.forEach((sec) => sec.classList.add('open'));
       void document.body.offsetHeight;
       // Shrinking the page for the peek forces the browser to clamp scrollY,
