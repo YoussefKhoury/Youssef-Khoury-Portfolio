@@ -313,34 +313,19 @@
     const open = collSecs.filter((s) => s.classList.contains('open')).reverse();
     if (!open.length) return;
 
-    const fileAway = () => {
-      const step = reduced ? 0 : 110;
-      open.forEach((sec, i) => {
-        if (step) setTimeout(() => setSection(sec, false), i * step);
-        else setSection(sec, false);
-      });
-      if (reduced) return;
-      setTimeout(() => {
-        drawerFront.classList.add('shutting');
-        drawerFront.addEventListener('animationend', () => drawerFront.classList.remove('shutting'), { once: true });
-      }, (open.length - 1) * step + 300);
-    };
-
-    /* Closing shortens the page under the viewport's feet, and part of that
-       loss isn't animated (the metric strip and the file's padding go at once),
-       so from further down the stack it reads as a twitch. Ride up to the top
-       of the drawer first: everything that collapses is then below the viewport
-       top, the scroll position stays put, and the files shut in plain view. */
-    const dossier = document.getElementById('dossier');
-    if (reduced || !dossier || dossier.getBoundingClientRect().top >= -2) {
-      fileAway();
-      return;
-    }
-    dossier.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    let started = false;
-    const go = () => { if (!started) { started = true; fileAway(); } };
-    window.addEventListener('scrollend', go, { once: true });
-    setTimeout(go, 620);
+    /* Close in place: no ride-up, no scroll compensation. The button sits
+       below the whole stack, so nothing above the viewport's current top
+       moves — only the open folders collapse under it. */
+    const step = reduced ? 0 : 110;
+    open.forEach((sec, i) => {
+      if (step) setTimeout(() => setSection(sec, false), i * step);
+      else setSection(sec, false);
+    });
+    if (reduced) return;
+    setTimeout(() => {
+      drawerFront.classList.add('shutting');
+      drawerFront.addEventListener('animationend', () => drawerFront.classList.remove('shutting'), { once: true });
+    }, (open.length - 1) * step + 300);
   });
 
   collSecs.forEach((sec) => {
