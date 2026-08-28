@@ -41,10 +41,17 @@
       const max = document.documentElement.scrollHeight - vh;
       progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
     }
-    if (workSec && workRail) {
-      const r = workSec.getBoundingClientRect();
-      const span = Math.max(1, r.height - vh * 0.55);
-      const p = Math.min(1, Math.max(0, (vh * 0.5 - r.top) / span));
+    if (workSec && workRail && workRows.length) {
+      // drive fill off the first/last row centers (not the section's full
+      // height) so it reliably hits 100% exactly as the last row reaches
+      // the focus line, instead of stalling short of it
+      const focusY = vh * 0.5;
+      const firstRect = workRows[0].getBoundingClientRect();
+      const lastRect = workRows[workRows.length - 1].getBoundingClientRect();
+      const firstCenter = firstRect.top + firstRect.height / 2;
+      const lastCenter = lastRect.top + lastRect.height / 2;
+      const span = Math.max(1, lastCenter - firstCenter);
+      const p = Math.min(1, Math.max(0, (focusY - firstCenter) / span));
       workRail.style.height = (p * 100) + '%';
       // light a row's node once the rail fill has physically reached it
       const railBox = workRail.parentElement.getBoundingClientRect();
