@@ -408,6 +408,11 @@
   // contentEditable node with a real Range selection, and refuses a node that
   // is off-screen or opacity:0. Keep it in the viewport but invisible-by-size.
   const legacyCopy = () => {
+    // window.getSelection() can return null and execCommand can throw; a throw
+    // escaping here used to reject copyEmail's promise silently, so the toast
+    // never fired and the tap looked dead
+    const sel = window.getSelection();
+    if (!sel) return false;
     const el = document.createElement('div');
     el.textContent = ADDR;
     el.contentEditable = 'true';
@@ -416,28 +421,30 @@
       'position:fixed;top:0;left:0;width:1px;height:1px;overflow:hidden;' +
       'opacity:0.01;pointer-events:none;font-size:16px;';
     document.body.appendChild(el);
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
     let ok = false;
-    try { ok = document.execCommand('copy'); } catch { ok = false; }
-    sel.removeAllRanges();
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      ok = document.execCommand('copy');
+      sel.removeAllRanges();
+    } catch { ok = false; }
     el.remove();
     return ok;
   };
   const copyEmail = async () => {
+    let ok = false;
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(ADDR);
-        flashToast();
-        return;
+        ok = true;
       }
     } catch {}
-    if (legacyCopy()) { flashToast(); return; }
-    // never navigate away silently: show the address so it can be read/selected
-    flashToast(ADDR);
+    if (!ok) { try { ok = legacyCopy(); } catch {} }
+    // either way the tap gets an answer: confirmation, or the address itself
+    // so it can still be read off the screen
+    flashToast(ok ? 'Email copied' : ADDR);
   };
   // every email affordance copies — the mailto: hrefs stay for middle-click,
   // context menu and no-JS, but a plain click never leaves the page
