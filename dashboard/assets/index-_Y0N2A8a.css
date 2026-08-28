@@ -2,3 +2,12 @@
 
 /* embed fix: keep the pinned bottom nav above the scrolling filter bar (z-index:30) so filters no longer overlap the tabs */
 @media (width<=780px){.sidebar{z-index:40}.app-shell{padding-bottom:80px}}
+
+/* embed: a filter change remounts the page subtree and re-fires every entrance
+   animation from opacity:0 -> reads as a full-page blink. Soften to a quick
+   settle instead of a fade-up-from-black. */
+@keyframes page-in{0%{opacity:.72;transform:translateY(3px)}to{opacity:1;transform:none}}
+@keyframes rise{0%{opacity:.72;transform:translateY(3px)}to{opacity:1;transform:none}}
+@keyframes spin-in{0%{opacity:.72;transform:rotate(-6deg) scale(.97)}to{opacity:1;transform:none}}
+.page-enter{animation-duration:.28s}
+.kpi-card,.panel,.actions-panel,.table-panel{animation-duration:.3s!important;animation-delay:0s!important}
