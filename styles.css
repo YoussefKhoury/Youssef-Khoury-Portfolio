@@ -958,7 +958,7 @@ h2 {
   gap: clamp(30px, 6vw, 78px); align-items: center; margin-top: 20px;
 }
 
-/* verified-outcome figure */
+/* question -> measure -> answer card */
 .contact-fig {
   position: relative; margin: 0; padding: 18px 22px 20px;
   border: 1px solid var(--line);
@@ -972,30 +972,28 @@ h2 {
 .contact-fig::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
 
 .cf-label { color: var(--faint); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; }
-/* the chart's type lives in viewBox units, so letting it fill the wider card
-   would scale 9px labels past the headline — cap it near its natural size */
-.cf-svg { display: block; width: 100%; max-width: 430px; height: auto; margin: 14px 0 4px; overflow: visible; }
-.cf-svg .cf-axis { stroke: var(--line); stroke-width: 1; }
-.cf-svg .cf-k {
-  fill: var(--faint); font-family: var(--mono); font-size: 9px;
-  letter-spacing: 0.12em; text-transform: uppercase; text-anchor: end;
+/* three beats on one ladder: the question, the measure it became, the answer */
+.tr-step {
+  display: grid; grid-template-columns: 64px 1fr; gap: 4px 14px;
+  padding: 12px 0; border-bottom: 1px dashed var(--line);
 }
-.cf-svg .cf-v { fill: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: 0.06em; }
-.cf-svg .cf-before { fill: color-mix(in srgb, var(--accent) 22%, transparent); }
-.cf-svg .cf-after { fill: var(--accent); }
-
-/* bars fade in on scroll (geometry is fixed; only opacity animates —
-   CSS width/transform on <rect> is unreliable across engines) */
-.js .contact-fig.reveal .cf-bar { opacity: 0; transition: opacity .6s var(--ease); }
-.js .contact-fig.reveal.visible .cf-before { opacity: 1; transition-delay: .15s; }
-.js .contact-fig.reveal.visible .cf-after { opacity: 1; transition-delay: .42s; }
-
-.cf-headline {
-  margin: 12px 0 0; font-family: var(--display); font-weight: 600;
-  font-size: 17px; letter-spacing: -0.01em; color: var(--ink);
+.tr-step:first-of-type { margin-top: 12px; }
+.tr-step:last-of-type { border-bottom: 0; padding-bottom: 14px; }
+.tr-k { color: var(--faint); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; padding-top: 3px; }
+.tr-q { margin: 0; color: var(--ink); font-size: 14px; line-height: 1.55; }
+.tr-a { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+/* the measure is the only literal artefact on the page — let it read as code,
+   and let it scroll on its own rather than widen the card */
+.tr-code {
+  margin: 0; overflow-x: auto; white-space: pre;
+  color: var(--muted); font-size: 11.5px; line-height: 1.7; letter-spacing: 0;
 }
-.cf-headline b { color: var(--accent); font-weight: 700; }
-.cf-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.tr-code b { color: var(--accent); font-weight: 500; }
+
+.cf-note {
+  margin: 0; padding-top: 12px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 12px; line-height: 1.6;
+}
 
 @media (max-width: 860px) {
   .contact-grid { grid-template-columns: 1fr; gap: 26px; }
@@ -1030,6 +1028,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   padding-top: 20px; border-top: 1px solid var(--line);
 }
 .stamp .fmark { display: inline-flex; color: var(--accent); opacity: .85; }
+.stamp .fmark svg { width: 12px; height: 12px; }
 
 /* ---------- toast ---------- */
 .toast {
@@ -1446,10 +1445,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
      so the copy read off-centre — pull the blocks to centre as well */
   .contact-copy { justify-self: stretch; }
   .contact-copy h2, .contact-copy > p { margin-inline: auto; }
-  /* the label and chart stay left so they read against the axis; the outcome
-     line and its note centre with the rest of the closing block */
+  /* the card is a document, not a headline — it stays left-read even where the
+     rest of the closing block centres */
   .contact-fig { text-align: left; }
-  .contact-fig .cf-headline, .contact-fig .cf-note { text-align: center; }
+  .tr-step { grid-template-columns: 1fr; gap: 2px; }
 
   .xrow { grid-template-columns: 1fr; gap: 10px; }
   .xr-when { display: flex; align-items: center; gap: 12px; }
@@ -1490,7 +1489,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head::after { animation: none; }
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
-  .js .contact-fig.reveal .cf-bar { opacity: 1; transition: none; }
   .xr-when .bar::after { transition: none; }
   .ov-nav a::before, .ov-nav a::after { transition: opacity .15s ease; transform: none; }
   .row:hover { transition: none; }
