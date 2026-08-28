@@ -392,7 +392,7 @@
       fx.clearRect(0, 0, fw, fh);
       const cx = fw / 2, cy = fh / 2;
       if (!reduced) fWash();
-      const R = fw * 0.30;               // cursor influence radius
+      const R = fw * 0.34;               // cursor influence radius
       const R2 = R * R;
       for (let y = STEP * 0.5; y < fh; y += STEP) {
         for (let x = STEP * 0.5; x < fw; x += STEP) {
@@ -412,29 +412,33 @@
 
           let px = x, py = y, boost = 0;
           if (!reduced) {
-            // a diagonal travelling wave: shifts the dot and pulses its size
-            const wave = Math.sin(x * 0.045 + y * 0.028 - fTime * 5.0);
-            px += wave * 2.4;
-            py += Math.cos(x * 0.03 - y * 0.05 - fTime * 4.0) * 2.0;
-            boost += Math.max(0, wave) * 0.12 * edge;
-            // cursor push-away with soft falloff
-            if (pStr > 0.01) {
+            // two low-frequency swells crossed at different angles, nudged by the
+            // same warp noise as the wash — an organic undulation, not a grid ripple
+            const w1 = Math.sin(x * 0.020 + y * 0.014 - fTime * 3.2);
+            const w2 = Math.sin(x * 0.011 - y * 0.026 - fTime * 2.3 + w1 * 0.6);
+            const wave = (w1 + w2) * 0.5;
+            px += wave * 3.0 + wx * 6;
+            py += Math.cos(x * 0.015 - y * 0.020 - fTime * 2.6) * 2.4 + wy * 6;
+            boost += (0.5 + 0.5 * wave) * 0.10 * edge;   // gentle brightness breathing
+            // cursor push-away — smoothstep falloff, tracks pm* which now keeps up
+            if (pStr > 0.005) {
               const ddx = x - pmX, ddy = y - pmY, d2 = ddx * ddx + ddy * ddy;
               if (d2 < R2) {
                 const dd = Math.sqrt(d2) || 1;
                 const f = 1 - dd / R;
-                const push = f * f * 22 * pStr;
+                const ef = f * f * (3 - 2 * f);
+                const push = ef * 30 * pStr;
                 px += (ddx / dd) * push;
                 py += (ddy / dd) * push;
-                boost += f * f * 0.5 * pStr;
+                boost += ef * 0.6 * pStr;
               }
             }
           }
 
-          const rad = edge * (0.35 + 1.7 * n) + boost * 1.4;
+          const rad = edge * (0.35 + 1.7 * n) + boost * 1.6;
           if (rad < 0.3) continue;
           const a = 0.05 + 0.24 * edge * n + boost;
-          fx.fillStyle = 'rgba(232,177,90,' + (a < 0.55 ? a : 0.55).toFixed(3) + ')';
+          fx.fillStyle = 'rgba(232,177,90,' + (a < 0.62 ? a : 0.62).toFixed(3) + ')';
           fx.beginPath();
           fx.arc(px, py, rad, 0, 6.283);
           fx.fill();
@@ -454,15 +458,16 @@
 
     const fDraw = (t) => {
       if (!fRun || reduced || document.hidden) return;
-      const gap = pStr > 0.02 ? 20 : 33;   // run smoother while the cursor drives it
-      if (t - fLast >= gap) {
-        fLast = t;
-        fTime += 0.008;
-        pStr += (pWant - pStr) * 0.12;
-        pmX += (ptX - pmX) * 0.16;
-        pmY += (ptY - pmY) * 0.16;
-        fPaint();
-      }
+      // frame-rate independent: paint every frame, advance by real elapsed time
+      const dt = fLast ? Math.min(50, t - fLast) : 16;
+      fLast = t;
+      fTime += dt * 0.00020;
+      const kP = 1 - Math.pow(0.60, dt / 16);   // cursor point catches up quickly
+      const kS = 1 - Math.pow(0.82, dt / 16);   // influence strength eases in/out
+      pStr += (pWant - pStr) * kS;
+      pmX += (ptX - pmX) * kP;
+      pmY += (ptY - pmY) * kP;
+      fPaint();
       requestAnimationFrame(fDraw);
     };
 
