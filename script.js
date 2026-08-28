@@ -400,9 +400,9 @@
           // on a phone the hero is tall + narrow, so the round clear-centre
           // collapses to two thin side strips; flatten it vertically and let the
           // dots run almost edge to edge left-right
-          const ux = (x - cx) / cx, uy = (y - cy) / cy * (fNarrow ? 0.5 : 1);
+          const ux = (x - cx) / cx, uy = (y - cy) / cy * (fNarrow ? 0.32 : 1);
           const nd = Math.min(1, Math.hypot(ux, uy) / 1.414);
-          let edge = (nd - (fNarrow ? 0.08 : 0.24)) / (fNarrow ? 0.92 : 0.76);
+          let edge = (nd - (fNarrow ? 0.02 : 0.24)) / (fNarrow ? 0.98 : 0.76);
           if (edge <= 0.02) continue;
           edge = edge < 1 ? edge * edge * (3 - 2 * edge) : 1;
 
@@ -479,6 +479,7 @@
       const fStart = () => { if (!fRun) { fRun = true; fLast = 0; requestAnimationFrame(fDraw); } };
       const hero = fog.parentElement;
       const onMove = (e) => {
+        if (e.pointerType === 'touch') return;   // taps on a phone must not push the dots
         const r = fog.getBoundingClientRect();
         ptX = (e.clientX - r.left) * SCALE;
         ptY = (e.clientY - r.top) * SCALE;
