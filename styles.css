@@ -271,7 +271,10 @@ html.booting .idcard .dsr-body { animation: bootIn .34s var(--ease) .5s both; }
 .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 /* atmospheric drifting fog — rendered low-res and softened so it reads as
    haze, not pixels; denser toward the hero's outer edges (see script.js) */
-.hero #herofog { filter: blur(0.5px); opacity: .32; }
+/* no CSS filter here: it forces a full-layer GPU pass every animation frame,
+   which is what dropped desktop scroll below 60fps. The 2x buffer upscale
+   already softens the dots. */
+.hero #herofog { opacity: .52; }
 /* a faint fixed amber wash so the hero never reads as flat black */
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
@@ -354,8 +357,8 @@ h1 .tp-ch {
   position: relative;
   width: 39em;
   margin-inline: auto;
-  margin-top: 44px;
-  font-size: clamp(8px, 0.4vw + 7px, 13px);
+  margin-top: 24px;
+  font-size: clamp(7px, 0.3vw + 6px, 9.6px);
 }
 .casecard {
   position: relative; width: 100%; overflow: hidden;
@@ -437,18 +440,18 @@ h1 .tp-ch {
   border-right: 1px solid var(--accent); border-top: 1px solid var(--accent); opacity: .65;
 }
 
-/* angled seam tracing the panel's diagonal top edge */
+/* level seam across the panel's top edge */
 .dsr-seam {
-  position: absolute; z-index: 4; left: 0; top: 26.8em; width: 150%; height: 0;
+  position: absolute; z-index: 4; left: 0; top: 26.8em; width: 100%; height: 0;
   border-top: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
-  transform: rotate(4.7deg); transform-origin: 0 0; pointer-events: none;
+  pointer-events: none;
 }
 
-/* information panel — diagonal top edge picks up the seam */
+/* information panel — flat top edge picks up the seam */
 .dsr-body {
   position: relative; z-index: 2;
-  margin-top: -3.2em; padding: 4.1em 2.3em 2.1em;
-  clip-path: polygon(0 0, 100% 3.2em, 100% 100%, 0 100%);
+  margin-top: -3.2em; padding: 2.6em 2.3em 2.1em;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   background: var(--surface);
 }
 .dsr-name {
@@ -986,8 +989,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   position: fixed; left: 50%; bottom: 26px; z-index: 400;
   transform: translate(-50%, calc(100% + 40px));
   opacity: 0; visibility: hidden;
+  max-width: min(90vw, 420px); text-align: center;
   padding: 11px 18px; background: var(--accent); color: #1a1204; border-radius: 8px;
-  font-size: 11px; letter-spacing: 0.1em;
+  font-size: 11px; letter-spacing: 0.1em; word-break: break-all;
   transition: transform .3s var(--ease), opacity .3s ease, visibility .3s;
 }
 .toast.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
@@ -1012,8 +1016,19 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
    ============================================================ */
 @media (max-width: 960px) {
   .topbar .topnav { display: none; }
-  .ov-inner { grid-template-columns: 1fr; gap: 36px; align-content: start; padding-top: 96px; }
-  .ov-side { align-self: start; }
+  .ov-inner { grid-template-columns: 1fr; gap: 22px; align-content: start; padding: 74px 0 26px; }
+  .ov-nav a { padding: 9px 12px; }
+  /* readout left, social links right, so the whole menu fits one screen
+     instead of pushing the links below the fold */
+  .ov-side {
+    align-self: start;
+    display: grid; grid-template-columns: 1fr auto;
+    column-gap: 20px; row-gap: 12px; align-items: start;
+  }
+  .ov-side > div:not(.ov-social) { grid-column: 1; }
+  .ov-social { grid-column: 2; grid-row: 1 / span 4; margin-top: 0; justify-self: end; }
+  .ov-social a { justify-content: flex-end; }
+  .ov-stamp { grid-column: 1 / -1; }
 }
 
 @media (max-width: 900px) {
@@ -1042,6 +1057,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .case-links { gap: 0 22px; }
   .actions { gap: 0 24px; }
   .topbar .id { padding-block: 12px; }
+  /* the phone hero is small enough that the dots sit right on the headline —
+     keep the brighter wash for desktop only */
+  .hero #herofog { opacity: .34; }
   .window-bar { align-items: center; }
   .window-bar a { display: flex; align-items: center; padding-left: 14px; min-height: 42px; }
 

@@ -361,36 +361,52 @@
 
   /* ---------- copy email ---------- */
   const toast = document.querySelector('.toast');
-  const flashToast = () => {
+  const flashToast = (msg) => {
     if (!toast) return;
+    toast.textContent = msg || 'Email copied';
     toast.classList.add('show');
     clearTimeout(toast._t);
-    toast._t = setTimeout(() => toast.classList.remove('show'), 1700);
+    toast._t = setTimeout(() => toast.classList.remove('show'), 2200);
+  };
+  const ADDR = 'youssefkhoury01@gmail.com';
+  // iOS Safari ignores execCommand('copy') on a plain <textarea>: it needs a
+  // contentEditable node with a real Range selection, and refuses a node that
+  // is off-screen or opacity:0. Keep it in the viewport but invisible-by-size.
+  const legacyCopy = () => {
+    const el = document.createElement('div');
+    el.textContent = ADDR;
+    el.contentEditable = 'true';
+    el.setAttribute('aria-hidden', 'true');
+    el.style.cssText =
+      'position:fixed;top:0;left:0;width:1px;height:1px;overflow:hidden;' +
+      'opacity:0.01;pointer-events:none;font-size:16px;';
+    document.body.appendChild(el);
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch { ok = false; }
+    sel.removeAllRanges();
+    el.remove();
+    return ok;
   };
   const copyEmail = async () => {
-    const addr = 'youssefkhoury01@gmail.com';
     try {
-      if (!navigator.clipboard?.writeText) throw new Error('no clipboard api');
-      await navigator.clipboard.writeText(addr);
-      flashToast();
-      return;
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(ADDR);
+        flashToast();
+        return;
+      }
     } catch {}
-    // fallback for older / restricted mobile browsers
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = addr;
-      ta.setAttribute('readonly', '');
-      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
-      document.body.appendChild(ta);
-      ta.select();
-      ta.setSelectionRange(0, addr.length);
-      const ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      if (ok) { flashToast(); return; }
-    } catch {}
-    window.location.href = 'mailto:' + addr;
+    if (legacyCopy()) { flashToast(); return; }
+    // never navigate away silently: show the address so it can be read/selected
+    flashToast(ADDR);
   };
-  document.querySelector('[data-copy-email]')?.addEventListener('click', copyEmail);
+  document.querySelectorAll('[data-copy-email]').forEach((el) => {
+    el.addEventListener('click', copyEmail);
+  });
 
   /* ---------- hero atmospheric fog ----------
      Two layers on one low-res buffer, softened in CSS so it reads as haze:
@@ -403,7 +419,12 @@
   if (fog) {
     const fx = fog.getContext('2d');
     const SCALE = 0.5;                  // buffer resolution vs. display
-    const STEP = 5;                     // grid spacing in buffer px (~10px on screen)
+    // per-frame dot budget. Spacing was a fixed 5 buffer px, so a wide desktop
+    // hero cost ~17k arcs per frame (a phone costs ~3k) — that gap is why
+    // desktop scrolling stuttered while mobile stayed smooth. Spacing is now
+    // derived from the buffer area so the cost is flat across screen sizes.
+    const DOTS = 5200;
+    let fStep = 5;                      // grid spacing in buffer px
     let fw = 1, fh = 1, fNarrow = false, fRun = false, fLast = 0, fTime = Math.random() * 100;
     // cursor state, all in buffer coords; pm* trails toward pt* for a soft lag
     let ptX = -999, ptY = -999, pmX = -999, pmY = -999, pStr = 0, pWant = 0;
@@ -451,8 +472,9 @@
       if (!reduced) fWash();
       const R = fw * 0.22;               // cursor influence radius
       const R2 = R * R;
-      for (let y = STEP * 0.5; y < fh; y += STEP) {
-        for (let x = STEP * 0.5; x < fw; x += STEP) {
+      const rs = fStep / 5;              // keep dot mass constant as spacing grows
+      for (let y = fStep * 0.5; y < fh; y += fStep) {
+        for (let x = fStep * 0.5; x < fw; x += fStep) {
           // normalise per axis so the clearing hugs the hero's own shape
           // clear the centre so the headline/photo/buttons stay readable.
           // on a phone the hero is tall + narrow, so a round vignette shrinks to
@@ -502,7 +524,7 @@
             }
           }
 
-          const rad = edge * (0.35 + 1.7 * n) + boost * 1.6;
+          const rad = (edge * (0.35 + 1.7 * n) + boost * 1.6) * rs;
           if (rad < 0.3) continue;
           const a = 0.05 + 0.24 * edge * n + boost;
           fx.fillStyle = 'rgba(232,177,90,' + (a < 0.62 ? a : 0.62).toFixed(3) + ')';
@@ -518,6 +540,7 @@
       fw = Math.max(1, Math.round(r.width * SCALE));
       fh = Math.max(1, Math.round(r.height * SCALE));
       fNarrow = r.width < 720;
+      fStep = Math.max(5, Math.sqrt((fw * fh) / DOTS));
       fog.width = fw; fog.height = fh;
       fPaint();                         // never leave the canvas blank
     };
@@ -526,7 +549,11 @@
 
     const fDraw = (t) => {
       if (!fRun || reduced || document.hidden) return;
-      // frame-rate independent: paint every frame, advance by real elapsed time
+      requestAnimationFrame(fDraw);
+      // ambient haze: 30fps is indistinguishable here and leaves the other half
+      // of every frame budget to the scroll work
+      if (fLast && t - fLast < 31) return;
+      // frame-rate independent: advance by real elapsed time
       const dt = fLast ? Math.min(50, t - fLast) : 16;
       fLast = t;
       fTime += dt * 0.00020;
@@ -536,7 +563,6 @@
       pmX += (ptX - pmX) * kP;
       pmY += (ptY - pmY) * kP;
       fPaint();
-      requestAnimationFrame(fDraw);
     };
 
     if (!reduced) {
