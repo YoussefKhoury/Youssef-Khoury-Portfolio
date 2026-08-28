@@ -24,7 +24,7 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; overflow-x: clip; }
+html { scroll-behavior: smooth; overflow-x: clip; scrollbar-gutter: stable both-edges; }
 
 body {
   margin: 0;
@@ -172,9 +172,8 @@ html.menu-open body { padding-top: 55px; }
 /* one exit at a time: the menu owns the screen, back-to-top waits */
 html.menu-open .to-top { opacity: 0; transform: translateY(14px); pointer-events: none; }
 /* lock the page scrollbar while the menu is open — one scroll area, not two.
-   --sbw (set from JS) backfills the removed scrollbar width so nothing reflows */
+   scrollbar-gutter: stable both-edges keeps the gutter reserved, so nothing reflows */
 html.menu-open, html.menu-open body { overflow: hidden; }
-html.menu-open { padding-right: var(--sbw, 0px); }
 .ov-inner {
   width: var(--shell); margin-inline: auto; min-height: 100%;
   display: grid; grid-template-columns: 1fr 300px; gap: 48px; align-content: center;
