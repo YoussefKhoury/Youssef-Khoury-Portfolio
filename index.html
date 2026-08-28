@@ -21,8 +21,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&family=Roboto+Flex:wdth,wght@60..150,100..900&display=swap" />
-    <link rel="stylesheet" href="styles.css?v=20260829n" />
-    <script src="script.js?v=20260829n" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260829p" />
+    <script src="script.js?v=20260829p" defer></script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"Person","name":"Youssef Khoury","jobTitle":"Data, Business and Operations Analyst","email":"mailto:youssefkhoury01@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"Matn University College"},"sameAs":["https://github.com/YoussefKhoury","https://www.linkedin.com/in/youssefkhoury/"]}
     </script>
@@ -530,21 +530,26 @@
             </div>
 
             <figure class="contact-fig reveal">
-              <figcaption class="cf-label mono">Verified outcome &middot; order-to-delivery operations</figcaption>
-              <svg class="cf-svg" viewBox="0 0 300 96" role="img"
-                aria-label="Order-to-delivery lead time fell from two to three months to about two weeks, roughly an 80 percent reduction.">
-                <line class="cf-axis" x1="66" y1="8" x2="66" y2="88" />
-                <text class="cf-k" x="58" y="28">Before</text>
-                <rect class="cf-bar cf-before" x="66" y="17" width="228" height="16" rx="2" />
-                <text class="cf-v" x="290" y="28" text-anchor="end">2&ndash;3 months</text>
-                <text class="cf-k" x="58" y="70">After</text>
-                <rect class="cf-bar cf-after" x="66" y="59" width="40" height="16" rx="2" />
-                <text class="cf-v cf-v-after" x="114" y="70">~2 weeks</text>
-              </svg>
-              <p class="cf-headline"><b>~80%</b> faster, order to sign-off</p>
-              <p class="cf-note">Mapped the process as-is / to-be, traced recurring delays to three root
-                causes, and rebuilt supplier follow-up &mdash; across 40+ concurrent orders and 20+ suppliers
-                on a USD&nbsp;1M+ operation.</p>
+              <figcaption class="cf-label mono">Question &rarr; measure &rarr; answer</figcaption>
+              <div class="tr-step">
+                <span class="tr-k mono">Asked</span>
+                <p class="tr-q">&ldquo;How much of the order book is sitting behind a late delivery right now?&rdquo;</p>
+              </div>
+              <div class="tr-step">
+                <span class="tr-k mono">Wrote</span>
+                <pre class="tr-code mono"><code><b>At-Risk Order Value</b> =
+CALCULATE(
+    [Total Order Value],
+    FactOrder[DelayDays] &gt; 0
+)</code></pre>
+              </div>
+              <div class="tr-step">
+                <span class="tr-k mono">Returned</span>
+                <p class="tr-a">One governed figure on the weekly view &mdash; drillable to the order rows and
+                  the supplier behind them.</p>
+              </div>
+              <p class="cf-note">A live measure from the Order-to-Delivery Control Tower model. Turning the
+                question someone actually asks into a number that survives being audited is most of the work.</p>
             </figure>
           </div>
         </div>
