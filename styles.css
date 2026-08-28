@@ -375,7 +375,7 @@ h1 .tp-ch {
   position: relative; width: 100%; overflow: hidden;
   background: linear-gradient(180deg, var(--surface), var(--surface-2));
   border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line));
-  border-radius: 1.6em;
+  border-radius: 0 1.6em 1.6em 1.6em;   /* square top-left so the tab's edges continue the card's as one line */
   box-shadow: 0 1.6em 3.6em rgba(0, 0, 0, .3);
 }
 
@@ -432,7 +432,7 @@ h1 .tp-ch {
 /* portrait — fills the frame, warm glow behind the subject */
 .dsr-photo {
   position: relative; height: var(--photo-h); overflow: hidden;
-  border-radius: 1.5em 1.5em 0 0; background: var(--surface-2);
+  border-radius: 0 1.5em 0 0; background: var(--surface-2);
 }
 .dsr-photo::before {
   content: ""; position: absolute; inset: 0; z-index: 0;
