@@ -392,7 +392,7 @@
       fx.clearRect(0, 0, fw, fh);
       const cx = fw / 2, cy = fh / 2;
       if (!reduced) fWash();
-      const R = fw * 0.34;               // cursor influence radius
+      const R = fw * 0.22;               // cursor influence radius
       const R2 = R * R;
       for (let y = STEP * 0.5; y < fh; y += STEP) {
         for (let x = STEP * 0.5; x < fw; x += STEP) {
@@ -427,7 +427,7 @@
                 const dd = Math.sqrt(d2) || 1;
                 const f = 1 - dd / R;
                 const ef = f * f * (3 - 2 * f);
-                const push = ef * 30 * pStr;
+                const push = ef * 24 * pStr;
                 px += (ddx / dd) * push;
                 py += (ddy / dd) * push;
                 boost += ef * 0.6 * pStr;
@@ -588,22 +588,29 @@
     window.addEventListener('resize', measure);
 
     const hero = document.querySelector('.hero');
-    let mx = -9999, my = -9999, raf = 0, active = false;
-    const loop = () => {
+    let mx = -9999, my = -9999, raf = 0, active = false, tpLast = 0;
+    const loop = (ts) => {
+      const dt = tpLast ? Math.min(48, ts - tpLast) : 16;
+      tpLast = ts;
+      const k = 1 - Math.pow(0.0015, dt / 1000);   // gentle, frame-rate independent
       let moving = false;
       for (const c of chars) {
         const d = Math.hypot(c.cx - mx, c.cy - my);
         const tgt = d < RADIUS ? (1 - d / RADIUS) ** 2 : 0;
-        c.cur += (tgt - c.cur) * 0.22;
-        if (Math.abs(tgt - c.cur) > 0.001) moving = true;
+        c.cur += (tgt - c.cur) * k;
+        if (Math.abs(tgt - c.cur) > 0.002) moving = true;
         const p = c.cur;
-        c.el.style.fontVariationSettings =
-          `"wght" ${(W0 + p * (W1 - W0)).toFixed(0)}, "wdth" ${(WD0 + p * (WD1 - WD0)).toFixed(0)}`;
-        c.el.style.transform = p > 0.002
+        const w = Math.round(W0 + p * (W1 - W0));
+        if (w !== c.lw) {                            // only touch the DOM on a real change
+          c.lw = w;
+          c.el.style.fontVariationSettings = `"wght" ${w}, "wdth" ${Math.round(WD0 + p * (WD1 - WD0))}`;
+        }
+        const tf = p > 0.003
           ? `translateY(${(-4 * p).toFixed(2)}px) scale(${(1 + 0.13 * p).toFixed(3)})`
           : '';
+        if (tf !== c.lt) { c.lt = tf; c.el.style.transform = tf; }
       }
-      raf = (moving || active) ? requestAnimationFrame(loop) : 0;
+      raf = (moving || active) ? requestAnimationFrame(loop) : (tpLast = 0);
     };
     hero.addEventListener('pointermove', (e) => {
       mx = e.clientX; my = e.clientY; active = true;
