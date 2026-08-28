@@ -379,22 +379,23 @@ h1 .tp-ch {
   box-shadow: 0 1.6em 3.6em rgba(0, 0, 0, .3);
 }
 
-/* one L-bracket only: a registration mark mirroring the photo's top-right
-   corner mark (.dsr-photo::after) — same 1em inset, opposite corner, so the
-   two read as a facing pair across the photo's diagonal */
+/* one L-bracket only: a top-left registration mark that mirrors the photo's
+   top-right corner mark (.dsr-photo::after) horizontally — same size, opening
+   downward, sitting beside the top of the name so the two read as a facing
+   pair across the card */
 .dsr-frame { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
 .dsr-frame::before {
   content: ""; position: absolute; width: 1.15em; height: 1.15em;
   border: 0 solid var(--accent); opacity: .7;
-  left: 1em; top: calc(var(--photo-h) - 2.15em);
-  border-left-width: 1px; border-bottom-width: 1px;
+  left: 1em; top: calc(var(--photo-h) - 0.95em);
+  border-left-width: 1px; border-top-width: 1px;
 }
 
 /* folder tab — sealed flush onto the card's top edge: the tab's bottom sits
    exactly on the card's top border (no overlap, no gap), so the two borders
    meet in one clean line instead of a stray corner past the seam */
 .dsr-tab {
-  position: absolute; top: -2.95em; left: 0.7em; z-index: 5;
+  position: absolute; top: -2.95em; left: 0; z-index: 5;
   display: flex; align-items: center; gap: 0.7em;
   height: 2.95em; padding: 0 1.5em 0 1.35em;
   background: var(--surface);
