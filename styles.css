@@ -1345,13 +1345,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .drawer-front b { color: #0b0906; font-weight: 700; }
   .drawer-front:disabled { cursor: default; }
-  /* the label stays optically centred in the bar; the file-back prompt sits to
-     the right so opening a folder never shoves the label off-centre */
-  .df-shut {
-    display: none; color: #0b0906; font-weight: 700;
-    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-  }
-  .dossier:has(.section.collapsible.open) .df-shut { display: inline-flex; align-items: center; }
+  /* once a folder is open the bar's whole job is to file it back, so it swaps
+     the "Case file / 03 files" label out for a single centred prompt */
+  .df-shut { display: none; color: #0b0906; font-weight: 700; align-items: center; }
+  .dossier:has(.section.collapsible.open) .drawer-front > span:first-child { display: none; }
+  .dossier:has(.section.collapsible.open) .df-shut { display: inline-flex; }
   .df-shut .ar { color: #0b0906; margin-right: 5px; }
   /* the front knocks shut once the last file has slid back in */
   .drawer-front.shutting { animation: drawerShut .46s var(--ease); }
