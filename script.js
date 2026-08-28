@@ -336,18 +336,20 @@
   document.querySelector('[data-copy-email]')?.addEventListener('click', copyEmail);
 
   /* ---------- hero atmospheric fog ----------
-     An amber value-noise field drawn as halftone dots. Two noise octaves are
-     domain-warped by a third, slower field, so the texture curls and drifts
-     like fog instead of cross-fading in place. A per-axis radial weight keeps
-     the dots dense at the hero's edges and clears the centre so the headline,
-     photo and buttons stay readable. Rendered at half resolution and softened
-     in CSS so it reads as dither. Static under prefers-reduced-motion. */
+     Two layers on one low-res buffer, softened in CSS so it reads as haze:
+       1. a few big amber radial blobs that drift on slow noise — the fog wash;
+       2. an amber halftone-dot grid that travels as a diagonal wave and bends
+          away from the cursor while it is over the hero.
+     A per-axis radial weight still keeps the centre lighter so the headline,
+     photo and buttons stay readable. Static under prefers-reduced-motion. */
   const fog = document.getElementById('herofog');
   if (fog) {
     const fx = fog.getContext('2d');
     const SCALE = 0.5;                  // buffer resolution vs. display
     const STEP = 5;                     // grid spacing in buffer px (~10px on screen)
     let fw = 1, fh = 1, fRun = false, fLast = 0, fTime = Math.random() * 100;
+    // cursor state, all in buffer coords; pm* trails toward pt* for a soft lag
+    let ptX = -999, ptY = -999, pmX = -999, pmY = -999, pStr = 0, pWant = 0;
 
     const hash = (ix, iy) => {
       let n = (ix * 374761393 + iy * 668265263) | 0;
@@ -363,31 +365,78 @@
       return a * (1 - u) * (1 - v) + b * u * (1 - v) + c * (1 - u) * v + d * u * v;
     };
 
+    // the fog wash: three soft blobs whose centres wander on slow noise
+    const BLOBS = [
+      { bx: 0.16, by: 0.24, s: 0.62, ph: 0.0 },
+      { bx: 0.86, by: 0.30, s: 0.55, ph: 2.1 },
+      { bx: 0.52, by: 0.86, s: 0.70, ph: 4.3 }
+    ];
+    const fWash = () => {
+      for (let i = 0; i < BLOBS.length; i++) {
+        const b = BLOBS[i];
+        const dxn = vnoise(i * 13 + fTime * 0.5, 7) - 0.5;
+        const dyn = vnoise(i * 13 + 50, fTime * 0.5 + 3) - 0.5;
+        const cx = (b.bx + dxn * 0.10) * fw;
+        const cy = (b.by + dyn * 0.10) * fh;
+        const rr = b.s * Math.max(fw, fh) * 0.55;
+        const g = fx.createRadialGradient(cx, cy, 0, cx, cy, rr);
+        g.addColorStop(0, 'rgba(232,177,90,0.055)');
+        g.addColorStop(0.55, 'rgba(224,150,70,0.022)');
+        g.addColorStop(1, 'rgba(232,177,90,0)');
+        fx.fillStyle = g;
+        fx.fillRect(cx - rr, cy - rr, rr * 2, rr * 2);
+      }
+    };
+
     const fPaint = () => {
       fx.clearRect(0, 0, fw, fh);
       const cx = fw / 2, cy = fh / 2;
+      if (!reduced) fWash();
+      const R = fw * 0.30;               // cursor influence radius
+      const R2 = R * R;
       for (let y = STEP * 0.5; y < fh; y += STEP) {
         for (let x = STEP * 0.5; x < fw; x += STEP) {
-          // normalise per axis so the clearing hugs the hero's own shape —
-          // otherwise a tall phone viewport reads as an all-over dot screen
+          // normalise per axis so the clearing hugs the hero's own shape
           const ux = (x - cx) / cx, uy = (y - cy) / cy;
           const nd = Math.min(1, Math.hypot(ux, uy) / 1.414);
-          let edge = (nd - 0.42) / 0.58;            // 0 near centre, 1 at corners
+          let edge = (nd - 0.30) / 0.70;          // dots reach a little further in now
           if (edge <= 0.02) continue;
           edge = edge < 1 ? edge * edge * (3 - 2 * edge) : 1;
-          // a slow low-frequency field pushes each sample point around, so the
-          // fog curls and billows rather than sliding as one flat sheet
+
           const wx = vnoise(x * 0.017 - fTime * 0.4, y * 0.017 + fTime * 0.15) - 0.5;
           const wy = vnoise(x * 0.017 + 37 + fTime * 0.18, y * 0.017 + fTime * 0.32) - 0.5;
           const sx = x * 0.055 + fTime * 1.1 + wx * 28;
           const sy = y * 0.055 - fTime * 0.4 + wy * 28;
           const n = 0.6 * vnoise(sx, sy)
                   + 0.4 * vnoise(x * 0.12 - fTime * 1.6 + wx * 13, y * 0.12 + wy * 13);
-          const rad = edge * (0.3 + 1.55 * n);
+
+          let px = x, py = y, boost = 0;
+          if (!reduced) {
+            // a diagonal travelling wave: shifts the dot and pulses its size
+            const wave = Math.sin(x * 0.045 + y * 0.028 - fTime * 5.0);
+            px += wave * 2.4;
+            py += Math.cos(x * 0.03 - y * 0.05 - fTime * 4.0) * 2.0;
+            boost += Math.max(0, wave) * 0.12 * edge;
+            // cursor push-away with soft falloff
+            if (pStr > 0.01) {
+              const ddx = x - pmX, ddy = y - pmY, d2 = ddx * ddx + ddy * ddy;
+              if (d2 < R2) {
+                const dd = Math.sqrt(d2) || 1;
+                const f = 1 - dd / R;
+                const push = f * f * 22 * pStr;
+                px += (ddx / dd) * push;
+                py += (ddy / dd) * push;
+                boost += f * f * 0.5 * pStr;
+              }
+            }
+          }
+
+          const rad = edge * (0.35 + 1.7 * n) + boost * 1.4;
           if (rad < 0.3) continue;
-          fx.fillStyle = 'rgba(232,177,90,' + (0.03 + 0.12 * edge * n).toFixed(3) + ')';
+          const a = 0.05 + 0.24 * edge * n + boost;
+          fx.fillStyle = 'rgba(232,177,90,' + (a < 0.55 ? a : 0.55).toFixed(3) + ')';
           fx.beginPath();
-          fx.arc(x, y, rad, 0, 6.283);
+          fx.arc(px, py, rad, 0, 6.283);
           fx.fill();
         }
       }
@@ -405,9 +454,13 @@
 
     const fDraw = (t) => {
       if (!fRun || reduced || document.hidden) return;
-      if (t - fLast >= 33) {            // ~30fps
+      const gap = pStr > 0.02 ? 20 : 33;   // run smoother while the cursor drives it
+      if (t - fLast >= gap) {
         fLast = t;
-        fTime += 0.008;                 // visible but unhurried drift
+        fTime += 0.008;
+        pStr += (pWant - pStr) * 0.12;
+        pmX += (ptX - pmX) * 0.16;
+        pmY += (ptY - pmY) * 0.16;
         fPaint();
       }
       requestAnimationFrame(fDraw);
@@ -415,6 +468,17 @@
 
     if (!reduced) {
       const fStart = () => { if (!fRun) { fRun = true; fLast = 0; requestAnimationFrame(fDraw); } };
+      const hero = fog.parentElement;
+      const onMove = (e) => {
+        const r = fog.getBoundingClientRect();
+        ptX = (e.clientX - r.left) * SCALE;
+        ptY = (e.clientY - r.top) * SCALE;
+        if (pmX < -900) { pmX = ptX; pmY = ptY; }
+        pWant = 1;
+        fStart();
+      };
+      hero.addEventListener('pointermove', onMove, { passive: true });
+      hero.addEventListener('pointerleave', () => { pWant = 0; });
       const fObs = new IntersectionObserver((es) => {
         es.forEach((e) => { if (e.isIntersecting) fStart(); else fRun = false; });
       }, { threshold: 0 });
