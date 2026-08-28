@@ -1017,8 +1017,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   padding-top: 20px; border-top: 1px solid var(--line);
 }
 .stamp .fmark {
-  width: 13px; height: 13px;
-  background: var(--accent); opacity: .85;
+  width: 16px; height: 16px;
+  background: var(--accent); opacity: 1;
   -webkit-mask: url("assets/logo-x.png") center / contain no-repeat;
   mask: url("assets/logo-x.png") center / contain no-repeat;
 }
