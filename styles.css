@@ -379,15 +379,14 @@ h1 .tp-ch {
   box-shadow: 0 1.6em 3.6em rgba(0, 0, 0, .3);
 }
 
-/* one L-bracket only: a top-left registration mark that mirrors the photo's
-   top-right corner mark (.dsr-photo::after) horizontally — same size, opening
-   downward, sitting beside the top of the name so the two read as a facing
-   pair across the card */
+/* one L-bracket only: a top-left registration mark seated at the card / folder-
+   tab junction — its vertical arm crosses the card's top edge so the tab reads
+   as connected to the card, its horizontal arm runs along the top */
 .dsr-frame { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
 .dsr-frame::before {
-  content: ""; position: absolute; width: 1.15em; height: 1.15em;
+  content: ""; position: absolute; width: 1.15em; height: 2.4em;
   border: 0 solid var(--accent); opacity: .7;
-  left: 1em; top: calc(var(--photo-h) - 0.95em);
+  left: 0; top: -1.9em;
   border-left-width: 1px; border-top-width: 1px;
 }
 
