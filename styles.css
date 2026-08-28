@@ -286,6 +286,8 @@ h1 .tp-word { display: inline-block; white-space: nowrap; }
 h1 .tp-ch {
   display: inline-block; will-change: transform, font-variation-settings;
   font-variation-settings: "wght" 700, "wdth" 100;
+  /* smooths the integer weight steps the script writes each frame */
+  transition: transform .14s var(--ease), font-variation-settings .14s linear;
 }
 .lead { color: var(--muted); max-width: 56ch; margin: 0 0 32px; font-size: 15.5px; }
 
@@ -327,7 +329,13 @@ h1 .tp-ch {
 .idcard { display: flex; flex-direction: column; gap: 12px; margin-top: 46px; }
 .avatar {
   position: relative; width: 168px; aspect-ratio: 4 / 5; overflow: hidden;
-  border: 1px solid var(--line); background: var(--surface-2);
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  background: var(--surface-2);
+  /* case-file frame: a mat gap, then an amber hairline around it */
+  box-shadow:
+    0 0 0 5px var(--bg),
+    0 0 0 6px color-mix(in srgb, var(--accent) 34%, var(--line)),
+    0 0 0 7px var(--bg);
 }
 .avatar img {
   position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
@@ -1068,7 +1076,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .idcard { flex-direction: column; align-items: center; text-align: center; }
   /* no frame on the phone — the portrait just fades into the page */
   .idcard .avatar {
-    width: 150px; border: 0; background: none;
+    width: 150px; border: 0; background: none; box-shadow: none;
     -webkit-mask-image: radial-gradient(130% 108% at 50% 32%, #000 46%, transparent 100%);
             mask-image: radial-gradient(130% 108% at 50% 32%, #000 46%, transparent 100%);
   }
