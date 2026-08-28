@@ -78,7 +78,7 @@
   /* ---------- full-screen index overlay ---------- */
   const overlay = document.getElementById('overlay');
   const indexBtn = document.querySelector('.index-btn');
-  const closeBtn = overlay?.querySelector('.ov-close');
+  const indexBtnLabel = indexBtn?.querySelector('span');
 
   // one clock, drives every [data-clock] (menu readout + contact readout)
   const clockEls = [...document.querySelectorAll('[data-clock]')];
@@ -103,7 +103,8 @@
     indexBtn?.setAttribute('aria-expanded', 'true');
     document.documentElement.classList.add('menu-open');
     overlay.scrollTop = 0;
-    requestAnimationFrame(() => closeBtn?.focus());
+    if (indexBtnLabel) indexBtnLabel.textContent = 'Close ×';
+    requestAnimationFrame(() => indexBtn?.focus());
   };
   const closeOverlay = () => {
     if (!overlay) return;
@@ -112,11 +113,14 @@
     indexBtn?.setAttribute('aria-expanded', 'false');
     document.documentElement.classList.remove('menu-open');
     document.documentElement.style.removeProperty('--sbw');
+    if (indexBtnLabel) indexBtnLabel.textContent = 'Menu';
     indexBtn?.focus();
   };
 
-  indexBtn?.addEventListener('click', openOverlay);
-  closeBtn?.addEventListener('click', closeOverlay);
+  /* one control: it opens the index, then closes it from the same spot */
+  indexBtn?.addEventListener('click', () => {
+    if (overlay?.classList.contains('open')) closeOverlay(); else openOverlay();
+  });
   overlay?.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(); });
   overlay?.querySelectorAll('.ov-nav a').forEach((a) => a.addEventListener('click', closeOverlay));
   document.addEventListener('keydown', (e) => {
@@ -126,8 +130,8 @@
   // keep Tab focus inside the dialog while it is open
   overlay?.addEventListener('keydown', (e) => {
     if (e.key !== 'Tab' || !overlay.classList.contains('open')) return;
-    const items = [...overlay.querySelectorAll('a[href], button:not([disabled])')]
-      .filter((el) => el.offsetParent !== null);
+    const items = [indexBtn, ...overlay.querySelectorAll('a[href], button:not([disabled])')]
+      .filter((el) => el && el.offsetParent !== null);
     if (!items.length) return;
     const first = items[0];
     const last = items[items.length - 1];

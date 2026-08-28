@@ -159,6 +159,11 @@ a { color: inherit; text-decoration: none; }
 .overlay::-webkit-scrollbar-thumb { background: var(--accent-2); border: 2px solid var(--surface-2); }
 .overlay::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 .overlay.open { opacity: 1; visibility: visible; transform: translateY(0); }
+html.menu-open .topbar {
+  z-index: 400;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  border-color: var(--line);
+}
 /* lock the page scrollbar while the menu is open — one scroll area, not two.
    --sbw (set from JS) backfills the removed scrollbar width so nothing reflows */
 html.menu-open, html.menu-open body { overflow: hidden; }
@@ -168,13 +173,6 @@ html.menu-open { padding-right: var(--sbw, 0px); }
   display: grid; grid-template-columns: 1fr 300px; gap: 48px; align-content: center;
   padding-block: 80px;
 }
-.ov-top {
-  position: absolute; top: 22px; left: 0; right: 0;
-  width: var(--shell); margin-inline: auto;
-  display: flex; justify-content: space-between; align-items: center; color: var(--muted);
-}
-.ov-close { background: none; border: 0; color: var(--ink); font-family: var(--mono); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; cursor: pointer; }
-.ov-close:hover { color: var(--accent); }
 
 .ov-nav { display: flex; flex-direction: column; }
 .ov-nav a {
@@ -1039,10 +1037,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .ov-social { gap: 0 !important; }
   .case-links { gap: 0 22px; }
   .actions { gap: 0 24px; }
-  /* Close was pinned to the right edge, over the overlay's scroll gutter —
-     swap the row so it leads on the left and the scrollbar stays reachable */
-  .ov-top { flex-direction: row-reverse; }
-  .ov-close { padding: 12px 14px; margin-left: -14px; }
   .topbar .id { padding-block: 12px; }
   .window-bar { align-items: center; }
   .window-bar a { display: flex; align-items: center; padding-left: 14px; min-height: 42px; }
@@ -1086,12 +1080,15 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
      the box above with the tab sitting in the gap rather than overrunning it */
   .js .dossier-body { display: block; height: auto; padding-top: 24px; }
 
-  /* each folder stands on its own: the gap above it is the index tab's band, so
-     the tab never lands on the file above */
+  /* closed, the folders butt into one stack — adjacent 1px borders overlap into a
+     single shared rule and each index tab rides on the front above it */
   .dossier-body > .section.collapsible {
-    position: relative; margin: 24px 0 0; padding: 0;
+    position: relative; margin: -1px 0 0; padding: 0;
   }
   .dossier-body > .section.collapsible:first-child { margin-top: 0; }
+  /* a drawn-out file ends its card, so the folder below drops by one tab band
+     rather than landing its tab on the open file */
+  .dossier-body > .section.collapsible.open + .section.collapsible { margin-top: 24px; }
   /* #experience carries an id-level padding-bottom off the base sheet — null it
      here so the last folder butts flush against the drawer front */
   .dossier-body > #experience.section.collapsible { padding-bottom: 0; }
@@ -1102,12 +1099,16 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     margin: 0; padding: 10px 13px 9px; min-height: 38px;
     cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, var(--kraft-hi), var(--kraft-lo));
-    border: 1px solid var(--line); border-radius: 8px 8px 0 0;
+    border: 1px solid var(--line); border-radius: 0;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
     transition: border-color .35s var(--ease), background .35s var(--ease), box-shadow .4s var(--ease);
   }
-  /* a closed folder is just its front, so it rounds on all four corners */
-  .js .section.collapsible:not(.open) .sec-head { border-radius: 8px; }
+  /* a front rounds its top only where a card starts: at the head of the stack, or
+     under the gap an open file above it opened up */
+  .dossier-body > .section.collapsible:first-child .sec-head,
+  .dossier-body > .section.collapsible.open + .section.collapsible .sec-head {
+    border-radius: 8px 8px 0 0;
+  }
   .section.collapsible .sec-head::after { display: none; }
   /* the index tab riding above the front, one step further left each time */
   .section.collapsible .sec-head > :first-child {
@@ -1214,15 +1215,19 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* the drawer front, butting directly under the last folder to close the stack */
   .drawer-front {
-    position: relative; width: calc(100% - 28px); margin: 24px auto 0; height: 44px;
+    position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 44px;
     display: flex; align-items: center; justify-content: center;
     background: linear-gradient(180deg, #191512, #100e0c);
-    border: 1px solid var(--line); border-radius: 8px;
+    border: 1px solid var(--line); border-radius: 0 0 8px 8px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
     font: 400 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
     color: var(--faint);
   }
   .drawer-front b { color: var(--accent); font-weight: 500; }
+  /* the last file drawn out ends the stack, so the front becomes its own bar */
+  #dossier-body:has(> .section.collapsible:last-child.open) + .drawer-front {
+    margin-top: 24px; border-radius: 8px;
+  }
 
   /* contents fade up once the cells have finished filling */
   .js .section.collapsible .sec-body > * {
