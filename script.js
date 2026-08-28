@@ -199,6 +199,8 @@
   const setCase = (btn, panel, open) => {
     btn.setAttribute('aria-expanded', String(open));
     panel.classList.toggle('open', open);
+    const label = btn.querySelector('.go b');
+    if (label) label.textContent = open ? 'Close case file' : 'Open case file';
     panel.style.height = panel.scrollHeight + 'px';
     if (open) {
       // transitionend bubbles: without the target/property guard the first
