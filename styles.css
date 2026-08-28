@@ -1340,18 +1340,19 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     border: 1px solid color-mix(in srgb, var(--accent) 70%, #000);
     border-radius: 0 0 8px 8px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
-    font: 400 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
-    color: color-mix(in srgb, #100e0c 78%, var(--accent));
+    font: 600 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
+    color: #0b0906;
   }
-  .drawer-front b { color: #100e0c; font-weight: 600; }
+  .drawer-front b { color: #0b0906; font-weight: 700; }
   .drawer-front:disabled { cursor: default; }
-  /* the prompt only exists while there is something to file back */
-  .df-shut { display: none; color: var(--accent); }
-  .dossier:has(.section.collapsible.open) .drawer-front {
-    color: color-mix(in srgb, #100e0c 60%, var(--accent));
+  /* the label stays optically centred in the bar; the file-back prompt sits to
+     the right so opening a folder never shoves the label off-centre */
+  .df-shut {
+    display: none; color: #0b0906; font-weight: 700;
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
   }
-  .dossier:has(.section.collapsible.open) .df-shut { display: inline; }
-  .df-shut .ar { color: #100e0c; margin-right: 5px; }
+  .dossier:has(.section.collapsible.open) .df-shut { display: inline-flex; align-items: center; }
+  .df-shut .ar { color: #0b0906; margin-right: 5px; }
   /* the front knocks shut once the last file has slid back in */
   .drawer-front.shutting { animation: drawerShut .46s var(--ease); }
   @keyframes drawerShut {
