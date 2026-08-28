@@ -335,84 +335,13 @@
   };
   document.querySelector('[data-copy-email]')?.addEventListener('click', copyEmail);
 
-  /* ---------- hero motes ---------- */
-  const canvas = document.getElementById('motes');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    const DPR = Math.min(window.devicePixelRatio || 1, 1.75);
-    let w = 1, h = 1, pts = [], running = false;
-
-    const resize = () => {
-      const r = canvas.getBoundingClientRect();
-      w = Math.max(1, r.width); h = Math.max(1, r.height);
-      canvas.width = Math.round(w * DPR);
-      canvas.height = Math.round(h * DPR);
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      const n = Math.max(10, Math.min(28, Math.round(w * h / 24000)));
-      pts = [];
-      for (let i = 0; i < n; i++) pts.push({
-        x: Math.random() * w, y: Math.random() * h,
-        r: 0.7 + Math.random() * 1.5, spd: 0.07 + Math.random() * 0.16,
-        seed: Math.random() * 6.283, sway: 4 + Math.random() * 9
-      });
-    };
-    if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
-    resize();
-
-    // motes get a transient push from scroll velocity, then settle
-    let lastScrollY = window.scrollY;
-    let scrollKick = 0;
-    if (!reduced) {
-      window.addEventListener('scroll', () => {
-        const dy = window.scrollY - lastScrollY;
-        lastScrollY = window.scrollY;
-        scrollKick = Math.max(-4, Math.min(4, scrollKick + dy * 0.03));
-      }, { passive: true });
-    }
-
-    const draw = (t) => {
-      ctx.clearRect(0, 0, w, h);
-      scrollKick *= 0.9;
-      for (let i = 0; i < pts.length; i++) {
-        const m = pts[i];
-        if (!reduced) {
-          m.y -= m.spd + scrollKick * (0.4 + m.r * 0.3);
-          if (m.y < -6) { m.y = h + 6; m.x = Math.random() * w; }
-          else if (m.y > h + 6) { m.y = -6; m.x = Math.random() * w; }
-        }
-        const x = m.x + Math.sin(t * 0.001 + m.seed) * m.sway;
-        const edge = Math.min(1, m.y / 50, (h - m.y) / 50);
-        ctx.fillStyle = 'rgba(232,177,90,' + (0.05 + 0.32 * Math.max(0, edge)) + ')';
-        ctx.beginPath();
-        ctx.arc(x, m.y, m.r, 0, 6.283);
-        ctx.fill();
-      }
-      if (running && !reduced && !document.hidden) requestAnimationFrame(draw);
-    };
-
-    const start = () => { if (!running) { running = true; requestAnimationFrame(draw); } };
-    const stop = () => { running = false; };
-
-    if (reduced) {
-      draw(2400);
-    } else {
-      // only animate while the hero is on screen
-      const heroObserver = new IntersectionObserver((entries) => {
-        entries.forEach((e) => (e.isIntersecting ? start() : stop()));
-      }, { threshold: 0.02 });
-      heroObserver.observe(canvas);
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && running) requestAnimationFrame(draw);
-      });
-    }
-  }
-
-  /* ---------- hero atmospheric halftone fog ----------
-     Original: a slow value-noise field sampled on a coarse grid and drawn as
-     amber halftone dots. A radial weight makes the dots denser/larger toward
-     the hero's outer edges and fades them out toward the centre so the
-     headline, photo and buttons stay clean. Rendered at ~1/3 resolution and
-     softened in CSS so it reads as dither, not pixels. */
+  /* ---------- hero atmospheric fog ----------
+     An amber value-noise field drawn as halftone dots. Two noise octaves are
+     domain-warped by a third, slower field, so the texture curls and drifts
+     like fog instead of cross-fading in place. A per-axis radial weight keeps
+     the dots dense at the hero's edges and clears the centre so the headline,
+     photo and buttons stay readable. Rendered at half resolution and softened
+     in CSS so it reads as dither. Static under prefers-reduced-motion. */
   const fog = document.getElementById('herofog');
   if (fog) {
     const fx = fog.getContext('2d');
@@ -446,11 +375,17 @@
           let edge = (nd - 0.42) / 0.58;            // 0 near centre, 1 at corners
           if (edge <= 0.02) continue;
           edge = edge < 1 ? edge * edge * (3 - 2 * edge) : 1;
-          const n = 0.62 * vnoise(x * 0.055 + fTime, y * 0.055 + fTime * 0.3)
-                  + 0.38 * vnoise(x * 0.12 - fTime * 0.6, y * 0.12);
+          // a slow low-frequency field pushes each sample point around, so the
+          // fog curls and billows rather than sliding as one flat sheet
+          const wx = vnoise(x * 0.017 - fTime * 0.4, y * 0.017 + fTime * 0.15) - 0.5;
+          const wy = vnoise(x * 0.017 + 37 + fTime * 0.18, y * 0.017 + fTime * 0.32) - 0.5;
+          const sx = x * 0.055 + fTime * 1.1 + wx * 28;
+          const sy = y * 0.055 - fTime * 0.4 + wy * 28;
+          const n = 0.6 * vnoise(sx, sy)
+                  + 0.4 * vnoise(x * 0.12 - fTime * 1.6 + wx * 13, y * 0.12 + wy * 13);
           const rad = edge * (0.3 + 1.55 * n);
           if (rad < 0.3) continue;
-          fx.fillStyle = 'rgba(232,177,90,' + (0.035 + 0.125 * edge * n).toFixed(3) + ')';
+          fx.fillStyle = 'rgba(232,177,90,' + (0.03 + 0.12 * edge * n).toFixed(3) + ')';
           fx.beginPath();
           fx.arc(x, y, rad, 0, 6.283);
           fx.fill();
@@ -470,9 +405,9 @@
 
     const fDraw = (t) => {
       if (!fRun || reduced || document.hidden) return;
-      if (t - fLast >= 40) {            // ~25fps is plenty for this drift
+      if (t - fLast >= 33) {            // ~30fps
         fLast = t;
-        fTime += 0.0009;                // extremely slow drift
+        fTime += 0.008;                 // visible but unhurried drift
         fPaint();
       }
       requestAnimationFrame(fDraw);
