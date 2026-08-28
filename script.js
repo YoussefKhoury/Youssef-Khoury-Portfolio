@@ -94,6 +94,10 @@
 
   const openOverlay = () => {
     if (!overlay) return;
+    // reserve the width the page scrollbar leaves behind, so locking scroll
+    // doesn't reflow the layout (the jolt on menu open/close)
+    const sbw = window.innerWidth - document.documentElement.clientWidth;
+    if (sbw > 0) document.documentElement.style.setProperty('--sbw', sbw + 'px');
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
     indexBtn?.setAttribute('aria-expanded', 'true');
@@ -107,6 +111,7 @@
     overlay.setAttribute('aria-hidden', 'true');
     indexBtn?.setAttribute('aria-expanded', 'false');
     document.documentElement.classList.remove('menu-open');
+    document.documentElement.style.removeProperty('--sbw');
     indexBtn?.focus();
   };
 
@@ -484,18 +489,7 @@
 
     if (!reduced) {
       const fStart = () => { if (!fRun) { fRun = true; fLast = 0; requestAnimationFrame(fDraw); } };
-      const hero = fog.parentElement;
-      const onMove = (e) => {
-        if (e.pointerType === 'touch') return;   // taps on a phone must not push the dots
-        const r = fog.getBoundingClientRect();
-        ptX = (e.clientX - r.left) * SCALE;
-        ptY = (e.clientY - r.top) * SCALE;
-        if (pmX < -900) { pmX = ptX; pmY = ptY; }
-        pWant = 1;
-        fStart();
-      };
-      hero.addEventListener('pointermove', onMove, { passive: true });
-      hero.addEventListener('pointerleave', () => { pWant = 0; });
+      // dots are ambient only — no cursor/touch push
       const fObs = new IntersectionObserver((es) => {
         es.forEach((e) => { if (e.isIntersecting) fStart(); else fRun = false; });
       }, { threshold: 0 });
