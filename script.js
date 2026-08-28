@@ -219,9 +219,17 @@
         panel.style.height = 'auto';
         panel.removeEventListener('transitionend', done);
         onScroll();
-        // on a phone the panel opens below the fold — bring its head back up
         if (matchMedia('(max-width: 720px)').matches) {
+          // on a phone the panel opens below the fold — bring its head back up
           btn.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        } else {
+          // the rail fill tracks the row sitting on the focus line, so a
+          // click needs to bring the opened row's dot there itself instead
+          // of waiting for the user to scroll to it by hand
+          const rowRect = btn.getBoundingClientRect();
+          const rowCenter = rowRect.top + rowRect.height / 2;
+          const focusY = window.innerHeight * 0.5;
+          window.scrollBy({ top: rowCenter - focusY, behavior: 'smooth' });
         }
       };
       panel.addEventListener('transitionend', done);
