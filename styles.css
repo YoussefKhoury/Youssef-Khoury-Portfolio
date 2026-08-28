@@ -976,6 +976,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     box-shadow: 0 26px 46px -22px rgba(0, 0, 0, .82);
     animation: fileDraw .5s var(--ease);
   }
+  /* experience has no metric strip to cap the file, so give the body its own top edge */
+  .js #experience.section.collapsible.open .sec-body {
+    border-top: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+    border-radius: 0 0 8px 8px;
+  }
   /* an amber light sweeps down the file as it draws open */
   .js .section.collapsible.open .sec-body::after {
     content: ""; position: absolute; left: 0; right: 0; top: 0; height: 42%;
