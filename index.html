@@ -21,8 +21,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&family=Roboto+Flex:wdth,wght@60..150,100..900&display=swap" />
-    <link rel="stylesheet" href="styles.css?v=20260829m" />
-    <script src="script.js?v=20260829m" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260829n" />
+    <script src="script.js?v=20260829n" defer></script>
     <script type="application/ld+json">
       {"@context":"https://schema.org","@type":"Person","name":"Youssef Khoury","jobTitle":"Data, Business and Operations Analyst","email":"mailto:youssefkhoury01@gmail.com","alumniOf":{"@type":"CollegeOrUniversity","name":"Matn University College"},"sameAs":["https://github.com/YoussefKhoury","https://www.linkedin.com/in/youssefkhoury/"]}
     </script>
@@ -400,9 +400,15 @@
                 </div>
                 <iframe data-src="dashboard/?theme=dark&v=3" title="Interactive Order-to-Delivery Control Tower dashboard" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 <button class="dash-gate" type="button" aria-label="Load and view the live Order-to-Delivery Control Tower dashboard">
-                  <span class="play" aria-hidden="true">&#9658;</span>
+                  <span class="play" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+                      stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3.5 20.5h17" />
+                      <path d="M6.5 20.5v-6" /><path d="M11.5 20.5v-10" /><path d="M16.5 20.5v-4" />
+                      <path d="M4.5 9 10 4.5l4 3.2 5.5-5" />
+                    </svg>
+                  </span>
                   <span class="gate-label">View live dashboard</span>
-                  <span class="gate-hint">Loads the interactive report</span>
                 </button>
               </div>
             </div>
@@ -555,7 +561,13 @@
           </div>
         </div>
         <div class="stamp mono">
-          <span>Last updated 2026.08</span>
+          <span class="fmark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentColor"
+              stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 6.5 L11.5 15.5 L19 6.5" /><path d="M11.5 15.5 L11.5 25.5" />
+              <path d="M19 6.5 L19 25.5" /><path d="M19 15.5 L26.5 7" /><path d="M19 15.5 L26.5 25.5" />
+            </svg>
+          </span>
           <span>Youssef Khoury — V2.0</span>
         </div>
       </div>

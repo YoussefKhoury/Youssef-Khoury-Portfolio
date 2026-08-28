@@ -160,10 +160,17 @@ a { color: inherit; text-decoration: none; }
 .overlay::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 .overlay.open { opacity: 1; visibility: visible; transform: translateY(0); }
 html.menu-open .topbar {
+  /* sticky stops tracking the viewport once the scroll container is locked with
+     overflow:hidden (mobile Safari/Chrome), so Close scrolls away with the page.
+     Pin it instead and backfill the 55px it leaves in flow, so nothing shifts. */
+  position: fixed; top: 0; left: 0; right: 0;
   z-index: 400;
   background: color-mix(in srgb, var(--bg) 92%, transparent);
   border-color: var(--line);
 }
+html.menu-open body { padding-top: 55px; }
+/* one exit at a time: the menu owns the screen, back-to-top waits */
+html.menu-open .to-top { opacity: 0; transform: translateY(14px); pointer-events: none; }
 /* lock the page scrollbar while the menu is open — one scroll area, not two.
    --sbw (set from JS) backfills the removed scrollbar width so nothing reflows */
 html.menu-open, html.menu-open body { overflow: hidden; }
@@ -602,7 +609,7 @@ h2 {
 
 .work-intro {
   color: var(--muted); font-size: 14px; line-height: 1.7;
-  max-width: 70ch; margin: 14px 0 6px;
+  max-width: 70ch; margin: 2px 0 6px;
 }
 
 .case-item { position: relative; max-width: 1080px; border-bottom: 1px solid var(--line); }
@@ -883,14 +890,13 @@ h2 {
 .dash-gate .play {
   width: 60px; height: 60px; border-radius: 50%;
   border: 1.5px solid var(--accent); color: var(--accent);
-  display: grid; place-items: center; font-size: 17px; padding-left: 3px;
+  display: grid; place-items: center;
   transition: transform .25s var(--ease), background .25s ease;
 }
 .dash-gate:hover .play, .dash-gate:focus-visible .play {
   transform: scale(1.08); background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 .dash-gate .gate-label { font-size: 12px; letter-spacing: 0.16em; }
-.dash-gate .gate-hint { font-size: 10px; letter-spacing: 0.1em; color: var(--muted); }
 .dashboard-window:not(.is-gated) .dash-gate { opacity: 0; pointer-events: none; visibility: hidden; }
 
 /* ---------- credentials ---------- */
@@ -1019,10 +1025,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 .actions button .ar { display: none; }
 
 .stamp {
-  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  display: flex; align-items: center; gap: 9px;
   color: var(--faint); font-size: 11px; letter-spacing: 0.12em;
   padding-top: 20px; border-top: 1px solid var(--line);
 }
+.stamp .fmark { display: inline-flex; color: var(--accent); opacity: .85; }
 
 /* ---------- toast ---------- */
 .toast {
@@ -1377,7 +1384,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .dashboard-window { min-height: 0; }
   .dash-stage { min-height: 300px; }
   .dash-skeleton .sk-kpis { grid-template-columns: repeat(2, 1fr); }
-  .dash-gate .play { width: 48px; height: 48px; font-size: 14px; }
+  .dash-gate .play { width: 48px; height: 48px; }
+  .dash-gate .play svg { width: 18px; height: 18px; }
   /* a blur filter inside the height-animating, overflow-hidden section body makes
      iOS Safari composite a layer it then fails to repaint (content renders half
      painted). Fake the softness with opacity instead — no filter, no layer. */
