@@ -118,10 +118,9 @@ a { color: inherit; text-decoration: none; }
 .topbar .topnav a:hover::before, .topbar .topnav a:hover::after,
 .topbar .topnav a.active::before, .topbar .topnav a.active::after { opacity: 1; }
 
-.index-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
 .index-btn {
   position: relative;
-  display: inline-flex; align-items: center; padding: 6px 12px;
+  display: inline-flex; align-items: center; padding: 5px 12px;
   background: transparent; border: 0; border-radius: 0;
   color: var(--ink); font-size: 11px; letter-spacing: 0.06em;
   cursor: pointer; transition: color .2s ease;
@@ -139,7 +138,6 @@ a { color: inherit; text-decoration: none; }
 .index-btn:hover::before, .index-btn:hover::after,
 .index-btn[aria-expanded="true"]::before,
 .index-btn[aria-expanded="true"]::after { border-color: var(--accent); }
-.index-date { font-size: 8px; letter-spacing: 0.16em; color: var(--faint); }
 
 /* ---------- mobile section strip (shown only < 720px, after the hero) ---------- */
 .secnav { display: none; }
@@ -301,6 +299,22 @@ h1 .tp-ch {
   display: inline-block; will-change: font-variation-settings;
   font-variation-settings: "wght" 700, "wdth" 100;
 }
+
+/* birthdate stamp, upper-right of the hero — same pressure-type morph as the headline */
+.birthdate {
+  position: absolute; z-index: 2; top: 19%; right: clamp(14px, 4.5vw, 60px);
+  font-family: "Roboto Flex", var(--display); font-weight: 700;
+  font-size: 15px; letter-spacing: 0.14em; color: var(--faint);
+  font-variation-settings: "wght" 700, "wdth" 100;
+  pointer-events: none; user-select: none; -webkit-user-select: none;
+}
+.birthdate .tp-word { display: inline-block; white-space: nowrap; }
+.birthdate .tp-ch {
+  display: inline-block; will-change: font-variation-settings;
+  font-variation-settings: "wght" 700, "wdth" 100;
+}
+@media (max-width: 900px) { .birthdate { display: none; } }
+
 .lead { color: var(--muted); max-width: 56ch; margin: 0 0 32px; font-size: 15.5px; }
 
 .actions { display: flex; flex-wrap: wrap; gap: 14px 28px; }
@@ -339,28 +353,17 @@ h1 .tp-ch {
 
 /* ---------- hero ID card ---------- */
 .idcard { display: flex; flex-direction: column; gap: 12px; margin-top: 46px; }
-/* portrait framed as a literal case file: a folder tab sits flush on top */
+/* portrait labelled like a case file — plain photo, no frame or borders */
 .casefile { align-self: flex-start; width: 168px; }
 .filetab {
-  display: block; width: fit-content; margin: 0 0 -1px 16px; position: relative; z-index: 3;
-  padding: 5px 13px 7px;
+  display: block; width: fit-content; margin: 0 0 9px 2px;
   font-size: 8.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--faint);
-  background: linear-gradient(180deg, #1e1a16, #131010);
-  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
-  border-bottom: 0; border-radius: 7px 7px 0 0;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--accent) 16%, transparent);
 }
-.filetab b { color: var(--accent); font-weight: 500; margin: 0 2px; }
+.filetab b { color: var(--accent); font-weight: 500; margin: 0 3px; }
 
-/* concentric case-file frame: hair rule, mat gap, drop shadow */
 .avatar {
   position: relative; width: 168px; aspect-ratio: 4 / 5; overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line));
   background: var(--surface-2);
-  box-shadow:
-    0 0 0 4px var(--bg),
-    0 0 0 5px color-mix(in srgb, var(--accent) 24%, var(--line)),
-    0 22px 42px -24px rgba(0, 0, 0, .85);
 }
 .avatar img {
   position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
@@ -369,26 +372,13 @@ h1 .tp-ch {
   filter: grayscale(1) contrast(1.06) brightness(.96) sepia(.14);
   pointer-events: none; user-select: none; -webkit-user-drag: none;
 }
-/* inner hairline sits a mat gap in from the edge */
-.avatar::before {
-  content: ""; position: absolute; inset: 7px; z-index: 3; pointer-events: none;
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-}
-/* warm cast + soft top-down vignette so the portrait reads with depth */
+/* subtle top-down tonal cast so the portrait reads with depth (no border) */
 .avatar::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 42%),
-    radial-gradient(128% 96% at 50% 16%, transparent 52%, rgba(9, 7, 5, .52));
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 42%),
+    radial-gradient(128% 96% at 50% 16%, transparent 58%, rgba(9, 7, 5, .40));
 }
-
-/* amber crop marks on the inner-frame corners */
-.pc { position: absolute; z-index: 4; width: 12px; height: 12px;
-  border: 1px solid color-mix(in srgb, var(--accent) 78%, transparent); }
-.pc.tl { top: 7px; left: 7px; border-right: 0; border-bottom: 0; }
-.pc.tr { top: 7px; right: 7px; border-left: 0; border-bottom: 0; }
-.pc.bl { bottom: 7px; left: 7px; border-right: 0; border-top: 0; }
-.pc.br { bottom: 7px; right: 7px; border-left: 0; border-top: 0; }
 
 .idname { font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: -0.01em; margin: 6px 0 0; }
 .idrole { color: var(--accent); font-size: 11px; margin: 0; line-height: 1.5; }

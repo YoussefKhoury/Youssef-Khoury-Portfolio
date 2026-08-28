@@ -553,7 +553,9 @@
 
   /* ---------- pressure-type on the hero heading (desktop pointer, motion-safe) ---------- */
   const heroH1 = document.querySelector('.hero-copy h1');
-  if (heroH1 && !reduced &&
+  const heroDate = document.querySelector('.hero .birthdate');
+  const ptTargets = [heroH1, heroDate].filter(Boolean);
+  if (ptTargets.length && !reduced &&
       window.matchMedia('(pointer: fine)').matches &&
       window.matchMedia('(min-width: 721px)').matches) {
     const W0 = 700, W1 = 900, WD0 = 100, WD1 = 136, RADIUS = 155;
@@ -583,12 +585,16 @@
         }
       });
     };
-    if (!heroH1.hasAttribute('aria-label')) {
-      heroH1.setAttribute('aria-label', heroH1.textContent.replace(/\s+/g, ' ').trim());
-    }
-    wrap(heroH1);
+    ptTargets.forEach((node) => {
+      if (!node.hasAttribute('aria-label') && !node.hasAttribute('aria-hidden')) {
+        node.setAttribute('aria-label', node.textContent.replace(/\s+/g, ' ').trim());
+      }
+      wrap(node);
+    });
 
-    const chars = [...heroH1.querySelectorAll('.tp-ch')].map((el) => ({ el, cx: 0, cy: 0, cur: 0 }));
+    const chars = ptTargets
+      .flatMap((node) => [...node.querySelectorAll('.tp-ch')])
+      .map((el) => ({ el, cx: 0, cy: 0, cur: 0 }));
     const measure = () => chars.forEach((c) => {
       const r = c.el.getBoundingClientRect();
       c.cx = r.left + r.width / 2;
@@ -622,6 +628,7 @@
       raf = (moving || active) ? requestAnimationFrame(loop) : (tpLast = 0);
     };
     hero.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') return;   // ignore touch input, incl. touchscreen PCs
       mx = e.clientX; my = e.clientY; active = true;
       if (!raf) raf = requestAnimationFrame(loop);
     });
