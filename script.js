@@ -28,17 +28,22 @@
   const workRail = workSec?.querySelector('.work-rail span');
   const workRows = [...(workSec ? workSec.querySelectorAll('.row') : [])];
 
-  // snaps the rail fill straight to a given row's own position, using the
-  // same first/last-center geometry as onScroll — no dependency on the
-  // scroll animation finishing, so a click lands on its dot immediately
-  // and exactly, instead of waiting on the focus line to catch up.
-  const syncRailTo = (targetRow) => {
+  // one renderer for the rail. normally the fill tracks whichever row sits on
+  // the scroll focus line; while a case is open it pins to that row's dot.
+  // everything is measured live, because opening a panel reflows every row
+  // below it and the old geometry is stale within a frame.
+  let railPin = null;
+  let railAnimating = false;
+
+  const renderRail = () => {
     if (!workSec || !workRail || !workRows.length) return;
     const firstRect = workRows[0].getBoundingClientRect();
     const lastRect = workRows[workRows.length - 1].getBoundingClientRect();
     const firstCenter = firstRect.top + firstRect.height / 2;
     const lastCenter = lastRect.top + lastRect.height / 2;
     const span = Math.max(1, lastCenter - firstCenter);
+    // pin the track to the first and last nodes rather than to hand-tuned
+    // offsets, so the line lands on the dots at every breakpoint
     const track = workRail.parentElement;
     const shellBox = track.offsetParent?.getBoundingClientRect();
     if (shellBox) {
@@ -46,15 +51,44 @@
       track.style.bottom = 'auto';
       track.style.height = span + 'px';
     }
-    const targetRect = targetRow.getBoundingClientRect();
-    const targetCenter = targetRect.top + targetRect.height / 2;
-    const p = Math.min(1, Math.max(0, (targetCenter - firstCenter) / span));
+    let mark;
+    if (railPin) {
+      const pinRect = railPin.getBoundingClientRect();
+      mark = pinRect.top + pinRect.height / 2;
+    } else {
+      mark = window.innerHeight * 0.5;
+    }
+    const p = Math.min(1, Math.max(0, (mark - firstCenter) / span));
     workRail.style.height = (p * 100) + '%';
+    // light a row's node once the fill reaches that row's own position on the
+    // same first/last-center scale used for p, so the last dot lights exactly
+    // when p hits 1 regardless of the track's on-screen geometry
     workRows.forEach((row) => {
       const rr = row.getBoundingClientRect();
       const rowFrac = (rr.top + rr.height / 2 - firstCenter) / span;
       row.classList.toggle('rail-lit', p >= rowFrac - 0.01);
     });
+  };
+
+  // a CSS height transition emits no layout events, so the only way to keep
+  // the fill sitting on the dot while a panel opens or closes is to re-measure
+  // every frame until it settles
+  const trackRailUntilSettled = (panel) => {
+    railAnimating = true;
+    let stopped = false;
+    const tick = () => { if (stopped) return; renderRail(); requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+    const end = () => {
+      if (stopped) return;
+      stopped = true;
+      railAnimating = false;
+      panel.removeEventListener('transitionend', onEnd);
+      clearTimeout(guard);
+      renderRail();
+    };
+    const onEnd = (e) => { if (e.target === panel && e.propertyName === 'height') end(); };
+    panel.addEventListener('transitionend', onEnd);
+    const guard = setTimeout(end, 800);   // fallback if transitionend never fires
   };
 
   const onScroll = () => {
@@ -70,38 +104,7 @@
       const max = document.documentElement.scrollHeight - vh;
       progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
     }
-    if (workSec && workRail && workRows.length) {
-      // drive fill off the first/last row centers (not the section's full
-      // height) so it reliably hits 100% exactly as the last row reaches
-      // the focus line, instead of stalling short of it
-      const focusY = vh * 0.5;
-      const firstRect = workRows[0].getBoundingClientRect();
-      const lastRect = workRows[workRows.length - 1].getBoundingClientRect();
-      const firstCenter = firstRect.top + firstRect.height / 2;
-      const lastCenter = lastRect.top + lastRect.height / 2;
-      const span = Math.max(1, lastCenter - firstCenter);
-      // pin the track to the first and last nodes rather than to hand-tuned
-      // offsets, so the line lands on the dots at every breakpoint
-      const track = workRail.parentElement;
-      const shellBox = track.offsetParent?.getBoundingClientRect();
-      if (shellBox) {
-        track.style.top = (firstCenter - shellBox.top) + 'px';
-        track.style.bottom = 'auto';
-        track.style.height = span + 'px';
-      }
-      const p = Math.min(1, Math.max(0, (focusY - firstCenter) / span));
-      workRail.style.height = (p * 100) + '%';
-      // light a row's node once the fill fraction reaches that row's own
-      // position on the same first/last-center scale used for p, so the
-      // last dot lights exactly when p hits 1 regardless of the rail
-      // track's actual on-screen geometry
-      workRows.forEach((row) => {
-        const rr = row.getBoundingClientRect();
-        const rowCenter = rr.top + rr.height / 2;
-        const rowFrac = (rowCenter - firstCenter) / span;
-        row.classList.toggle('rail-lit', p >= rowFrac - 0.01);
-      });
-    }
+    renderRail();
     if (workRows.length) {
       const focus = vh * 0.42;
       let best = null, bestD = Infinity;
@@ -117,6 +120,7 @@
   onScroll();
   let ticking = false;
   window.addEventListener('scroll', () => {
+    if (railPin && !railAnimating) railPin = null;   // user scrolled: hand the rail back to the scroll position
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => { onScroll(); ticking = false; });
@@ -251,20 +255,11 @@
           // on a phone the panel opens below the fold — bring its head back up
           btn.scrollIntoView({ block: 'start', behavior: 'smooth' });
         }
-        // desktop: no auto-scroll here — it fired scroll events mid-animation
-        // that made onScroll() re-fight the rail fill syncRailTo already set,
-        // producing a visible twitch under the dot
       };
       panel.addEventListener('transitionend', done);
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) done();
     } else {
       requestAnimationFrame(() => { panel.style.height = '0px'; });
-      const shut = (e) => {
-        if (e.target !== panel || e.propertyName !== 'height') return;
-        panel.removeEventListener('transitionend', shut);
-        onScroll();
-      };
-      panel.addEventListener('transitionend', shut);
     }
   };
   caseToggles.forEach((btn) => {
@@ -276,8 +271,10 @@
         if (other === btn || other.getAttribute('aria-expanded') !== 'true') return;
         setCase(other, document.getElementById(other.getAttribute('aria-controls')), false);
       });
+      // the rail follows the open case; releasing the pin hands it back to scroll
+      railPin = willOpen ? btn : null;
       setCase(btn, panel, willOpen);
-      if (willOpen) syncRailTo(btn); // move the rail the instant it's clicked, not after the panel finishes animating open
+      trackRailUntilSettled(panel);
     });
   });
 
