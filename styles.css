@@ -1180,7 +1180,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
        "File all back" adds .filing for the length of the fold: while the
        stack is shrinking, anchoring would instead chase the viewport down. */
     /* same charcoal as the rest of the site; amber only on the accents */
-    --kraft-hi: #191512; --kraft-lo: #100e0c;
+    --kraft-hi: #121010; --kraft-lo: #0a0908;
     /* clear space an index tab (22.8px) drops into, plus room to breathe */
     --tab-band: 44px;
   }
@@ -1227,7 +1227,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     position: absolute; bottom: 100%; margin-bottom: -1px;
     display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
     padding: 4px 9px 5px;
-    background: linear-gradient(180deg, #1d1916, #131010);
+    background: linear-gradient(180deg, #131010, #0a0808);
     border: 1px solid var(--line); border-bottom: 0; border-radius: 7px 7px 0 0;
     font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
     transition: color .3s var(--ease), border-color .3s var(--ease);
@@ -1249,7 +1249,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .section.collapsible.open .sec-head {
     border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
-    background: linear-gradient(180deg, #201b15, #15120e);
+    background: linear-gradient(180deg, #16120c, #0c0a07);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
   }
   .section.collapsible.open .sec-head > :first-child {
@@ -1273,7 +1273,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     position: relative; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
     min-height: 44px; padding: 10px 4px; text-align: center;
-    background: var(--file, #0B0906);
+    background: var(--file, #050403);
     font: 500 11px/1.25 var(--mono); letter-spacing: 0.04em; color: var(--ink);
     text-transform: uppercase;
   }
@@ -1281,7 +1281,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
      wipes off left-to-right (staggered) in step with the body expanding */
   .section.collapsible .sec-metrics li::before {
     content: ""; position: absolute; inset: 0; z-index: 1;
-    background: #0a0a0a;
+    background: #000;
     transform-origin: right;
     transition: transform .42s var(--ease) calc(var(--i, 0) * 70ms);
   }
@@ -1295,10 +1295,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .js .section.collapsible.open .sec-body {
     padding: 16px 13px 18px;
-    background: #12100d;
+    background: #050403;
     border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line)); border-top: 0;
     border-radius: 0 0 8px 8px;
-    box-shadow: 0 26px 46px -22px rgba(0, 0, 0, .82);
+    box-shadow: 0 26px 46px -22px rgba(0, 0, 0, .92);
     animation: fileDraw .5s var(--ease);
   }
   /* experience has no metric strip to cap the file: it takes its own top edge and
