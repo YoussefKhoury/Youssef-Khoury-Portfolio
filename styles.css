@@ -864,7 +864,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* === the drawer: three folders whose files pull open === */
   .dossier {
     padding: 16px 0 34px;
-    --kraft-hi: #26211A; --kraft-lo: #1A140E;
+    /* folders wear the site's own surface tones, not warm kraft */
+    --kraft-hi: #1d1915; --kraft-lo: #14100d;
   }
   .dossier + .section { padding-top: 34px; }
 
@@ -888,8 +889,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, var(--kraft-hi), var(--kraft-lo));
     border: 1px solid var(--line); border-radius: 0;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
-    transition: border-color .35s var(--ease), background .35s var(--ease);
+    box-shadow: inset 0 0 0 rgba(232, 177, 90, 0), inset 0 1px 0 rgba(255, 255, 255, .04);
+    transition: border-color .35s var(--ease), background .35s var(--ease), box-shadow .4s var(--ease);
   }
   /* only the ends of the stack are rounded */
   .dossier-body > .section.collapsible:first-child .sec-head { border-radius: 8px 8px 0 0; }
@@ -904,7 +905,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     position: absolute; bottom: 100%; margin-bottom: -1px;
     display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
     padding: 7px 13px 8px;
-    background: linear-gradient(180deg, var(--kraft-hi), #201a13);
+    background: linear-gradient(180deg, var(--kraft-hi), #17130f);
     border: 1px solid var(--line); border-bottom: 0; border-radius: 8px 8px 0 0;
     font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
     transition: color .3s var(--ease), border-color .3s var(--ease);
@@ -915,18 +916,19 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head > :first-child::before {
     content: attr(data-file) "\00a0\00a0"; color: var(--accent);
   }
-  /* the front's own caption + chevron */
+  /* no caption text on the front — just an open/close chevron */
   .section.collapsible .sec-head > :last-child {
     display: inline-flex; align-items: center; margin-left: auto;
-    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint);
+    font-size: 0; letter-spacing: 0; color: var(--faint);
   }
   .section.collapsible .sec-head > :last-child::after {
-    content: "\00a0\00a0\25B8"; color: var(--faint);
+    content: "\25B8"; font-size: 13px; color: var(--faint);
     display: inline-block; transition: transform .4s var(--ease), color .3s var(--ease);
   }
   .section.collapsible.open .sec-head {
     border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
-    background: linear-gradient(180deg, #2b241b, #1d160f);
+    background: linear-gradient(180deg, #241e18, #16120e);
+    box-shadow: inset 3px 0 0 var(--accent), inset 0 1px 0 rgba(255, 255, 255, .04);
   }
   .section.collapsible.open .sec-head > :first-child {
     color: var(--ink); border-color: color-mix(in srgb, var(--accent) 46%, var(--line));
@@ -940,10 +942,12 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 1px; padding: 1px; margin: 8px 3px 0;
     list-style: none; cursor: pointer;
-    background: var(--line); border: 1px solid #2A241E;
+    background: var(--line); border: 1px solid var(--line);
     border-radius: 8px 8px 0 0; overflow: hidden;
   }
   .js .section.collapsible:not(.open) .sec-metrics { display: none; }
+  /* experience keeps one honest headline stat instead of a four-cell grid */
+  #experience .sec-metrics { grid-template-columns: 1fr; }
   .section.collapsible .sec-metrics li {
     position: relative; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
@@ -968,10 +972,27 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .js .section.collapsible.open .sec-body {
     padding: 20px 14px 22px;
-    background: #0B0906;
-    border: 1px solid color-mix(in srgb, var(--accent) 30%, #2A241E); border-top: 0;
+    background: #12100d;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line)); border-top: 0;
     border-radius: 0 0 8px 8px;
     box-shadow: 0 26px 46px -22px rgba(0, 0, 0, .82);
+    animation: fileDraw .5s var(--ease);
+  }
+  /* an amber light sweeps down the file as it draws open */
+  .js .section.collapsible.open .sec-body::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 42%;
+    pointer-events: none;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 20%, transparent), transparent);
+    animation: fileScan .62s var(--ease) forwards;
+  }
+  @keyframes fileDraw {
+    from { opacity: .25; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fileScan {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    35%  { opacity: 1; }
+    100% { transform: translateY(320%); opacity: 0; }
   }
   /* resting collapsed state is CSS-only, so a resize back to desktop always reveals */
   .js .section.collapsible:not(.open) .sec-body { height: 0; padding: 0; }
@@ -980,7 +1001,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .drawer-front {
     position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 78px;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(180deg, #211b15, #141009);
+    background: linear-gradient(180deg, #1d1915, #100e0c);
     border: 1px solid var(--line); border-radius: 0 0 11px 11px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
     font: 400 10px/1 var(--mono); letter-spacing: 0.26em; text-transform: uppercase;
@@ -1093,7 +1114,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head,
   .section.collapsible .sec-head > :first-child,
   .section.collapsible .sec-head > :last-child::after { transition: none; }
-  .section.collapsible .sec-body { transition: none; }
+  .section.collapsible .sec-body { transition: none; animation: none; }
+  .section.collapsible .sec-body::after { animation: none; display: none; }
   .section.collapsible .sec-body > * { opacity: 1; transform: none; transition: none; }
   .section.collapsible .sec-metrics li { animation: none; }
   .section.collapsible .sec-metrics li span { opacity: 1; transition: none; }
