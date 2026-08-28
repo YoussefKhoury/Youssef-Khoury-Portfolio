@@ -1364,6 +1364,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* calmer hero: centred, drop the 3-beat method list */
   .hero-copy { text-align: center; }
   .hero-copy .actions { justify-content: center; }
+  .hero-copy .lead { margin-inline: auto; }
   .hero-avatar { margin-inline: auto; }
   .method { display: none; }
 
@@ -1396,6 +1397,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .contact .shell { text-align: center; }
   .contact .actions { justify-content: center; }
   .contact-grid { justify-items: center; }
+  /* max-width on these blocks kept them left-anchored while their text centred,
+     so the copy read off-centre — pull the blocks to centre as well */
+  .contact-copy { justify-self: stretch; }
+  .contact-copy h2, .contact-copy > p { margin-inline: auto; }
   /* the label and chart stay left so they read against the axis; the outcome
      line and its note centre with the rest of the closing block */
   .contact-fig { text-align: left; }
