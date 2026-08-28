@@ -328,33 +328,53 @@ h1 .tp-ch {
 /* portrait framed as a literal case file: a folder tab sits flush on top */
 .casefile { align-self: flex-start; width: 168px; }
 .filetab {
-  display: block; width: fit-content; margin: 0 0 -1px 14px; position: relative; z-index: 2;
-  padding: 5px 14px 8px;
-  font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint);
-  background: linear-gradient(180deg, #1d1916, #131010);
-  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  display: block; width: fit-content; margin: 0 0 -1px 16px; position: relative; z-index: 3;
+  padding: 5px 13px 7px;
+  font-size: 8.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--faint);
+  background: linear-gradient(180deg, #1e1a16, #131010);
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
   border-bottom: 0; border-radius: 7px 7px 0 0;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--accent) 16%, transparent);
 }
-.filetab b { color: var(--accent); font-weight: 500; margin: 0 1px; }
+.filetab b { color: var(--accent); font-weight: 500; margin: 0 2px; }
+
+/* concentric case-file frame: hair rule, mat gap, drop shadow */
 .avatar {
   position: relative; width: 168px; aspect-ratio: 4 / 5; overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line));
   background: var(--surface-2);
-  box-shadow: 0 18px 34px -22px rgba(0, 0, 0, .8);
+  box-shadow:
+    0 0 0 4px var(--bg),
+    0 0 0 5px color-mix(in srgb, var(--accent) 24%, var(--line)),
+    0 22px 42px -24px rgba(0, 0, 0, .85);
 }
 .avatar img {
   position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 0;
   transform: scale(1.32); transform-origin: 50% 8%;
-  filter: grayscale(1) contrast(1.05) brightness(.97);
+  filter: grayscale(1) contrast(1.06) brightness(.96) sepia(.14);
   pointer-events: none; user-select: none; -webkit-user-drag: none;
 }
+/* inner hairline sits a mat gap in from the edge */
+.avatar::before {
+  content: ""; position: absolute; inset: 7px; z-index: 3; pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+/* warm cast + soft top-down vignette so the portrait reads with depth */
+.avatar::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 42%),
+    radial-gradient(128% 96% at 50% 16%, transparent 52%, rgba(9, 7, 5, .52));
+}
 
-.pc { position: absolute; z-index: 2; width: 10px; height: 10px; border: 1px solid var(--accent); }
-.pc.tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
-.pc.tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
-.pc.bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
-.pc.br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+/* amber crop marks on the inner-frame corners */
+.pc { position: absolute; z-index: 4; width: 12px; height: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 78%, transparent); }
+.pc.tl { top: 7px; left: 7px; border-right: 0; border-bottom: 0; }
+.pc.tr { top: 7px; right: 7px; border-left: 0; border-bottom: 0; }
+.pc.bl { bottom: 7px; left: 7px; border-right: 0; border-top: 0; }
+.pc.br { bottom: 7px; right: 7px; border-left: 0; border-top: 0; }
 
 .idname { font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: -0.01em; margin: 6px 0 0; }
 .idrole { color: var(--accent); font-size: 11px; margin: 0; line-height: 1.5; }
