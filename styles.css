@@ -731,6 +731,9 @@ h2 {
   font-size: 11px; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 12px;
 }
 .row .tags b { color: var(--accent-2); font-weight: 500; }
+/* separators live on the tag, not in the markup, so hiding a tag on a phone
+   takes its dot with it */
+.row .tags .t + .t::before { content: " · "; color: var(--faint); }
 .case-dek {
   color: var(--muted); font-size: 13.5px; line-height: 1.65; margin: 0 0 16px; max-width: 74ch;
 }
@@ -1390,23 +1393,38 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .case-item { max-width: none; }
   #work { --case-rise: 26px; --case-tilt: 0deg; }
   #work .sec-head { margin-bottom: 6px; }
+  /* the index sits top-left and the +/× top-right on one line, with the title
+     and a trimmed tag strip beneath — three lines a row instead of four */
   .row {
-    max-width: none; grid-template-columns: 1fr; gap: 6px;
-    padding: 20px 2px;
+    max-width: none; grid-template-columns: 1fr auto; gap: 4px 14px;
+    align-items: start; padding: 18px 2px 18px 22px;
+    scroll-margin-top: 96px;
   }
-  .row .go { opacity: 1; transform: none; order: 3; margin-top: 4px; }
+  .row .row-body { grid-column: 1; }
+  .row .go {
+    grid-column: 2; grid-row: 1; align-self: start;
+    opacity: 1; transform: none; margin-top: 0;
+  }
+  /* the glyph alone carries the affordance — the words cost a whole line */
+  .row .go b { display: none; }
+  .row .go .chev { font-size: 20px; }
   .row .idx { display: inline-block; margin: 0 0 4px; }
   .row h3 { margin: 0; }
-  .row .tags { margin-top: 2px; }
-  .case-item.flagship::before { left: 2px; top: 2px; }
+  .row .tags { margin-top: 2px; line-height: 1.8; }
+  /* three skills is what a phone can show without wrapping to a block of text */
+  .row .tags .t:nth-child(n+4) { display: none; }
+  .case-item.flagship::before { left: 22px; top: 2px; }
   .case-item.flagship .row { padding-top: 26px; }
-  .case-inner { padding-left: 2px; padding-right: 2px; }
+  .case-inner { padding-left: 22px; padding-right: 2px; }
   .case dl > div { grid-template-columns: 1fr; gap: 4px; }
 
-  /* strip the decorative layer that reads as clutter on a phone
-     (the hero fog stays — it carries the atmosphere) */
-  .work-rail { display: none; }
-  .row .node { display: none; }
+  /* the rail stays — it is the section's spine and the only scroll feedback
+     on a phone — but slimmed and moved inside the shell. The sparks go: they
+     are decoration, and they cost real height. */
+  .work-rail { left: 3px; width: 1px; }
+  .work-rail span { width: 1px; }
+  .row .node { left: 0; width: 7px; height: 7px; margin-top: -3.5px; border-width: 1px; }
+  .row.rail-lit .node { box-shadow: 0 0 8px var(--accent); }
   .row .spark { display: none; }
 
   /* the fixed corner frames crowd content on small screens */

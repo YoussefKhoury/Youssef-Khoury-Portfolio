@@ -51,6 +51,15 @@
       const firstCenter = firstRect.top + firstRect.height / 2;
       const lastCenter = lastRect.top + lastRect.height / 2;
       const span = Math.max(1, lastCenter - firstCenter);
+      // pin the track to the first and last nodes rather than to hand-tuned
+      // offsets, so the line lands on the dots at every breakpoint
+      const track = workRail.parentElement;
+      const shellBox = track.offsetParent?.getBoundingClientRect();
+      if (shellBox) {
+        track.style.top = (firstCenter - shellBox.top) + 'px';
+        track.style.bottom = 'auto';
+        track.style.height = span + 'px';
+      }
       const p = Math.min(1, Math.max(0, (focusY - firstCenter) / span));
       workRail.style.height = (p * 100) + '%';
       // light a row's node once the fill fraction reaches that row's own
@@ -209,11 +218,22 @@
         if (e && (e.target !== panel || e.propertyName !== 'height')) return;
         panel.style.height = 'auto';
         panel.removeEventListener('transitionend', done);
+        onScroll();
+        // on a phone the panel opens below the fold — bring its head back up
+        if (matchMedia('(max-width: 720px)').matches) {
+          btn.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        }
       };
       panel.addEventListener('transitionend', done);
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) done();
     } else {
       requestAnimationFrame(() => { panel.style.height = '0px'; });
+      const shut = (e) => {
+        if (e.target !== panel || e.propertyName !== 'height') return;
+        panel.removeEventListener('transitionend', shut);
+        onScroll();
+      };
+      panel.addEventListener('transitionend', shut);
     }
   };
   caseToggles.forEach((btn) => {
