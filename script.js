@@ -592,7 +592,7 @@
     const loop = (ts) => {
       const dt = tpLast ? Math.min(48, ts - tpLast) : 16;
       tpLast = ts;
-      const k = 1 - Math.pow(0.0015, dt / 1000);   // gentle, frame-rate independent
+      const k = 1 - Math.exp(-dt / 120);            // gentle, frame-rate independent
       let moving = false;
       for (const c of chars) {
         const d = Math.hypot(c.cx - mx, c.cy - my);
@@ -600,15 +600,12 @@
         c.cur += (tgt - c.cur) * k;
         if (Math.abs(tgt - c.cur) > 0.002) moving = true;
         const p = c.cur;
-        const w = Math.round(W0 + p * (W1 - W0));
-        if (w !== c.lw) {                            // only touch the DOM on a real change
+        // weight/width only — no positional transform, so letters never jump
+        const w = (W0 + p * (W1 - W0)).toFixed(1);
+        if (w !== c.lw) {
           c.lw = w;
-          c.el.style.fontVariationSettings = `"wght" ${w}, "wdth" ${Math.round(WD0 + p * (WD1 - WD0))}`;
+          c.el.style.fontVariationSettings = `"wght" ${w}, "wdth" ${(WD0 + p * (WD1 - WD0)).toFixed(1)}`;
         }
-        const tf = p > 0.003
-          ? `translateY(${(-4 * p).toFixed(2)}px) scale(${(1 + 0.13 * p).toFixed(3)})`
-          : '';
-        if (tf !== c.lt) { c.lt = tf; c.el.style.transform = tf; }
       }
       raf = (moving || active) ? requestAnimationFrame(loop) : (tpLast = 0);
     };
