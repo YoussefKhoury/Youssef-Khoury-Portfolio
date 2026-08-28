@@ -1050,7 +1050,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .idcard { display: none; }
   .hero-avatar {
     display: block; position: relative; overflow: hidden;
-    width: 96px; height: 96px; margin: 0 0 24px;
+    width: 148px; height: 148px; margin: 0 0 24px;
     border-radius: 50%;
     border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line));
     background:
@@ -1059,11 +1059,13 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     box-shadow: 0 8px 20px rgba(0, 0, 0, .38);
   }
   /* the source is a head-to-waist cut-out: the face sits in its top third, the
-     torso fills the rest. Scaled to 186% the circle lands on the head and
-     collar — face centred, a little of the shoulders, torso cropped away. */
+     torso fills the rest. Zoom is independent of the circle's size (percent
+     scales both axes together), so widening the circle alone would still crop
+     tight on the face — pull the zoom back to 148% to bring the collar and
+     jacket into frame with it. */
   .hero-avatar img {
-    position: absolute; left: 50%; top: 2%;
-    width: 186%; max-width: none; height: auto; transform: translateX(-50%);
+    position: absolute; left: 50%; top: 1%;
+    width: 148%; max-width: none; height: auto; transform: translateX(-50%);
     filter: grayscale(1) contrast(1.06) brightness(.97);
     pointer-events: none; user-select: none; -webkit-user-drag: none;
   }
