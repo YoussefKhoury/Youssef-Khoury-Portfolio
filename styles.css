@@ -904,7 +904,7 @@ h2 {
 .contact .actions { margin-top: 24px; }
 
 .contact-grid {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 372px);
+  display: grid; grid-template-columns: minmax(320px, 1fr) minmax(300px, 1.5fr);
   gap: clamp(30px, 6vw, 78px); align-items: center; margin-top: 20px;
 }
 
@@ -922,7 +922,9 @@ h2 {
 .contact-fig::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
 
 .cf-label { color: var(--faint); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; }
-.cf-svg { display: block; width: 100%; height: auto; margin: 14px 0 4px; overflow: visible; }
+/* the chart's type lives in viewBox units, so letting it fill the wider card
+   would scale 9px labels past the headline — cap it near its natural size */
+.cf-svg { display: block; width: 100%; max-width: 430px; height: auto; margin: 14px 0 4px; overflow: visible; }
 .cf-svg .cf-axis { stroke: var(--line); stroke-width: 1; }
 .cf-svg .cf-k {
   fill: var(--faint); font-family: var(--mono); font-size: 9px;
@@ -1071,14 +1073,15 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     padding: 0 0 24px;
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #191512; --kraft-lo: #100e0c;
+    /* clear space an index tab (22.8px) drops into, plus room to breathe */
+    --tab-band: 44px;
   }
   .dossier + .section { padding-top: 34px; }
   /* the drawer hangs off the box above it, so that box drops its bottom padding */
   .section:has(+ .dossier) { padding-bottom: 0; }
 
-  /* headroom is exactly one index tab (22.8px), so the first folder front butts
-     the box above with the tab sitting in the gap rather than overrunning it */
-  .js .dossier-body { display: block; height: auto; padding-top: 24px; }
+  /* headroom for the first folder's index tab, so it clears the box above */
+  .js .dossier-body { display: block; height: auto; padding-top: var(--tab-band); }
 
   /* closed, the folders butt into one stack — adjacent 1px borders overlap into a
      single shared rule and each index tab rides on the front above it */
@@ -1088,7 +1091,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .dossier-body > .section.collapsible:first-child { margin-top: 0; }
   /* a drawn-out file ends its card, so the folder below drops by one tab band
      rather than landing its tab on the open file */
-  .dossier-body > .section.collapsible.open + .section.collapsible { margin-top: 24px; }
+  .dossier-body > .section.collapsible.open + .section.collapsible { margin-top: var(--tab-band); }
   /* #experience carries an id-level padding-bottom off the base sheet — null it
      here so the last folder butts flush against the drawer front */
   .dossier-body > #experience.section.collapsible { padding-bottom: 0; }
@@ -1226,7 +1229,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .drawer-front b { color: var(--accent); font-weight: 500; }
   /* the last file drawn out ends the stack, so the front becomes its own bar */
   #dossier-body:has(> .section.collapsible:last-child.open) + .drawer-front {
-    margin-top: 24px; border-radius: 8px;
+    margin-top: var(--tab-band); border-radius: 8px;
   }
 
   /* contents fade up once the cells have finished filling */
@@ -1293,7 +1296,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .contact .shell { text-align: center; }
   .contact .actions { justify-content: center; }
   .contact-grid { justify-items: center; }
+  /* the label and chart stay left so they read against the axis; the outcome
+     line and its note centre with the rest of the closing block */
   .contact-fig { text-align: left; }
+  .contact-fig .cf-headline, .contact-fig .cf-note { text-align: center; }
 
   .xrow { grid-template-columns: 1fr; gap: 10px; }
   .xr-when { display: flex; align-items: center; gap: 12px; }
