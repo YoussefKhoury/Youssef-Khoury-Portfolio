@@ -1340,7 +1340,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     border: 1px solid color-mix(in srgb, var(--accent) 70%, #000);
     border-radius: 0 0 8px 8px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
-    font: 600 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
+    font: 600 10.5px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
     color: #0b0906;
   }
   .drawer-front b { color: #0b0906; font-weight: 700; }
