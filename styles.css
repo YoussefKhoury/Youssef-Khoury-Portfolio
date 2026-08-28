@@ -243,7 +243,7 @@ html.booting .hero-copy > :nth-child(2) { animation-delay: .50s; }
 html.booting .hero-copy > :nth-child(3) { animation-delay: .58s; }
 html.booting .hero-copy > :nth-child(4) { animation-delay: .66s; }
 html.booting .hero-copy > :nth-child(5) { animation-delay: .74s; }
-html.booting .idcard > :not(.avatar) { animation: bootIn .34s var(--ease) .5s both; }
+html.booting .idcard > :not(.casefile) { animation: bootIn .34s var(--ease) .5s both; }
 
 @keyframes bootFrame { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes bootWipe {
@@ -325,11 +325,12 @@ h1 .tp-ch {
 
 /* ---------- hero ID card ---------- */
 .idcard { display: flex; flex-direction: column; gap: 12px; margin-top: 46px; }
-/* the folder tab riding on top of the portrait — a literal case file */
+/* portrait framed as a literal case file: a folder tab sits flush on top */
+.casefile { align-self: flex-start; width: 168px; }
 .filetab {
-  align-self: flex-start; margin: 0 0 -1px 12px; position: relative; z-index: 2;
-  padding: 5px 12px 7px;
-  font-size: 8.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint);
+  display: block; width: fit-content; margin: 0 0 -1px 14px; position: relative; z-index: 2;
+  padding: 5px 14px 8px;
+  font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--faint);
   background: linear-gradient(180deg, #1d1916, #131010);
   border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
   border-bottom: 0; border-radius: 7px 7px 0 0;
@@ -831,7 +832,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .idcard {
     order: -1; margin-top: 0; flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 8px 20px;
   }
-  .idcard .avatar { width: 120px; }
+  .idcard .casefile, .idcard .avatar { width: 120px; }
   .idcard .idname { width: 100%; margin-top: 12px; }
   .idcard .idrole { width: 100%; margin-bottom: 4px; }
   .idcard .idlinks { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
@@ -1077,6 +1078,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
             mask-image: radial-gradient(130% 108% at 50% 32%, #000 46%, transparent 100%);
   }
   .idcard .avatar .pc { display: none; }
+  .idcard .casefile { align-self: center; width: 150px; }
   .idcard .filetab { display: none; }
   .idcard .avatar img { filter: grayscale(1) contrast(1.03) brightness(.92); }
   .idcard .idlinks { justify-content: center; }
@@ -1166,7 +1168,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   html.booting .frame,
   html.booting .avatar > img,
   html.booting .hero-copy > *,
-  html.booting .idcard > :not(.avatar) { animation: none !important; }
+  html.booting .idcard > :not(.casefile) { animation: none !important; }
   .scroll-progress { box-shadow: none; }
   .overlay { transition: opacity .12s ease, visibility .12s; clip-path: none; }
   .overlay .ov-nav a { transition: color .2s ease; }
