@@ -864,13 +864,13 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* === the drawer: three folders whose files pull open === */
   .dossier {
     padding: 16px 0 34px;
-    /* folders wear the site's own surface tones, not warm kraft */
-    --kraft-hi: #1d1915; --kraft-lo: #14100d;
+    /* folders sit near-black like the rest of the page; amber carries the state */
+    --kraft-hi: #17140f; --kraft-lo: #100e0c;
   }
   .dossier + .section { padding-top: 34px; }
 
   /* the top padding is headroom for the first folder's index tab */
-  .js .dossier-body { display: block; height: auto; padding-top: 30px; }
+  .js .dossier-body { display: block; height: auto; padding-top: 24px; }
 
   /* the folders butt into one continuous stack — adjacent 1px borders
      overlap into a single shared rule, no gap between fronts */
@@ -885,7 +885,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* .sec-head is the folder front — the whole bar is the tap target */
   .section.collapsible .sec-head {
     position: relative; display: flex; align-items: center; gap: 10px;
-    margin: 0; padding: 16px 15px 15px; min-height: 54px;
+    margin: 0; padding: 13px 14px 12px; min-height: 47px;
     cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, var(--kraft-hi), var(--kraft-lo));
     border: 1px solid var(--line); border-radius: 0;
@@ -898,16 +898,16 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head::after {
     display: block; content: ""; position: absolute;
     left: 14px; right: 14px; top: 8px; bottom: auto;
-    height: 1px; background: rgba(255, 255, 255, .05); transform: none;
+    height: 1px; background: color-mix(in srgb, var(--accent) 16%, transparent); transform: none;
   }
   /* the index tab riding above the front, one step further left each time */
   .section.collapsible .sec-head > :first-child {
     position: absolute; bottom: 100%; margin-bottom: -1px;
-    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
-    padding: 7px 13px 8px;
-    background: linear-gradient(180deg, var(--kraft-hi), #17130f);
-    border: 1px solid var(--line); border-bottom: 0; border-radius: 8px 8px 0 0;
-    font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
+    display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    padding: 5px 11px 6px;
+    background: linear-gradient(180deg, #1b1712, #100e0c);
+    border: 1px solid var(--line); border-bottom: 0; border-radius: 7px 7px 0 0;
+    font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
     transition: color .3s var(--ease), border-color .3s var(--ease);
   }
   .dossier-body > .section.collapsible:nth-child(1) .sec-head > :first-child { left: auto; right: 2%; }
@@ -927,7 +927,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .section.collapsible.open .sec-head {
     border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
-    background: linear-gradient(180deg, #241e18, #16120e);
+    background: linear-gradient(180deg, #1b1712, #100e0c);
     box-shadow: inset 3px 0 0 var(--accent), inset 0 1px 0 rgba(255, 255, 255, .04);
   }
   .section.collapsible.open .sec-head > :first-child {
@@ -946,8 +946,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     border-radius: 8px 8px 0 0; overflow: hidden;
   }
   .js .section.collapsible:not(.open) .sec-metrics { display: none; }
-  /* experience keeps one honest headline stat instead of a four-cell grid */
-  #experience .sec-metrics { grid-template-columns: 1fr; }
   .section.collapsible .sec-metrics li {
     position: relative; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
@@ -999,12 +997,12 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* the drawer front, butting directly under the last folder to close the stack */
   .drawer-front {
-    position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 78px;
+    position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 60px;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(180deg, #1d1915, #100e0c);
-    border: 1px solid var(--line); border-radius: 0 0 11px 11px;
+    background: linear-gradient(180deg, #17140f, #100e0c);
+    border: 1px solid var(--line); border-radius: 0 0 10px 10px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
-    font: 400 10px/1 var(--mono); letter-spacing: 0.26em; text-transform: uppercase;
+    font: 400 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
     color: var(--faint);
   }
   .drawer-front::before {
