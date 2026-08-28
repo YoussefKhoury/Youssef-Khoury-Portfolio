@@ -247,7 +247,6 @@
         if (e && (e.target !== panel || e.propertyName !== 'height')) return;
         panel.style.height = 'auto';
         panel.removeEventListener('transitionend', done);
-        syncRailTo(btn);
         if (matchMedia('(max-width: 720px)').matches) {
           // on a phone the panel opens below the fold — bring its head back up
           btn.scrollIntoView({ block: 'start', behavior: 'smooth' });
@@ -282,6 +281,7 @@
         setCase(other, document.getElementById(other.getAttribute('aria-controls')), false);
       });
       setCase(btn, panel, willOpen);
+      if (willOpen) syncRailTo(btn); // move the rail the instant it's clicked, not after the panel finishes animating open
     });
   });
 
