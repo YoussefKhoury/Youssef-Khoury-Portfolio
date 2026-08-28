@@ -312,15 +312,45 @@
   drawerFront?.addEventListener('click', () => {
     const open = collSecs.filter((s) => s.classList.contains('open')).reverse();
     if (!open.length) return;
-
-    /* Close in place: no ride-up, no scroll compensation. The button sits
-       below the whole stack, so nothing above the viewport's current top
-       moves — only the open folders collapse under it. */
     const step = reduced ? 0 : 110;
+
+    /* The page ends up shorter than the current scroll position once these
+       fold shut, and the browser snaps scrollY down to fit the instant that
+       happens — synchronously, with no animation, wherever in the sequence
+       it happens to land. Peek at the final layout first (toggle the closed
+       state with no transition, measure, put it back) so we know exactly
+       where that landing spot is, then drive a real smooth scroll there in
+       parallel with the fold, pre-empting the hard snap instead of eating it. */
+    let targetY = null;
+    if (!reduced) {
+      const startY = window.scrollY;
+      open.forEach((sec) => sec.classList.remove('open'));
+      void document.body.offsetHeight;
+      const maxY = document.documentElement.scrollHeight - window.innerHeight;
+      targetY = Math.max(0, Math.min(startY, maxY));
+      open.forEach((sec) => sec.classList.add('open'));
+      void document.body.offsetHeight;
+      // Shrinking the page for the peek forces the browser to clamp scrollY,
+      // then growing it back doesn't reliably restore the original position —
+      // scroll anchoring can push it past the start instead (blocked by this
+      // stack's own overflow-anchor:none, but forcing it back is still the
+      // point). behavior:'auto' here would NOT be instant — per spec 'auto'
+      // defers to the CSS scroll-behavior, which is smooth on <html>, so this
+      // would silently animate and race the real scroll started below, and
+      // scrollY wouldn't reflect it synchronously either. 'instant' is the
+      // one value that actually bypasses CSS and applies (and reads) at once.
+      window.scrollTo({ top: startY, left: 0, behavior: 'instant' });
+    }
+
     open.forEach((sec, i) => {
       if (step) setTimeout(() => setSection(sec, false), i * step);
       else setSection(sec, false);
     });
+
+    if (targetY !== null && targetY < window.scrollY - 2) {
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+
     if (reduced) return;
     setTimeout(() => {
       drawerFront.classList.add('shutting');
