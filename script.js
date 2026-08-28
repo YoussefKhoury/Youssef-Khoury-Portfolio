@@ -28,6 +28,35 @@
   const workRail = workSec?.querySelector('.work-rail span');
   const workRows = [...(workSec ? workSec.querySelectorAll('.row') : [])];
 
+  // snaps the rail fill straight to a given row's own position, using the
+  // same first/last-center geometry as onScroll — no dependency on the
+  // scroll animation finishing, so a click lands on its dot immediately
+  // and exactly, instead of waiting on the focus line to catch up.
+  const syncRailTo = (targetRow) => {
+    if (!workSec || !workRail || !workRows.length) return;
+    const firstRect = workRows[0].getBoundingClientRect();
+    const lastRect = workRows[workRows.length - 1].getBoundingClientRect();
+    const firstCenter = firstRect.top + firstRect.height / 2;
+    const lastCenter = lastRect.top + lastRect.height / 2;
+    const span = Math.max(1, lastCenter - firstCenter);
+    const track = workRail.parentElement;
+    const shellBox = track.offsetParent?.getBoundingClientRect();
+    if (shellBox) {
+      track.style.top = (firstCenter - shellBox.top) + 'px';
+      track.style.bottom = 'auto';
+      track.style.height = span + 'px';
+    }
+    const targetRect = targetRow.getBoundingClientRect();
+    const targetCenter = targetRect.top + targetRect.height / 2;
+    const p = Math.min(1, Math.max(0, (targetCenter - firstCenter) / span));
+    workRail.style.height = (p * 100) + '%';
+    workRows.forEach((row) => {
+      const rr = row.getBoundingClientRect();
+      const rowFrac = (rr.top + rr.height / 2 - firstCenter) / span;
+      row.classList.toggle('rail-lit', p >= rowFrac - 0.01);
+    });
+  };
+
   const onScroll = () => {
     const vh = window.innerHeight;
     header?.classList.toggle('scrolled', window.scrollY > 20);
@@ -218,14 +247,13 @@
         if (e && (e.target !== panel || e.propertyName !== 'height')) return;
         panel.style.height = 'auto';
         panel.removeEventListener('transitionend', done);
-        onScroll();
+        syncRailTo(btn);
         if (matchMedia('(max-width: 720px)').matches) {
           // on a phone the panel opens below the fold — bring its head back up
           btn.scrollIntoView({ block: 'start', behavior: 'smooth' });
         } else {
-          // the rail fill tracks the row sitting on the focus line, so a
-          // click needs to bring the opened row's dot there itself instead
-          // of waiting for the user to scroll to it by hand
+          // decorative only — the rail already snapped to this row above,
+          // this just brings it up to the focus line to read comfortably
           const rowRect = btn.getBoundingClientRect();
           const rowCenter = rowRect.top + rowRect.height / 2;
           const focusY = window.innerHeight * 0.5;
