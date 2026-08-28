@@ -637,7 +637,8 @@ h2 {
 .case-item.flagship .row { padding-top: 60px; }
 .row .result {
   margin: 14px 0 0; font-size: 12px; line-height: 1.6;
-  letter-spacing: 0.02em; color: var(--muted); max-width: 74ch;
+  letter-spacing: 0.02em; color: var(--muted); max-width: 62ch;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
 }
 .row .result b { color: var(--accent); font-weight: 600; }
 
@@ -732,10 +733,16 @@ h2 {
   font-size: 11px; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 12px;
 }
 .row .tags b { color: var(--accent-2); font-weight: 500; }
-.row .meta { color: var(--muted); font-size: 13.5px; line-height: 1.65; margin: 0; max-width: 74ch; }
-.row .outcome {
-  color: var(--ink); font-size: 13px; line-height: 1.6; margin: 18px 0 0; max-width: 74ch;
+.row .meta {
+  color: var(--muted); font-size: 13.5px; line-height: 1.65; margin: 0; max-width: 62ch;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.case-inner .outcome {
+  color: var(--ink); font-size: 13px; line-height: 1.6; margin: 0 0 22px; max-width: 74ch;
   padding-left: 12px; border-left: 2px solid var(--accent);
+}
+.case-inner .outcome .mono {
+  color: var(--accent); font-size: 10px; letter-spacing: 0.16em; margin-right: 8px;
 }
 
 /* per-row staggered entrance */
@@ -744,24 +751,17 @@ h2 {
 .js .row.reveal .idx,
 .js .row.reveal .tags,
 .js .row.reveal .meta,
-.js .row.reveal .result,
-.js .row.reveal .outcome {
+.js .row.reveal .result {
   opacity: 0; transform: translateY(8px);
   transition: opacity .45s var(--ease), transform .45s var(--ease);
 }
 .js .row.reveal .tags { transition-delay: .06s; }
 .js .row.reveal .meta { transition-delay: .12s; }
-.js .row.reveal .outcome { transition-delay: .18s; }
-.js .row.reveal .result { transition-delay: .24s; }
+.js .row.reveal .result { transition-delay: .18s; }
 .js .row.reveal.visible .idx,
 .js .row.reveal.visible .tags,
 .js .row.reveal.visible .meta,
-.js .row.reveal.visible .result,
-.js .row.reveal.visible .outcome { opacity: 1; transform: none; }
-.row .outcome .mono {
-  color: var(--accent); font-size: 10px; letter-spacing: 0.16em;
-  margin-right: 8px;
-}
+.js .row.reveal.visible .result { opacity: 1; transform: none; }
 
 .row .go {
   justify-self: start; align-self: center;
@@ -1377,7 +1377,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .44s; }
 
   /* --- fewer words on a phone: keep collapsed rows to title + tags --- */
-  .row .meta, .row .outcome { display: none; }
+  .row .meta { display: none; }
   .hero-copy .stackline { display: none; }
   .flag-copy .fineprint { display: none; }
   /* Experience is behind a folder the visitor chose to open, so the roles read
@@ -1485,8 +1485,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .row .go { transition: opacity .15s ease; transform: none; }
   .sec-head::after { transition: none; transform: scaleX(1); }
   .js .row.reveal h3, .js .row.reveal .idx, .js .row.reveal .tags,
-  .js .row.reveal .meta, .js .row.reveal .result,
-  .js .row.reveal .outcome { opacity: 1; transform: none; transition: none; }
+  .js .row.reveal .meta,
+  .js .row.reveal .result { opacity: 1; transform: none; transition: none; }
   .work-rail span, .row .node { transition: none; }
   .case, .case-inner, .row .chev { transition: none; }
   .js .ct-panel { transition: none; transform: none; }
