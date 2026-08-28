@@ -347,7 +347,7 @@
     const fx = fog.getContext('2d');
     const SCALE = 0.5;                  // buffer resolution vs. display
     const STEP = 5;                     // grid spacing in buffer px (~10px on screen)
-    let fw = 1, fh = 1, fRun = false, fLast = 0, fTime = Math.random() * 100;
+    let fw = 1, fh = 1, fNarrow = false, fRun = false, fLast = 0, fTime = Math.random() * 100;
     // cursor state, all in buffer coords; pm* trails toward pt* for a soft lag
     let ptX = -999, ptY = -999, pmX = -999, pmY = -999, pStr = 0, pWant = 0;
 
@@ -397,9 +397,12 @@
       for (let y = STEP * 0.5; y < fh; y += STEP) {
         for (let x = STEP * 0.5; x < fw; x += STEP) {
           // normalise per axis so the clearing hugs the hero's own shape
-          const ux = (x - cx) / cx, uy = (y - cy) / cy;
+          // on a phone the hero is tall + narrow, so the round clear-centre
+          // collapses to two thin side strips; flatten it vertically and let the
+          // dots run almost edge to edge left-right
+          const ux = (x - cx) / cx, uy = (y - cy) / cy * (fNarrow ? 0.5 : 1);
           const nd = Math.min(1, Math.hypot(ux, uy) / 1.414);
-          let edge = (nd - 0.24) / 0.76;          // dots reach a little further in now
+          let edge = (nd - (fNarrow ? 0.08 : 0.24)) / (fNarrow ? 0.92 : 0.76);
           if (edge <= 0.02) continue;
           edge = edge < 1 ? edge * edge * (3 - 2 * edge) : 1;
 
@@ -450,6 +453,7 @@
       const r = fog.getBoundingClientRect();
       fw = Math.max(1, Math.round(r.width * SCALE));
       fh = Math.max(1, Math.round(r.height * SCALE));
+      fNarrow = r.width < 720;
       fog.width = fw; fog.height = fh;
       fPaint();                         // never leave the canvas blank
     };
