@@ -273,7 +273,7 @@ html.booting .idcard .dsr-body { animation: bootIn .34s var(--ease) .5s both; }
 .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 /* atmospheric drifting fog — rendered low-res and softened so it reads as
    haze, not pixels; denser toward the hero's outer edges (see script.js) */
-.hero #herofog { filter: blur(0.5px); opacity: .52; }
+.hero #herofog { filter: blur(0.5px); opacity: .32; }
 /* a faint fixed amber wash so the hero never reads as flat black */
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
@@ -355,7 +355,7 @@ h1 .tp-ch {
    is fixed; it only shrinks on narrower viewports. */
 .idcard {
   position: relative;
-  width: 38em;
+  width: 45em;
   margin-inline: auto;
   margin-top: 30px;
   font-size: clamp(8px, 0.38vw + 7px, 12.5px);
@@ -364,7 +364,7 @@ h1 .tp-ch {
   position: relative; width: 100%; overflow: hidden;
   background: linear-gradient(180deg, var(--surface), var(--surface-2));
   border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--line));
-  border-radius: 1.5em;
+  border-radius: 0 1.75em 1.75em 1.75em;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 3%, transparent), 0 1.4em 3em rgba(0, 0, 0, .16);
 }
 .casecard::before {
@@ -440,8 +440,8 @@ h1 .tp-ch {
     radial-gradient(88% 74% at 50% 42%, color-mix(in srgb, var(--accent) 4%, transparent), transparent 78%);
 }
 .dsr-photo img {
-  position: absolute; inset: auto; z-index: 1; width: 74%; height: auto;
-  left: 13%; bottom: -3em;
+  position: absolute; inset: auto; z-index: 1; width: 66%; height: auto;
+  left: 17%; bottom: -2.4em;
   object-fit: contain; object-position: 50% 100%;
   transform: none; transform-origin: 50% 100%;
   filter: grayscale(1) contrast(1.05) brightness(.98) sepia(.1);
