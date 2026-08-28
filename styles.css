@@ -284,7 +284,7 @@ html.booting .idcard .dsr-body { animation: bootIn .34s var(--ease) .5s both; }
 }
 .hero-grid {
   position: relative; z-index: 1;
-  display: grid; grid-template-columns: 300px 1fr; gap: 52px; align-items: start;
+  display: grid; grid-template-columns: auto 1fr; gap: clamp(34px, 4.5vw, 60px); align-items: start;
   padding-top: calc(54px + clamp(40px, 6vw, 66px)); padding-bottom: clamp(52px, 9vw, 88px);
 }
 .eyebrow { color: var(--faint); margin: 0 0 20px; }
@@ -349,125 +349,150 @@ h1 .tp-ch {
 .method span.mono { font-size: 11px; color: var(--accent); letter-spacing: 0.16em; }
 .method p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.55; }
 
-/* ---------- hero dossier card ---------- */
-.idcard { margin-top: 40px; }
-.dossier {
+/* ---------- hero case-file card ----------
+   one proportional system: every dimension below is in `em`, and the single
+   font-size knob on .idcard scales the whole card as one unit. Desktop value
+   is fixed; it only shrinks on narrower viewports. */
+.idcard {
   position: relative;
-  padding: 15px 15px 13px;
+  width: 37em;
+  margin-top: 34px;
+  font-size: clamp(8.4px, 0.46vw + 8px, 13px);
+}
+.casecard {
+  position: relative; width: 100%; overflow: hidden;
   background: linear-gradient(180deg, var(--surface), var(--surface-2));
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-radius: 0.5em;
 }
-/* four L-brackets sitting just outside the panel edge */
-.dsr-frame { position: absolute; inset: 0; pointer-events: none; }
-.dsr-frame::before, .dsr-frame::after,
-.dossier::before, .dossier::after {
-  content: ""; position: absolute; width: 12px; height: 12px;
-  border: 1px solid var(--accent); opacity: .85;
-}
-.dsr-frame::before { top: -5px; left: -5px; border-right: 0; border-bottom: 0; }
-.dsr-frame::after { top: -5px; right: -5px; border-left: 0; border-bottom: 0; }
-.dossier::before { bottom: -5px; left: -5px; border-right: 0; border-top: 0; }
-.dossier::after { bottom: -5px; right: -5px; border-left: 0; border-top: 0; }
 
-/* folder tab */
-.dsr-tab {
-  display: flex; align-items: center; gap: 7px;
-  padding: 0 0 11px; margin: 1px 0 0;
-  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
-  border-bottom: 1px solid var(--line);
+/* corner brackets — thin muted gold, just outside the silhouette.
+   the top-left one hugs the protruding folder tab, the other three the panel */
+.dsr-frame { position: absolute; inset: 0; pointer-events: none; z-index: 6; }
+.dsr-frame::before, .dsr-frame::after,
+.idcard::before, .idcard::after {
+  content: ""; position: absolute; width: 0.9em; height: 0.9em;
+  border: 1px solid color-mix(in srgb, var(--accent) 62%, transparent); opacity: .9;
 }
-.dsr-tab b { color: var(--faint); font-weight: 500; margin: 0 2px; }
-.dsr-tab svg { flex: none; color: var(--accent); }
+.dsr-frame::before { top: -2.55em; left: -0.4em; border-right: 0; border-bottom: 0; }
+.dsr-frame::after  { top: -0.4em; right: -0.4em; border-left: 0; border-bottom: 0; }
+.idcard::before { bottom: -0.4em; left: -0.4em; border-right: 0; border-top: 0; }
+.idcard::after  { bottom: -0.4em; right: -0.4em; border-left: 0; border-top: 0; }
+
+/* protruding top-left folder tab */
+.dsr-tab {
+  position: absolute; top: -2.3em; left: -1px; z-index: 5;
+  display: flex; align-items: center; gap: 0.55em;
+  height: 2.45em; padding: 0 1.7em 0 1.15em;
+  background: linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 80%, var(--surface-2)));
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-bottom: 0; border-radius: 0.5em 0.5em 0 0;
+  font-size: 0.82em; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); white-space: nowrap;
+}
+.dsr-tab b { color: var(--faint); font-weight: 500; margin: 0 0.15em; }
+.dsr-tab svg { flex: none; width: 1.1em; height: 1em; color: var(--accent); }
 
 /* vertical caption up the right edge */
 .dsr-side {
-  position: absolute; top: 46px; right: 7px;
+  position: absolute; top: 5em; right: -1.55em; z-index: 4;
   writing-mode: vertical-rl; text-orientation: mixed;
-  font-size: 7.5px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--faint);
+  display: flex; align-items: center; gap: 0.9em;
+  font-size: 0.64em; letter-spacing: 0.36em; text-transform: uppercase; color: var(--faint);
 }
-.dsr-side::before { content: "\2022"; display: block; margin-bottom: 7px; color: var(--accent); }
+.dsr-side::before { content: "\2022"; color: var(--accent); font-size: 1.5em; line-height: 1; }
 .dsr-side::after {
-  content: ""; display: block; margin-top: 8px; width: 1px; height: 24px;
+  content: ""; width: 1px; height: 3.6em;
   background: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
-/* decorative dot matrices */
+/* understated gold dot texture */
 .dsr-dots {
-  position: absolute; pointer-events: none;
-  background-image: radial-gradient(color-mix(in srgb, var(--accent) 38%, transparent) 1px, transparent 1.5px);
-  background-size: 10px 10px;
+  position: absolute; z-index: 3; pointer-events: none;
+  background-image: radial-gradient(color-mix(in srgb, var(--accent) 32%, transparent) 0.5px, transparent 1px);
+  background-size: 0.72em 0.72em;
 }
-.dsr-dots-a { top: 62px; left: 13px; width: 44px; height: 80px; opacity: .5; }
-.dsr-dots-b { right: 20px; bottom: 118px; width: 38px; height: 56px; opacity: .32; }
+.dsr-dots-a { top: 3.6em; left: 1em; width: 3.1em; height: 5.2em; opacity: .24; }
+.dsr-dots-b { right: 1.1em; bottom: 6.5em; width: 2.7em; height: 3.8em; opacity: .16; }
 
-/* portrait */
+/* portrait — ~58% of the card height */
 .dsr-photo {
-  position: relative; margin: 13px 0 0; aspect-ratio: 4 / 5; overflow: hidden;
-  border-radius: 4px; background: var(--surface-2);
+  position: relative; height: 34em; overflow: hidden; background: var(--surface-2);
 }
 .dsr-photo::before {
-  content: ""; position: absolute; inset: 0; z-index: 0;
-  background: radial-gradient(68% 52% at 50% 80%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(70% 48% at 50% 82%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 72%);
 }
 .dsr-photo img {
-  position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
-  object-fit: cover; object-position: 50% 0;
-  transform: scale(1.32); transform-origin: 50% 8%;
-  filter: grayscale(1) contrast(1.06) brightness(.98) sepia(.12);
+  position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 12%;
+  transform: scale(1.07); transform-origin: 50% 0;
+  filter: grayscale(1) contrast(1.05) brightness(.98) sepia(.1);
   pointer-events: none; user-select: none; -webkit-user-drag: none;
 }
 .dsr-photo::after {
-  content: ""; position: absolute; z-index: 2; left: 7px; bottom: 7px;
-  width: 11px; height: 11px;
-  border-left: 1px solid var(--accent); border-bottom: 1px solid var(--accent); opacity: .8;
+  content: ""; position: absolute; z-index: 2; right: 0.85em; top: 0.85em;
+  width: 0.85em; height: 0.85em;
+  border-right: 1px solid var(--accent); border-top: 1px solid var(--accent); opacity: .7;
 }
 
-/* identity block */
-.dsr-body { position: relative; }
-.dsr-name {
-  font-family: var(--display); font-weight: 700; font-size: 18px;
-  letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink);
-  margin: 14px 0 0; text-wrap: balance;
+/* the angled seam between portrait and information panel */
+.dsr-seam {
+  position: absolute; z-index: 5; left: 0; top: 34em; width: 102%; height: 0;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  transform: rotate(-5deg); transform-origin: left center; pointer-events: none;
 }
-.dsr-role { color: var(--accent); font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase; margin: 7px 0 0; }
-.dsr-role2 { color: var(--muted); font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; margin: 3px 0 0; }
+
+/* information panel — diagonal top edge picks up the seam */
+.dsr-body {
+  position: relative; z-index: 2;
+  margin-top: -3.2em; padding: 3.5em 2em 1.6em;
+  clip-path: polygon(0 3.2em, 100% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+}
+.dsr-name {
+  font-family: var(--display); font-weight: 800; font-size: 2.85em; line-height: 0.96;
+  letter-spacing: 0.004em; text-transform: uppercase; color: var(--ink);
+  margin: 0; max-width: 8.5em; text-wrap: balance;
+}
+.dsr-role  { color: var(--accent); font-size: 0.82em; letter-spacing: 0.15em; text-transform: uppercase; margin: 0.95em 0 0; }
+.dsr-role2 { color: var(--ink); font-size: 0.82em; letter-spacing: 0.3em; text-transform: uppercase; margin: 0.4em 0 0; opacity: .92; }
 
 .dsr-rule {
-  display: block; position: relative; height: 1px; margin: 12px 0 11px;
-  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  display: block; position: relative; height: 1px; margin: 1.5em 0 1.4em;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 .dsr-rule::before {
-  content: ""; position: absolute; left: 0; top: -1px; width: 42px; height: 3px; background: var(--accent);
+  content: ""; position: absolute; left: 0; top: -1px; width: 3.2em; height: 3px; background: var(--accent);
 }
 
-/* metadata table */
-.dsr-meta { display: grid; gap: 8px; margin: 0; }
+/* metadata — generous row spacing */
+.dsr-meta { display: grid; gap: 1.45em; margin: 0.3em 0 0; }
 .dsr-meta > div {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 9.5px; letter-spacing: 0.11em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.9em;
+  font-size: 0.82em; letter-spacing: 0.13em; text-transform: uppercase;
 }
-.dsr-ic { flex: none; color: var(--accent); font-size: 10px; line-height: 1; }
-.dsr-meta dt { flex: none; color: var(--muted); margin: 0; }
-.dsr-led { flex: 1; height: 0; border-bottom: 1px dotted color-mix(in srgb, var(--accent) 40%, transparent); }
+.dsr-ic { flex: none; color: var(--accent); font-size: 1.1em; line-height: 1; }
+.dsr-meta dt { flex: none; color: var(--muted); margin: 0; min-width: 5em; }
+.dsr-led { flex: 1; height: 0; border-bottom: 1px dotted color-mix(in srgb, var(--accent) 38%, transparent); }
 .dsr-meta dd { flex: none; color: var(--ink); margin: 0; }
 .dsr-meta dd.ok { color: var(--accent); }
 
-/* footer links */
+/* footer links — icon + label + arrow, evenly split */
 .dsr-links {
-  display: flex; align-items: stretch; margin: 13px 0 0; padding: 10px 0 0;
-  border-top: 1px solid var(--line);
+  display: flex; align-items: stretch; margin: 1.6em 0 0; padding: 1.15em 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
 }
 .dsr-links a {
-  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  font-size: 8.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.5em;
+  font-size: 0.72em; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted);
   transition: color .2s ease;
 }
-.dsr-links a + a { border-left: 1px solid var(--line); }
+.dsr-links a + a { border-left: 1px solid color-mix(in srgb, var(--accent) 18%, transparent); }
 .dsr-links a:hover { color: var(--ink); }
-.dsr-links svg { flex: none; color: var(--faint); transition: color .2s ease; }
+.dsr-links svg { flex: none; width: 1.05em; height: 1.05em; color: var(--faint); transition: color .2s ease; }
 .dsr-links a:hover svg { color: var(--accent); }
-.dsr-links .ar { color: var(--accent); font-size: 11px; }
+.dsr-links .ar { color: var(--accent); font-size: 1.1em; margin-left: 0.15em; }
 
 /* ---------- skills marquee ---------- */
 .skillstrip {
@@ -934,8 +959,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
 @media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr; gap: 30px; }
-  .idcard { order: -1; margin-top: 0; display: flex; justify-content: center; }
-  .dossier { width: 100%; max-width: 340px; }
+  .idcard { order: -1; margin: 0 auto; }
   h1 { max-width: 20ch; }
   .flag-grid { grid-template-columns: 1fr; }
   .flag-copy .actions { flex-direction: row; flex-wrap: wrap; }
@@ -1169,7 +1193,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .hero-copy { text-align: center; }
   .hero-copy .actions { justify-content: center; }
   .method { display: none; }
-  .dossier { max-width: 320px; }
+  .idcard { width: min(33.6em, 100%); font-size: clamp(7.8px, 2.4vw, 10.5px); }
   .dsr-side { display: none; }
   .dsr-dots-b { display: none; }
 
