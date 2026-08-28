@@ -853,6 +853,10 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     order: -1; margin-top: 0; flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 8px 20px;
   }
   .idcard .casefile, .idcard .avatar { width: 120px; }
+  /* no case-file frame outside the desktop layout — plain portrait */
+  .idcard .avatar { border: 0; background: none; box-shadow: none; }
+  .idcard .avatar::before, .idcard .avatar::after { display: none; }
+  .idcard .avatar .pc { display: none; }
   .idcard .idname { width: 100%; margin-top: 12px; }
   .idcard .idrole { width: 100%; margin-bottom: 4px; }
   .idcard .idlinks { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
