@@ -251,8 +251,16 @@ html.booting .idcard > :not(.avatar) { animation: bootIn .34s var(--ease) .5s bo
 .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
 .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 /* atmospheric drifting fog — rendered low-res and softened so it reads as
-   dither, not pixels; denser toward the hero's outer edges (see script.js) */
-.hero #herofog { filter: blur(0.7px); opacity: 0.9; }
+   haze, not pixels; denser toward the hero's outer edges (see script.js) */
+.hero #herofog { filter: blur(0.5px); opacity: 1; }
+/* a faint fixed amber wash so the hero never reads as flat black */
+.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(80% 60% at 15% 20%, rgba(232, 177, 90, .06), transparent 60%),
+    radial-gradient(80% 60% at 85% 30%, rgba(224, 150, 70, .05), transparent 60%),
+    radial-gradient(90% 70% at 50% 95%, rgba(232, 177, 90, .05), transparent 65%);
+}
 .hero-grid {
   position: relative; z-index: 1;
   display: grid; grid-template-columns: 240px 1fr; gap: 64px; align-items: start;
