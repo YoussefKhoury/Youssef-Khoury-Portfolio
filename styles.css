@@ -863,19 +863,23 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* === the drawer: three folders whose files pull open === */
   .dossier {
-    padding: 40px 0 34px;
+    padding: 16px 0 34px;
     --kraft-hi: #26211A; --kraft-lo: #1A140E;
   }
   .dossier + .section { padding-top: 34px; }
 
-  .js .dossier-body { display: block; height: auto; }
+  /* the top padding is headroom for the first folder's index tab */
+  .js .dossier-body { display: block; height: auto; padding-top: 30px; }
 
-  /* each folder: a kraft front with a raised index tab, staggered across
-     the drawer so all three tabs stay reachable */
+  /* the folders butt into one continuous stack — adjacent 1px borders
+     overlap into a single shared rule, no gap between fronts */
   .dossier-body > .section.collapsible {
-    position: relative; margin: 30px 0 0; padding: 0;
+    position: relative; margin: -1px 0 0; padding: 0;
   }
-  .dossier-body > .section.collapsible:first-child { margin-top: 8px; }
+  .dossier-body > .section.collapsible:first-child { margin-top: 0; }
+  /* #experience carries an id-level padding-bottom off the base sheet — null it
+     here so the last folder butts flush against the drawer front */
+  .dossier-body > #experience.section.collapsible { padding-bottom: 0; }
 
   /* .sec-head is the folder front — the whole bar is the tap target */
   .section.collapsible .sec-head {
@@ -883,10 +887,13 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
     margin: 0; padding: 16px 15px 15px; min-height: 54px;
     cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
     background: linear-gradient(180deg, var(--kraft-hi), var(--kraft-lo));
-    border: 1px solid var(--line); border-radius: 2px 2px 10px 10px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04), 0 14px 24px -16px rgba(0, 0, 0, .8);
+    border: 1px solid var(--line); border-radius: 0;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
     transition: border-color .35s var(--ease), background .35s var(--ease);
   }
+  /* only the ends of the stack are rounded */
+  .dossier-body > .section.collapsible:first-child .sec-head { border-radius: 8px 8px 0 0; }
+  .dossier-body > .section.collapsible:last-child:not(.open) .sec-head { border-radius: 0 0 3px 3px; }
   .section.collapsible .sec-head::after {
     display: block; content: ""; position: absolute;
     left: 14px; right: 14px; top: 8px; bottom: auto;
@@ -969,13 +976,13 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* resting collapsed state is CSS-only, so a resize back to desktop always reveals */
   .js .section.collapsible:not(.open) .sec-body { height: 0; padding: 0; }
 
-  /* the drawer front, closing the stack off */
+  /* the drawer front, butting directly under the last folder to close the stack */
   .drawer-front {
-    position: relative; margin: 10px 14px 0; height: 78px;
+    position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 78px;
     display: flex; align-items: center; justify-content: center;
     background: linear-gradient(180deg, #211b15, #141009);
-    border: 1px solid var(--line); border-radius: 3px 3px 11px 11px;
-    box-shadow: 0 18px 30px -18px rgba(0, 0, 0, .72);
+    border: 1px solid var(--line); border-radius: 0 0 11px 11px;
+    box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
     font: 400 10px/1 var(--mono); letter-spacing: 0.26em; text-transform: uppercase;
     color: var(--faint);
   }
