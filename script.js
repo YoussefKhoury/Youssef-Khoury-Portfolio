@@ -189,7 +189,13 @@
     panel.classList.toggle('open', open);
     panel.style.height = panel.scrollHeight + 'px';
     if (open) {
-      const done = () => { panel.style.height = 'auto'; panel.removeEventListener('transitionend', done); };
+      // transitionend bubbles: without the target/property guard the first
+      // child transition to finish cuts the height animation short
+      const done = (e) => {
+        if (e && (e.target !== panel || e.propertyName !== 'height')) return;
+        panel.style.height = 'auto';
+        panel.removeEventListener('transitionend', done);
+      };
       panel.addEventListener('transitionend', done);
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) done();
     } else {
@@ -245,19 +251,48 @@
     const body = sec.querySelector('.sec-body');
     if (!head || !body) return;
     if (open) body.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
-    body.style.height = (open ? 0 : body.scrollHeight) + 'px';
-    void body.offsetHeight;                           // reflow so the start height sticks
-    sec.classList.toggle('open', open);
-    head.setAttribute('aria-expanded', String(open));
-    body.style.height = (open ? body.scrollHeight : 0) + 'px';
+
     let t;
-    const done = () => {
+    const done = (e) => {
+      // transitionend bubbles up from every child that finishes a transition;
+      // acting on those cut the height animation short, which is what read as
+      // a blink — the box snapped to its resting size mid-open.
+      if (e && (e.target !== body || e.propertyName !== 'height')) return;
       body.style.height = '';                         // hand resting state back to CSS
+      body.style.paddingTop = '';
+      body.style.paddingBottom = '';
       body.removeEventListener('transitionend', done);
       clearTimeout(t);
     };
+
+    if (open) {
+      // .open brings padding and borders with it. The box is border-box, so a
+      // height of 0 with padding on still renders ~36px — measure the target
+      // with the open styles applied, then animate height AND padding from 0.
+      sec.classList.add('open');
+      head.setAttribute('aria-expanded', 'true');
+      const target = body.offsetHeight;               // border-box, so borders count
+      body.style.transition = 'none';
+      body.style.height = '0px';
+      body.style.paddingTop = '0px';
+      body.style.paddingBottom = '0px';
+      void body.offsetHeight;
+      body.style.transition = '';
+      body.style.height = target + 'px';
+      body.style.paddingTop = '';
+      body.style.paddingBottom = '';
+    } else {
+      body.style.transition = 'none';
+      body.style.height = body.offsetHeight + 'px';
+      void body.offsetHeight;
+      body.style.transition = '';
+      sec.classList.remove('open');
+      head.setAttribute('aria-expanded', 'false');
+      body.style.height = '0px';                      // padding follows from CSS
+    }
+
     body.addEventListener('transitionend', done);
-    t = setTimeout(done, 500);                        // fallback if transitionend never fires
+    t = setTimeout(done, 700);                        // fallback if transitionend never fires
     if (reduced) done();
     syncDrawer();
   };
@@ -404,9 +439,13 @@
     // never navigate away silently: show the address so it can be read/selected
     flashToast(ADDR);
   };
+  // every email affordance copies — the mailto: hrefs stay for middle-click,
+  // context menu and no-JS, but a plain click never leaves the page
   document.querySelectorAll('[data-copy-email]').forEach((el) => {
-    el.addEventListener('click', copyEmail);
+    el.addEventListener('click', (e) => { e.preventDefault(); copyEmail(); });
   });
+  // tapping the toast dismisses it
+  toast?.addEventListener('click', () => toast.classList.remove('show'));
 
   /* ---------- hero atmospheric fog ----------
      Two layers on one low-res buffer, softened in CSS so it reads as haze:

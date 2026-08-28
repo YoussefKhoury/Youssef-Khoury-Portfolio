@@ -376,18 +376,18 @@ h1 .tp-ch {
 }
 .idcard::before { left: -0.55em; bottom: -0.55em; border-left-width: 1px; border-bottom-width: 1px; }
 .idcard::after  { right: -0.55em; bottom: -0.55em; border-right-width: 1px; border-bottom-width: 1px; }
-.dsr-frame::before { left: 0.7em; top: 26.3em; border-left-width: 1px; border-bottom-width: 1px; opacity: .7; }
+/* registration mark, inside the profile panel rather than straddling its edge */
+.dsr-frame::before { left: 1.5em; top: 28.4em; border-left-width: 1px; border-bottom-width: 1px; opacity: .7; }
 
-/* folder tab — flush on the card's top edge, notched right corner */
+/* folder tab — a closed tab sealed onto the card's top edge */
 .dsr-tab {
   position: absolute; top: -2.7em; left: 0.7em; z-index: 5;
   display: flex; align-items: center; gap: 0.7em;
-  height: 2.95em; padding: 0 2.5em 0 1.35em;
+  height: 2.95em; padding: 0 1.5em 0 1.35em;
   background: var(--surface);
   border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line));
   border-bottom: 0;
   border-radius: 0.7em 0.7em 0 0;
-  clip-path: polygon(0 0, calc(100% - 1.15em) 0, 100% 100%, 0 100%);
   font-size: 0.92em; letter-spacing: 0.24em; text-transform: uppercase;
   color: var(--accent); white-space: nowrap;
 }
@@ -498,7 +498,6 @@ h1 .tp-ch {
 .dsr-links a:hover { color: var(--ink); }
 .dsr-links svg { flex: none; width: 1.5em; height: 1.5em; color: var(--faint); transition: color .2s ease; }
 .dsr-links a:hover svg { color: var(--accent); }
-.dsr-link-arrow { color: var(--accent); font-size: 1.05em; line-height: 1; }
 
 /* ---------- skills marquee ---------- */
 .skillstrip {
@@ -1090,7 +1089,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* === the drawer: three folders whose files pull open === */
   .dossier {
-    padding: 0 0 24px;
+    /* no bottom padding: the next section's own padding-top already matches the
+       --tab-band headroom above the stack, so the drawer sits evenly spaced */
+    padding: 0;
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #191512; --kraft-lo: #100e0c;
     /* clear space an index tab (22.8px) drops into, plus room to breathe */
@@ -1198,9 +1199,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .section.collapsible.open .sec-metrics li::before { transform: scaleX(0); }
 
+  /* padding rides the same curve as height: the box is border-box, so padding
+     appearing all at once made the file pop open before it slid open */
   .js .section.collapsible .sec-body {
     position: relative; overflow: hidden; margin: 0;
-    transition: height .42s var(--ease);
+    transition: height .38s var(--ease), padding .38s var(--ease);
   }
   .js .section.collapsible.open .sec-body {
     padding: 16px 13px 18px;
@@ -1276,13 +1279,13 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* contents fade up once the cells have finished filling */
   .js .section.collapsible .sec-body > * {
     opacity: 0; transform: translateY(14px);
-    transition: opacity .45s var(--ease), transform .45s var(--ease);
+    transition: opacity .3s var(--ease), transform .3s var(--ease);
   }
-  .js .section.collapsible.open .sec-body > * { opacity: 1; transform: none; transition-delay: .46s; }
-  .js .section.collapsible.open .sec-body > :nth-child(2) { transition-delay: .52s; }
-  .js .section.collapsible.open .sec-body > :nth-child(3) { transition-delay: .58s; }
-  .js .section.collapsible.open .sec-body > :nth-child(4) { transition-delay: .64s; }
-  .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .70s; }
+  .js .section.collapsible.open .sec-body > * { opacity: 1; transform: none; transition-delay: .24s; }
+  .js .section.collapsible.open .sec-body > :nth-child(2) { transition-delay: .29s; }
+  .js .section.collapsible.open .sec-body > :nth-child(3) { transition-delay: .34s; }
+  .js .section.collapsible.open .sec-body > :nth-child(4) { transition-delay: .39s; }
+  .js .section.collapsible.open .sec-body > :nth-child(5) { transition-delay: .44s; }
 
   /* --- fewer words on a phone: keep collapsed rows to title + tags --- */
   .row .meta, .row .outcome { display: none; }
