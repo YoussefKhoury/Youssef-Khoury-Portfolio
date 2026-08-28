@@ -386,7 +386,7 @@ h1 .tp-ch {
 .dsr-frame::before {
   content: ""; position: absolute; width: 1.15em; height: 1.15em;
   border: 0 solid var(--accent); opacity: .7;
-  left: 1em; top: calc(var(--photo-h) - 2.15em);
+  left: 1em; top: calc(var(--seam) - 2.15em);
   border-left-width: 1px; border-bottom-width: 1px;
 }
 
