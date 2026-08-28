@@ -88,12 +88,17 @@ a { color: inherit; text-decoration: none; }
 /* ---------- top bar ---------- */
 .topbar {
   position: sticky; top: 0; z-index: 100;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(9px);
+  /* mostly see-through at rest so the hero fog drifts behind the nav */
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(6px);
   border-bottom: 1px solid transparent;
   transition: border-color .25s ease, background .25s ease;
 }
-.topbar.scrolled { border-color: var(--line); }
+/* once past the hero, go opaque again for legibility over real content */
+.topbar.scrolled {
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+}
 .topbar .shell { display: flex; align-items: center; justify-content: space-between; height: 54px; }
 .topbar .id { color: var(--ink); font-size: 11px; letter-spacing: 0.1em; }
 .topbar .id b { color: var(--accent); font-weight: 600; }
@@ -248,7 +253,9 @@ html.booting .idcard > :not(.avatar) { animation: bootIn .34s var(--ease) .5s bo
 @keyframes bootIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 /* ---------- hero ---------- */
-.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+/* pull the hero up under the sticky topbar so the drifting fog fills the
+   top strip behind the nav; hero-grid padding compensates so nothing shifts */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); margin-top: -54px; }
 .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 /* atmospheric drifting fog — rendered low-res and softened so it reads as
    haze, not pixels; denser toward the hero's outer edges (see script.js) */
@@ -264,7 +271,7 @@ html.booting .idcard > :not(.avatar) { animation: bootIn .34s var(--ease) .5s bo
 .hero-grid {
   position: relative; z-index: 1;
   display: grid; grid-template-columns: 240px 1fr; gap: 64px; align-items: start;
-  padding-top: clamp(40px, 6vw, 66px); padding-bottom: clamp(52px, 9vw, 88px);
+  padding-top: calc(54px + clamp(40px, 6vw, 66px)); padding-bottom: clamp(52px, 9vw, 88px);
 }
 .eyebrow { color: var(--faint); margin: 0 0 20px; }
 h1 {
@@ -872,8 +879,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   /* === the drawer: three folders whose files pull open === */
   .dossier {
     padding: 16px 0 34px;
-    /* folders sit near-black like the rest of the page; amber carries the state */
-    --kraft-hi: #17140f; --kraft-lo: #100e0c;
+    /* warm dark base tied to the amber hero; amber carries the open state */
+    --kraft-hi: #261c11; --kraft-lo: #150f09;
   }
   .dossier + .section { padding-top: 34px; }
 
@@ -906,14 +913,14 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .section.collapsible .sec-head::after {
     display: block; content: ""; position: absolute;
     left: 14px; right: 14px; top: 8px; bottom: auto;
-    height: 1px; background: color-mix(in srgb, var(--accent) 16%, transparent); transform: none;
+    height: 1px; background: color-mix(in srgb, var(--accent) 24%, transparent); transform: none;
   }
   /* the index tab riding above the front, one step further left each time */
   .section.collapsible .sec-head > :first-child {
     position: absolute; bottom: 100%; margin-bottom: -1px;
     display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
     padding: 5px 11px 6px;
-    background: linear-gradient(180deg, #1b1712, #100e0c);
+    background: linear-gradient(180deg, #2a2013, #150f09);
     border: 1px solid var(--line); border-bottom: 0; border-radius: 7px 7px 0 0;
     font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
     transition: color .3s var(--ease), border-color .3s var(--ease);
@@ -935,8 +942,8 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   }
   .section.collapsible.open .sec-head {
     border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
-    background: linear-gradient(180deg, #1b1712, #100e0c);
-    box-shadow: inset 3px 0 0 var(--accent), inset 0 1px 0 rgba(255, 255, 255, .04);
+    background: linear-gradient(180deg, #322510, #1a1209);
+    box-shadow: inset 3px 0 0 var(--accent), inset 0 1px 0 rgba(255, 255, 255, .05);
   }
   .section.collapsible.open .sec-head > :first-child {
     color: var(--ink); border-color: color-mix(in srgb, var(--accent) 46%, var(--line));
@@ -1012,7 +1019,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .drawer-front {
     position: relative; width: calc(100% - 28px); margin: -1px auto 0; height: 60px;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(180deg, #17140f, #100e0c);
+    background: linear-gradient(180deg, #241a10, #140e08);
     border: 1px solid var(--line); border-radius: 0 0 10px 10px;
     box-shadow: 0 16px 26px -20px rgba(0, 0, 0, .7);
     font: 400 9px/1 var(--mono); letter-spacing: 0.22em; text-transform: uppercase;
