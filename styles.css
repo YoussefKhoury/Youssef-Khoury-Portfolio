@@ -194,10 +194,13 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   font-family: var(--display); font-weight: 600; font-size: clamp(26px, 4.4vw, 44px);
   letter-spacing: -0.02em; color: var(--ink);
   opacity: 0; transform: translateX(-14px);
-  transition: opacity .3s var(--ease), transform .3s var(--ease), color .2s ease;
+  transition: opacity .3s var(--ease), transform .3s var(--ease), color .2s ease, background .25s ease;
 }
 .ov-nav a i { font-size: 13px; font-style: normal; color: var(--faint); font-weight: 400; }
-.ov-nav a:hover, .ov-nav a:focus-visible { color: var(--accent); }
+.ov-nav a:hover, .ov-nav a:focus-visible {
+  color: var(--accent); transform: translateX(8px);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}
 /* corner-lock: brackets snap inward onto the hovered / focused entry */
 .ov-nav a::before, .ov-nav a::after {
   content: ""; position: absolute; width: 16px; height: 16px;
