@@ -1033,12 +1033,16 @@ h2 {
 }
 
 /* ---------- footer ---------- */
-footer { border-top: 1px solid var(--line); padding: 30px 0 34px; }
+footer { border-top: 1px solid var(--line); padding: 52px 0 40px; }
 .foot-inner {
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
 }
-.foot-inner .fmark {
-  width: 18px; height: 18px; justify-self: start;
+.foot-brand {
+  display: inline-flex; align-items: center; gap: 9px; justify-self: start;
+  color: var(--faint); font-size: 10.5px; letter-spacing: 0.14em;
+}
+.foot-brand .fmark {
+  width: 18px; height: 18px;
   background: var(--accent);
   -webkit-mask: url("assets/logo-x.png") center / contain no-repeat;
   mask: url("assets/logo-x.png") center / contain no-repeat;
@@ -1047,15 +1051,9 @@ footer { border-top: 1px solid var(--line); padding: 30px 0 34px; }
   justify-self: center; color: var(--faint);
   font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
 }
-.foot-year {
-  justify-self: end; color: var(--faint);
-  font-size: 10.5px; letter-spacing: 0.14em;
-}
+.foot-inner::after { content: ""; }
 @media (max-width: 720px) {
-  footer { padding-bottom: 78px; }
-  .foot-inner { grid-template-columns: auto 1fr; row-gap: 12px; }
-  .foot-rights { justify-self: start; }
-  .foot-year { grid-column: 1 / -1; justify-self: start; }
+  footer { padding-bottom: 72px; }
 }
 
 /* arrow stays put; the label slides right on hover (defined late so it wins source order) */
