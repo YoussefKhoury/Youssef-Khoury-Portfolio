@@ -1051,6 +1051,12 @@ footer { border-top: 1px solid var(--line); padding: 30px 0 34px; }
   justify-self: end; color: var(--faint);
   font-size: 10.5px; letter-spacing: 0.14em;
 }
+@media (max-width: 720px) {
+  footer { padding-bottom: 78px; }
+  .foot-inner { grid-template-columns: auto 1fr; row-gap: 12px; }
+  .foot-rights { justify-self: start; }
+  .foot-year { grid-column: 1 / -1; justify-self: start; }
+}
 
 /* arrow stays put; the label slides right on hover (defined late so it wins source order) */
 .idlinks a, .ov-social a, .actions a, .actions button, .case-links a {
