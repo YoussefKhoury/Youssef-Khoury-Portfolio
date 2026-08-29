@@ -975,28 +975,18 @@ h2 {
   border-bottom: 1px solid var(--line);
   color: var(--faint); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
 }
-/* one number, told as two bars — the lead-time win, no prose */
-.lt { display: grid; gap: 12px; }
-.lt-row { display: grid; grid-template-columns: 48px 1fr 52px; align-items: center; gap: 12px; }
-.lt-k { color: var(--faint); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
-.lt-bar { height: 8px; background: color-mix(in srgb, var(--line) 70%, transparent); }
-.lt-bar i {
-  display: block; height: 100%; width: var(--w);
-  background: color-mix(in srgb, var(--faint) 55%, transparent);
-  transform-origin: left;
+/* small terminal readout — the card is a prompt, not a pitch */
+.term { padding-bottom: 22px; }
+.term .cf-label { margin-bottom: 16px; }
+.tl { font-size: 12.5px; line-height: 2; color: var(--fg); letter-spacing: 0; }
+.tl .tp { color: var(--accent); margin-right: 8px; }
+.tl.out { color: var(--muted); padding-left: 2px; }
+.cur {
+  display: inline-block; width: 8px; height: 14px; vertical-align: -2px;
+  background: var(--accent); animation: blink 1.1s steps(1, end) infinite;
 }
-.lt-row.is-now .lt-bar i { background: var(--accent); }
-.lt-v { color: var(--muted); font-size: 12px; text-align: right; }
-.lt-row.is-now .lt-v { color: var(--fg); }
-.lt-note { margin-top: 16px; color: var(--faint); font-size: 10px; letter-spacing: 0.1em; }
-
-.js .contact-fig .lt-bar i { transition: transform .8s var(--ease); }
-.js .contact-fig:not(.visible) .lt-bar i { transform: scaleX(0); }
-.js .contact-fig.visible .lt-row.is-now .lt-bar i { transition-delay: .22s; }
-
-@media (prefers-reduced-motion: reduce) {
-  .js .contact-fig .lt-bar i { transition: none; transform: none; }
-}
+@keyframes blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cur { animation: none; } }
 
 @media (max-width: 860px) {
   .contact-grid { grid-template-columns: 1fr; gap: 26px; }
