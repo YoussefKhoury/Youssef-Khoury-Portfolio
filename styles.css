@@ -337,13 +337,13 @@ h1 .tp-ch {
 
 /* larger arrow glyph; alignment (the hover-slide lives after the component rules below).
    line-height 1 clips the ↗ head on some faces, so give the glyph its own room. */
-.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions .ar, .case-links a .ar {
+.idlinks a .ar, .ov-social a .ar, .actions .ar, .case-links a .ar {
   font-size: 15px; line-height: 1.25; align-self: center; overflow: visible;
 }
-.idlinks a, .fcol a, .ov-social a { align-items: center; }
+.idlinks a, .ov-social a { align-items: center; }
 .actions a, .actions button { display: inline-flex; align-items: center; gap: 7px; }
 /* arrow trails the label, so every link's text starts at the same left edge */
-.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions a .ar, .actions button .ar, .case-links a .ar {
+.idlinks a .ar, .ov-social a .ar, .actions a .ar, .actions button .ar, .case-links a .ar {
   order: 9; margin: 0;
 }
 
@@ -946,13 +946,37 @@ h2 {
 /* ---------- contact ---------- */
 #contact { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(52px, 7vw, 78px); }
 #experience { padding-bottom: clamp(40px, 6vw, 60px); }
-.contact h2 { margin-top: 8px; }
-.contact .actions { margin-top: 24px; }
-
+/* closing block: headline left, the four routes out as tiles beside it */
 .contact-clean {
-  margin-top: 20px; text-align: center; padding: clamp(24px, 5vw, 40px) 0;
+  display: grid; grid-template-columns: minmax(260px, 0.85fr) minmax(420px, 1.15fr);
+  gap: clamp(28px, 5vw, 64px); align-items: center; margin-top: 24px;
 }
-.contact-clean .actions { justify-content: center; }
+.contact-clean h2 { margin: 0; }
+
+.channels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ch {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  padding: 15px 16px; text-align: left; cursor: pointer;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  transition: border-color .22s ease, transform .22s var(--ease);
+}
+.ch:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); transform: translateY(-2px); }
+.ch-ic {
+  flex: none; display: grid; place-items: center; width: 34px; height: 34px;
+  color: var(--accent); border: 1px solid var(--line); background: var(--bg);
+}
+.ch-ic svg { width: 16px; height: 16px; display: block; }
+.ch-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ch-k { color: var(--ink); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; }
+/* the handle is the proof the route is real — never let it wrap the tile open */
+.ch-v { color: var(--faint); font-size: 11px; letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ch-go {
+  margin-left: auto; flex: none; color: var(--accent); font-size: 15px; line-height: 1;
+  transition: transform .28s var(--ease);
+}
+.ch-go.mono { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+.ch:hover .ch-go:not(.mono) { transform: translate(2px, -2px); }
 
 /* heading types itself out, then the CTAs/socials fade up after */
 .type-cursor {
@@ -960,33 +984,38 @@ h2 {
   background: var(--accent); animation: blink 1.1s steps(1, end) infinite;
 }
 @keyframes blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
-.js .contact-reveal {
+/* tiles land one after another once the heading has finished typing */
+.js .contact-reveal .ch {
   opacity: 0; transform: translateY(10px);
-  transition: opacity .5s ease, transform .5s ease;
+  transition: opacity .45s ease, transform .45s var(--ease), border-color .22s ease;
 }
-.js .contact-reveal.visible { opacity: 1; transform: none; }
+.js .contact-reveal.visible .ch { opacity: 1; transform: none; }
+.js .contact-reveal.visible .ch:nth-child(2) { transition-delay: .08s; }
+.js .contact-reveal.visible .ch:nth-child(3) { transition-delay: .16s; }
+.js .contact-reveal.visible .ch:nth-child(4) { transition-delay: .24s; }
 @media (prefers-reduced-motion: reduce) {
   .type-cursor { animation: none; }
-  .js .contact-reveal { transition: none; }
+  .js .contact-reveal .ch { transition: none; }
+}
+
+@media (max-width: 980px) {
+  .contact-clean { grid-template-columns: 1fr; gap: 26px; align-items: start; }
+  /* one column of full-width rows reads better than cramped 2-up tiles on a phone */
+  .channels { grid-template-columns: 1fr; gap: 10px; }
 }
 
 /* ---------- footer ---------- */
 footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
-.fcols { display: flex; flex-wrap: wrap; gap: 36px 72px; margin-bottom: 32px; }
-.fcol .k { color: var(--faint); font-size: 11px; letter-spacing: 0.16em; margin: 0 0 12px; }
-.fcol a { display: flex; gap: 8px; color: var(--muted); font-size: 12px; letter-spacing: 0.06em; padding: 4px 0; transition: color .2s ease; }
-.fcol a .ar { color: var(--accent); }
-.fcol a:hover { color: var(--ink); }
 
 /* arrow stays put; the label slides right on hover (defined late so it wins source order) */
-.idlinks a, .fcol a, .ov-social a, .actions a, .actions button, .case-links a {
+.idlinks a, .ov-social a, .actions a, .actions button, .case-links a {
   transition: transform .28s var(--ease), color .2s ease, border-color .2s ease;
 }
-.idlinks a .ar, .fcol a .ar, .ov-social a .ar, .actions .ar, .case-links a .ar { transition: transform .28s var(--ease); }
-.idlinks a:hover, .fcol a:hover, .ov-social a:hover,
+.idlinks a .ar, .ov-social a .ar, .actions .ar, .case-links a .ar { transition: transform .28s var(--ease); }
+.idlinks a:hover, .ov-social a:hover,
 .actions a:hover, .actions button:hover, .case-links a:hover { transform: translateX(5px); color: var(--accent); }
 .case-links a:hover { border-color: var(--accent); }
-.idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,
+.idlinks a:hover .ar, .ov-social a:hover .ar,
 .actions a:hover .ar, .actions button:hover .ar, .case-links a:hover .ar { transform: translateX(4px); }
 
 /* The ↗ marks a link. Buttons are not links, so they stay bare. */
@@ -1091,7 +1120,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 
   /* thumb targets: these are all 11–12px text links, so pad them out to a
      comfortable tap height without letting the padding change the layout */
-  .idlinks a, .ov-social a, .case-links a, .fcol a, .actions a, .actions button {
+  .idlinks a, .ov-social a, .case-links a, .actions a, .actions button {
     padding-block: 11px;
   }
   .idlinks { gap: 0; margin-top: 0; }
@@ -1419,7 +1448,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .skillstrip { padding: 15px 0; gap: 8px; }
   .mq-track li { padding: 3px 17px; letter-spacing: 0.12em; font-size: 11px; }
 
-  .fcols { gap: 28px 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1462,9 +1490,9 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .case, .case-inner, .row .chev { transition: none; }
   .js .ct-panel { transition: none; transform: none; }
   .ct-tab, .ct-tab::before, .ct-tab::after { transition: none; }
-  .idlinks a:hover, .fcol a:hover, .ov-social a:hover,
+  .idlinks a:hover, .ov-social a:hover,
   .actions a:hover, .actions button:hover,
-  .idlinks a:hover .ar, .fcol a:hover .ar, .ov-social a:hover .ar,
+  .idlinks a:hover .ar, .ov-social a:hover .ar,
   .actions a:hover .ar, .actions button:hover .ar { transform: none; }
   html.booting .frame,
   html.booting .dsr-photo > img,
