@@ -186,6 +186,7 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 }
 
 .ov-nav { display: flex; flex-direction: column; }
+.ov-nav a, .ov-side { font-family: var(--body); }
 .ov-nav a {
   position: relative;
   display: flex; align-items: baseline; gap: 18px;
@@ -440,8 +441,8 @@ h1 .tp-ch {
 .dsr-photo::before {
   content: ""; position: absolute; inset: 0; z-index: 0;
   background:
-    radial-gradient(44% 38% at 50% 60%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
-    radial-gradient(82% 66% at 50% 50%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 80%);
+    radial-gradient(44% 38% at 50% 76%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+    radial-gradient(82% 66% at 50% 66%, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 80%);
 }
 .dsr-photo img {
   /* anchored to the bottom, so shrinking the width is what opens headroom at
