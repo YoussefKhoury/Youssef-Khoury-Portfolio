@@ -231,44 +231,23 @@
   }, { threshold: 0.14 });
   document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
-  /* ---------- contact heading: types itself out, then CTAs/socials fade in ---------- */
+  /* ---------- contact heading: static in the DOM, CTAs/socials fade in on scroll ----------
+     the heading text lives in the markup so it's never empty (no-JS, JS-fails,
+     or before-scroll all show the real text) — only the reveal is animated */
   const typeHeading = document.querySelector('.type-heading');
   if (typeHeading) {
-    const out = typeHeading.querySelector('.type-out');
-    const text = out ? out.textContent : '';
     const cursor = typeHeading.querySelector('.type-cursor');
+    if (cursor) cursor.style.display = 'none';
     const revealAfter = document.querySelector('.contact-reveal');
-    // the cursor only adds width on the right, so leaving it on after typing
-    // ends pulls the centered heading visibly off-centre — drop it once done
-    const finishReveal = () => {
-      if (cursor) cursor.style.display = 'none';
+    if (reduced || !revealAfter) {
       revealAfter && revealAfter.classList.add('visible');
-    };
-    if (reduced || !out) {
-      if (out) out.textContent = text;
-      finishReveal();
     } else {
-      out.textContent = ''; // hide immediately so the scroll-triggered typing has nothing to clear
-      let typed = false;
-      const typeSpeed = window.matchMedia('(max-width: 700px)').matches ? 38 : 45;
-      const runType = () => {
-        if (typed) return;
-        typed = true;
-        let i = 0;
-        const step = () => {
-          out.textContent = text.slice(0, i);
-          i += 1;
-          if (i <= text.length) setTimeout(step, typeSpeed);
-          else finishReveal();
-        };
-        step();
-      };
-      const typeObserver = new IntersectionObserver((entries) => {
+      const headObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) { runType(); typeObserver.unobserve(entry.target); }
+          if (entry.isIntersecting) { revealAfter.classList.add('visible'); headObserver.unobserve(entry.target); }
         });
       }, { threshold: 0.5 });
-      typeObserver.observe(typeHeading);
+      headObserver.observe(typeHeading);
     }
   }
 
@@ -568,10 +547,10 @@
     // so it can still be read off the screen
     flashToast(ok ? 'Email copied' : ADDR);
   };
-  // every email affordance copies — the mailto: hrefs stay for middle-click,
-  // context menu and no-JS, but a plain click never leaves the page
+  // every email affordance copies the address as a convenience, but the
+  // mailto: navigation still fires — a click has to actually open a mail app
   document.querySelectorAll('[data-copy-email]').forEach((el) => {
-    el.addEventListener('click', (e) => { e.preventDefault(); copyEmail(); });
+    el.addEventListener('click', () => { copyEmail(); });
   });
   // tapping the toast dismisses it
   toast?.addEventListener('click', () => toast.classList.remove('show'));
@@ -757,17 +736,23 @@
     }
   }
 
-  /* ---------- flagship dashboard: click-to-load gate ---------- */
+  /* ---------- flagship dashboard: autoload once it scrolls near view ----------
+     no click gate — the skeleton stays visible until the iframe fires load */
   const dashWin = document.querySelector('.dashboard-window');
-  const dashGate = dashWin?.querySelector('.dash-gate');
   const dashFrame = dashWin?.querySelector('iframe');
-  dashGate?.addEventListener('click', () => {
-    if (dashFrame && !dashFrame.src && dashFrame.dataset.src) {
+  if (dashWin && dashFrame) {
+    const loadDash = () => {
+      if (dashFrame.src) return;
       dashFrame.src = dashFrame.dataset.src;
-    }
-    dashWin.classList.remove('is-gated');
-    dashFrame?.focus();
-  });
+      dashFrame.addEventListener('load', () => dashWin.classList.remove('is-gated'), { once: true });
+    };
+    const dashObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) { loadDash(); dashObserver.unobserve(entry.target); }
+      });
+    }, { rootMargin: '400px 0px' });
+    dashObserver.observe(dashWin);
+  }
 
   /* ---------- decrypt-on-hover for menu links ---------- */
   if (!reduced) {
