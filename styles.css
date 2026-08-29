@@ -248,7 +248,7 @@ html.menu-open body { overflow: hidden; }
 .ov-stamp { font-size: 11px; letter-spacing: 0.14em; color: var(--faint); margin: 8px 0 0; }
 
 /* ---------- reveal (only hidden once JS confirms it can un-hide them) ---------- */
-.js .reveal { opacity: 0; transform: translateY(20px); transition: opacity .85s var(--ease), transform .85s var(--ease); }
+.js .reveal { opacity: 0; transform: translateY(20px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
 .js .reveal.visible { opacity: 1; transform: none; }
 
 /* section-aware scroll reveal: headings wipe in as you reach them */
@@ -257,17 +257,17 @@ html.menu-open body { overflow: hidden; }
 .js .sec-head.reveal .sk,
 .js .sec-head.reveal > span:first-child {
   clip-path: inset(0 105% 0 -2px);
-  transition: clip-path .95s var(--ease);
+  transition: clip-path 1.1s var(--ease);
 }
 .js .sec-head.reveal.visible .sk,
 .js .sec-head.reveal.visible > span:first-child { clip-path: inset(0 -2px 0 -2px); }
-.js .sec-head.reveal > span:last-child { opacity: 0; transition: opacity .65s ease .38s; }
+.js .sec-head.reveal > span:last-child { opacity: 0; transition: opacity .75s ease .48s; }
 .js .sec-head.reveal.visible > span:last-child { opacity: 1; }
 
 /* large display headings clip-wipe + rise */
 .js .flag-copy.reveal h2 {
   clip-path: inset(0 100% 0 0); transform: translateY(14px);
-  transition: clip-path 1.05s var(--ease), transform 1.05s var(--ease);
+  transition: clip-path 1.2s var(--ease), transform 1.2s var(--ease);
 }
 .js .flag-copy.reveal.visible h2 { clip-path: inset(0 0 0 0); transform: none; }
 
