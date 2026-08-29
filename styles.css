@@ -604,7 +604,7 @@ h2 {
 
 .work-intro {
   color: var(--muted); font-size: 14px; line-height: 1.7;
-  max-width: 70ch; margin: 2px 0 6px;
+  max-width: 70ch; margin: 2px 0 32px;
 }
 
 .case-item { position: relative; max-width: 1080px; border-bottom: 1px solid var(--line); }
