@@ -220,6 +220,8 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .overlay.open .ov-nav a:nth-child(5) { transition-delay: .24s; }
 .overlay.open .ov-nav a:nth-child(6) { transition-delay: .28s; }
 .overlay.open .ov-nav a:nth-child(7) { transition-delay: .32s; }
+.overlay.open .ov-nav a:hover,
+.overlay.open .ov-nav a:focus-visible { transition-delay: 0s; }
 
 .ov-side { display: flex; flex-direction: column; gap: 16px; align-self: center; color: var(--muted); opacity: 0; transition: opacity .4s ease .3s; }
 .overlay.open .ov-side { opacity: 1; }
