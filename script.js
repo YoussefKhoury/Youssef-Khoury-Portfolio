@@ -231,6 +231,40 @@
   }, { threshold: 0.14 });
   document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
+  /* ---------- contact heading: types itself out, then CTAs/socials fade in ---------- */
+  const typeHeading = document.querySelector('.type-heading');
+  if (typeHeading) {
+    const out = typeHeading.querySelector('.type-out');
+    const text = out ? out.textContent : '';
+    const revealAfter = document.querySelector('.contact-reveal');
+    const finishReveal = () => revealAfter && revealAfter.classList.add('visible');
+    if (reduced || !out) {
+      if (out) out.textContent = text;
+      finishReveal();
+    } else {
+      out.textContent = ''; // hide immediately so the scroll-triggered typing has nothing to clear
+      let typed = false;
+      const runType = () => {
+        if (typed) return;
+        typed = true;
+        let i = 0;
+        const step = () => {
+          out.textContent = text.slice(0, i);
+          i += 1;
+          if (i <= text.length) setTimeout(step, 42);
+          else finishReveal();
+        };
+        step();
+      };
+      const typeObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) { runType(); typeObserver.unobserve(entry.target); }
+        });
+      }, { threshold: 0.5 });
+      typeObserver.observe(typeHeading);
+    }
+  }
+
   /* ---------- expandable case detail ---------- */
   const caseToggles = [...document.querySelectorAll('.row[aria-controls]')];
   const setCase = (btn, panel, open) => {
