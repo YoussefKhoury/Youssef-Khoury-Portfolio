@@ -33,14 +33,14 @@ html { scroll-behavior: smooth; overflow-x: clip; }
 
 /* desktop scrollbar — Chromium browsers such as Brave */
 @media (min-width: 900px) {
-  html { scrollbar-color: var(--accent-2) var(--surface-2); scrollbar-width: thin; }
+  html { scrollbar-color: var(--accent) var(--surface-2); scrollbar-width: thin; }
   html::-webkit-scrollbar { width: 12px; }
   html::-webkit-scrollbar-track { background: var(--surface-2); border-left: 1px solid var(--line); }
   html::-webkit-scrollbar-thumb {
-    background: var(--accent-2); border: 3px solid var(--surface-2);
+    background: var(--accent); border: 3px solid var(--surface-2);
     border-radius: 999px;
   }
-  html::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  html::-webkit-scrollbar-thumb:hover { background: #F4C56D; }
 }
 
 body {
