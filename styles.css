@@ -24,7 +24,12 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; overflow-x: clip; scrollbar-gutter: stable both-edges; }
+/* no scrollbar-gutter: on overlay-scrollbar browsers (Chrome/Brave/Edge on
+   Win11, all of macOS) "stable both-edges" reserves phantom gutters on BOTH
+   sides that never get painted — that was the black strip clipping the hero
+   fog at the far left/right. Overlay scrollbars don't shift layout, so the
+   gutter bought nothing. */
+html { scroll-behavior: smooth; overflow-x: clip; }
 
 body {
   margin: 0;
