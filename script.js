@@ -244,6 +244,7 @@
     } else {
       out.textContent = ''; // hide immediately so the scroll-triggered typing has nothing to clear
       let typed = false;
+      const typeSpeed = window.matchMedia('(max-width: 700px)').matches ? 65 : 90;
       const runType = () => {
         if (typed) return;
         typed = true;
@@ -251,7 +252,7 @@
         const step = () => {
           out.textContent = text.slice(0, i);
           i += 1;
-          if (i <= text.length) setTimeout(step, 90);
+          if (i <= text.length) setTimeout(step, typeSpeed);
           else finishReveal();
         };
         step();

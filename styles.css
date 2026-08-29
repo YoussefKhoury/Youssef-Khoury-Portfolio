@@ -1007,11 +1007,21 @@ h2 {
    under a centred heading, each a 56px tap target */
 @media (max-width: 700px) {
   .contact-clean { text-align: center; gap: 40px; }
-  .channels { display: flex; justify-content: center; gap: 12px; }
-  .ch { width: 46px; height: 46px; padding: 0; display: grid; place-items: center; gap: 0; }
+  /* email / linkedin / github in a row; CV drops to its own centred row below,
+     spelled out since it isn't just another logo */
+  .channels { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+  .ch { width: 52px; height: 52px; padding: 0; display: grid; place-items: center; gap: 0; }
   .ch-body, .ch-go { display: none; }
-  .ch-ic { width: 100%; height: 100%; }
-  .ch-ic svg { width: 16px; height: 16px; }
+  .ch-ic { width: 100%; height: 100%; border: 0; background: none; }
+  .ch-ic svg { width: 24px; height: 24px; }
+
+  .channels .ch:last-child {
+    flex-basis: 100%; width: auto; height: auto; display: flex; flex-direction: row;
+    justify-content: center; gap: 10px; padding-top: 6px;
+  }
+  .channels .ch:last-child .ch-ic { width: 30px; height: 30px; border: 1px solid var(--line); background: var(--surface); }
+  .channels .ch:last-child .ch-ic svg { width: 15px; height: 15px; }
+  .channels .ch:last-child .ch-body { display: flex; }
 }
 
 /* ---------- footer ---------- */
