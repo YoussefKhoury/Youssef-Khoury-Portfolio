@@ -199,7 +199,8 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .ov-nav a i { font-size: 13px; font-style: normal; color: var(--faint); font-weight: 400; }
 .ov-nav a:hover, .ov-nav a:focus-visible {
   color: var(--accent); transform: translateX(8px);
-  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 76%);
+  transition-delay: 0s;
 }
 /* corner-lock: brackets snap inward onto the hovered / focused entry */
 .ov-nav a::before, .ov-nav a::after {
