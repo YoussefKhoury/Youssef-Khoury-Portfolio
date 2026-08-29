@@ -1111,9 +1111,11 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 }
 
 @media (max-width: 900px) {
-  .hero-grid { grid-template-columns: 1fr; gap: 30px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 30px; padding-top: calc(54px + 22px); }
   /* case-file card is a desktop-only element */
   .idcard { display: none; }
+  /* the name already sits in the topbar on mobile; drop the eyebrow repeat */
+  .hero-copy .eyebrow { display: none; }
   .hero-avatar {
     display: block; position: relative; overflow: hidden;
     width: min(190px, 52vw); height: min(190px, 52vw); margin: 0 0 26px;
