@@ -1098,7 +1098,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 64px 0 
 
 /* ---------- back-to-top ---------- */
 .to-top {
-  position: absolute; right: 24px; top: 14px; bottom: auto; z-index: 300;
+  position: absolute; right: 24px; top: -20px; bottom: auto; z-index: 300;
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 13px; background: color-mix(in srgb, var(--surface) 92%, transparent);
   border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
