@@ -358,19 +358,6 @@ h1 .tp-ch {
 
 .stackline { color: var(--faint); margin: 34px 0 0; font-size: 11px; }
 
-/* hero proof strip — real outcomes, no employer names */
-.hero-proof {
-  list-style: none; margin: 0 0 30px; padding: 0;
-  display: grid; grid-template-columns: repeat(3, auto); justify-content: start;
-  gap: 18px 34px; max-width: 860px;
-}
-.hero-proof li {
-  display: flex; flex-direction: column; gap: 5px;
-  padding-left: 14px; border-left: 1px solid var(--line);
-}
-.hero-proof .pv { font-size: 13px; color: var(--accent); letter-spacing: 0.04em; white-space: nowrap; }
-.hero-proof .pl { color: var(--faint); font-size: 11.5px; line-height: 1.5; }
-
 /* ---------- hero case-file card ----------
    one proportional system: every dimension below is in `em`, and the single
    font-size knob on .idcard scales the whole card as one unit. */
@@ -461,7 +448,7 @@ h1 .tp-ch {
   position: absolute; z-index: 1; bottom: 0; left: 50%;
   width: 58%; height: auto; transform: translateX(-50%);
   object-fit: contain; object-position: 50% 100%;
-  filter: grayscale(1) contrast(1.06) brightness(.97);
+  filter: contrast(1.03) saturate(1.02);
   pointer-events: none; user-select: none; -webkit-user-drag: none;
 }
 .dsr-photo::after {
@@ -1145,7 +1132,7 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .hero-avatar img {
     position: absolute; left: 50%; top: 1%;
     width: 130%; max-width: none; height: auto; transform: translateX(-50%);
-    filter: grayscale(1) contrast(1.06) brightness(.97);
+    filter: contrast(1.03) saturate(1.02);
     pointer-events: none; user-select: none; -webkit-user-drag: none;
   }
   h1 { max-width: 20ch; }
@@ -1440,12 +1427,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
   .hero-copy .actions { justify-content: center; }
   .hero-copy .lead { margin-inline: auto; }
   .hero-avatar { margin-inline: auto; }
-  /* proof strip stacks: one line per outcome, centred with the rest of the hero */
-  .hero-proof {
-    grid-template-columns: 1fr; justify-content: stretch;
-    gap: 12px; margin-bottom: 26px; text-align: left;
-  }
-  .hero-proof li { padding-left: 12px; }
 
   .case-item { max-width: none; }
   #work { --case-rise: 26px; --case-tilt: 0deg; }
