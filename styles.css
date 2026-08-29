@@ -1057,6 +1057,8 @@ h2 {
 @media (max-width: 700px) {
   .contact.section { padding-block: clamp(80px, 16vw, 120px); }
   .contact-clean { text-align: center; gap: 28px; }
+  .type-heading { position: relative; }
+  .type-heading .type-cursor { position: absolute; margin-left: 4px; }
   .contact-sub { margin-inline: auto; font-size: 13px; }
   /* grid, not flex-wrap: lets the CV row size to its own text instead of
      stretching the full width, so its rule sits only under the label */
