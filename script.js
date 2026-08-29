@@ -589,9 +589,13 @@
     // hero cost ~17k arcs per frame (a phone costs ~3k) — that gap is why
     // desktop scrolling stuttered while mobile stayed smooth. Spacing is now
     // derived from the buffer area so the cost is flat across screen sizes.
-    const DOTS = 5200;
+    const DOTS = 6000;
     let fStep = 5;                      // grid spacing in buffer px
     let fw = 1, fh = 1, fNarrow = false, fRun = false, fLast = 0, fTime = Math.random() * 100;
+    // ratio of the (over-scanned) buffer to the visible hero box. The vignette
+    // is measured in visible coords via these, so full-strength dots sit right
+    // out to the visible edge and keep streaming in from the clipped overscan.
+    let fOverX = 1, fOverY = 1;
     // cursor state, all in buffer coords; pm* trails toward pt* for a soft lag
     let ptX = -999, ptY = -999, pmX = -999, pmY = -999, pStr = 0, pWant = 0;
 
@@ -647,7 +651,7 @@
           // two thin side strips — drive it mostly off the horizontal axis
           // instead, so dots run full-strength right out to both edges even as
           // the wave pushes them around.
-          const ux = (x - cx) / cx, uy = (y - cy) / cy;
+          const ux = (x - cx) / cx * fOverX, uy = (y - cy) / cy * fOverY;
           let edge;
           if (fNarrow) {
             edge = Math.max((Math.abs(ux) - 0.02) / 0.72, (Math.abs(uy) - 0.34) / 0.66);
@@ -703,9 +707,12 @@
 
     const fResize = () => {
       const r = fog.getBoundingClientRect();
+      const pr = (fog.parentElement || fog).getBoundingClientRect();
+      fOverX = pr.width ? Math.max(1, r.width / pr.width) : 1;
+      fOverY = pr.height ? Math.max(1, r.height / pr.height) : 1;
       fw = Math.max(1, Math.round(r.width * SCALE));
       fh = Math.max(1, Math.round(r.height * SCALE));
-      fNarrow = r.width < 720;
+      fNarrow = pr.width < 720;
       fStep = Math.max(5, Math.sqrt((fw * fh) / DOTS));
       fog.width = fw; fog.height = fh;
       fPaint();                         // never leave the canvas blank
