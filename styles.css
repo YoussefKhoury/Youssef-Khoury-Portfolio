@@ -975,13 +975,28 @@ h2 {
   border-bottom: 1px solid var(--line);
   color: var(--faint); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
 }
-/* the measure is the only literal artefact on the page — let it read as code,
-   and let it scroll on its own rather than widen the card */
-.tr-code {
-  margin: 0; overflow-x: auto; white-space: pre;
-  color: var(--muted); font-size: 12px; line-height: 1.75; letter-spacing: 0;
+/* one number, told as two bars — the lead-time win, no prose */
+.lt { display: grid; gap: 12px; }
+.lt-row { display: grid; grid-template-columns: 48px 1fr 52px; align-items: center; gap: 12px; }
+.lt-k { color: var(--faint); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+.lt-bar { height: 8px; background: color-mix(in srgb, var(--line) 70%, transparent); }
+.lt-bar i {
+  display: block; height: 100%; width: var(--w);
+  background: color-mix(in srgb, var(--faint) 55%, transparent);
+  transform-origin: left;
 }
-.tr-code b { color: var(--accent); font-weight: 500; }
+.lt-row.is-now .lt-bar i { background: var(--accent); }
+.lt-v { color: var(--muted); font-size: 12px; text-align: right; }
+.lt-row.is-now .lt-v { color: var(--fg); }
+.lt-note { margin-top: 16px; color: var(--faint); font-size: 10px; letter-spacing: 0.1em; }
+
+.js .contact-fig .lt-bar i { transition: transform .8s var(--ease); }
+.js .contact-fig:not(.visible) .lt-bar i { transform: scaleX(0); }
+.js .contact-fig.visible .lt-row.is-now .lt-bar i { transition-delay: .22s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .contact-fig .lt-bar i { transition: none; transform: none; }
+}
 
 @media (max-width: 860px) {
   .contact-grid { grid-template-columns: 1fr; gap: 26px; }
