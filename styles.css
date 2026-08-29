@@ -356,7 +356,8 @@ h1 .tp-ch {
   order: 9; margin: 0;
 }
 
-.stackline { color: var(--faint); margin: 34px 0 0; font-size: 11px; }
+.stackline { display: none; }
+.hero-copy .actions { margin-top: 34px; }
 
 /* ---------- hero case-file card ----------
    one proportional system: every dimension below is in `em`, and the single
