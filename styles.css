@@ -1006,12 +1006,12 @@ h2 {
 /* on a phone the rows are dead weight: keep the four logos only, in one row
    under a centred heading, each a 56px tap target */
 @media (max-width: 700px) {
-  .contact-clean { text-align: center; gap: 22px; }
-  .channels { display: flex; justify-content: center; gap: 14px; }
-  .ch { width: 56px; height: 56px; padding: 0; display: grid; place-items: center; gap: 0; }
+  .contact-clean { text-align: center; gap: 40px; }
+  .channels { display: flex; justify-content: center; gap: 12px; }
+  .ch { width: 46px; height: 46px; padding: 0; display: grid; place-items: center; gap: 0; }
   .ch-body, .ch-go { display: none; }
   .ch-ic { width: 100%; height: 100%; }
-  .ch-ic svg { width: 20px; height: 20px; }
+  .ch-ic svg { width: 16px; height: 16px; }
 }
 
 /* ---------- footer ---------- */
