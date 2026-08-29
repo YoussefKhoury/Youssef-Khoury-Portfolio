@@ -955,6 +955,10 @@ h2 {
 .xr-body h3 .co { color: var(--accent-2); font-size: 11px; font-weight: 400; }
 .xr-body p { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 58ch; }
 
+@media (min-width: 721px) {
+  .xr-body p { max-width: 78ch; }
+}
+
 /* ---------- contact ---------- */
 #contact { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(52px, 7vw, 78px); }
 #experience { padding-bottom: clamp(40px, 6vw, 60px); }
