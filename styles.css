@@ -842,6 +842,12 @@ h2 {
 
 /* ---------- flagship ---------- */
 .flag-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 40px; align-items: start; margin-top: 8px; }
+
+@media (min-width: 721px) {
+  /* Align the flagship narrative with the live panel content without shrinking the panel. */
+  .flag-copy { padding-top: 40px; }
+}
+
 .flag-copy p { color: var(--muted); }
 .flag-copy .actions { margin-top: 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
 .fineprint { color: var(--faint); font-size: 11px; margin-top: 20px; line-height: 1.6; }
