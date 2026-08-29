@@ -178,7 +178,8 @@ html.menu-open body { padding-top: 55px; }
 html.menu-open .to-top { opacity: 0; transform: translateY(14px); pointer-events: none; }
 /* lock the page scrollbar while the menu is open — one scroll area, not two.
    scrollbar-gutter: stable both-edges keeps the gutter reserved, so nothing reflows */
-html.menu-open, html.menu-open body { overflow: hidden; }
+html.menu-open { overflow-x: clip; overflow-y: scroll; }
+html.menu-open body { overflow: hidden; }
 .ov-inner {
   width: var(--shell); margin-inline: auto; min-height: 100%;
   display: grid; grid-template-columns: 1fr 300px; gap: 48px; align-content: center;
