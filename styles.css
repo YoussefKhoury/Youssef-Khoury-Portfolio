@@ -959,9 +959,57 @@ h2 {
   .xr-body p { max-width: 78ch; }
 }
 
+/* ---------- experience -> contact handoff ---------- */
+.case-handoff {
+  height: clamp(76px, 7vw, 96px); overflow: hidden;
+  display: flex; align-items: center;
+}
+.case-handoff .shell { width: 100%; }
+.case-handoff-track {
+  position: relative; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+}
+.case-handoff-track::before {
+  content: ""; position: absolute; inset: 50% 0 auto;
+  height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: scaleX(0); transform-origin: left center;
+}
+.case-handoff-tab {
+  position: relative; z-index: 2; padding: 9px 16px;
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--faint); font-size: 9.5px; letter-spacing: .14em;
+  text-transform: uppercase; white-space: nowrap;
+  clip-path: inset(0 100% 0 0); opacity: 0;
+}
+.case-handoff-tab b { color: var(--accent); font-weight: 400; padding: 0 8px; }
+.case-handoff-pulse {
+  position: absolute; z-index: 3; top: calc(50% - 3px); left: 0;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 72%, transparent);
+  opacity: 0; pointer-events: none;
+}
+.case-handoff.visible .case-handoff-track::before { animation: handoff-line 1.05s var(--ease) forwards; }
+.case-handoff.visible .case-handoff-tab { animation: handoff-tab .62s var(--ease) .58s forwards; }
+.case-handoff.visible .case-handoff-pulse { animation: handoff-pulse 1.2s var(--ease) .08s forwards; }
+
+@keyframes handoff-line {
+  to { transform: scaleX(1); }
+}
+@keyframes handoff-tab {
+  to { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+@keyframes handoff-pulse {
+  0% { left: 0; opacity: 0; }
+  12%, 82% { opacity: 1; }
+  100% { left: calc(100% - 6px); opacity: 0; }
+}
+
 /* ---------- contact ---------- */
 #contact { padding-top: clamp(44px, 6vw, 68px); padding-bottom: clamp(52px, 7vw, 78px); }
 #experience { padding-bottom: clamp(40px, 6vw, 60px); }
+@media (min-width: 721px) {
+  #contact { padding-bottom: clamp(82px, 9vw, 108px); }
+}
 /* closing block: headline left, the four routes out as borderless rows beside it */
 .contact-clean {
   display: grid; grid-template-columns: minmax(260px, 0.85fr) minmax(420px, 1.15fr);
@@ -1073,6 +1121,9 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 64px 0 
   footer { padding: 40px 0 40px; }
   .to-top { position: static; margin: 0 auto 24px; display: flex; width: max-content; }
   footer .foot-inner { margin-top: 0; }
+  .case-handoff { height: 64px; }
+  .case-handoff-tab { padding: 8px 10px; font-size: 8px; letter-spacing: .08em; }
+  .case-handoff-tab b { padding: 0 4px; }
 }
 
 /* arrow stays put; the label slides right on hover (defined late so it wins source order) */
@@ -1547,6 +1598,9 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 64px 0 
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
+  .case-handoff-track::before { transform: scaleX(1); animation: none !important; }
+  .case-handoff-tab { clip-path: none; opacity: 1; animation: none !important; }
+  .case-handoff-pulse { display: none; animation: none !important; }
   .ov-nav a::before, .ov-nav a::after { transition: opacity .15s ease; transform: none; }
   .row:hover { transition: none; }
   .row:hover .spark { transform: none; }
