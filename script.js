@@ -510,8 +510,10 @@
   }
 
   /* ---------- back to top ---------- */
-  toTop?.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  document.querySelectorAll('.to-top, .to-top-scroll').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    });
   });
 
   /* ---------- copy email ---------- */
