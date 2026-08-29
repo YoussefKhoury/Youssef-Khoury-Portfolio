@@ -792,6 +792,7 @@ h2 {
 .row .go {
   justify-self: start; align-self: center;
   display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  min-height: 28px; padding-left: 14px; border-left: 1px solid var(--line);
   color: var(--accent); font-size: 14px;
   opacity: 0; transform: translateX(-6px);
   transition: opacity .24s ease, transform .28s var(--ease);
@@ -842,8 +843,8 @@ h2 {
 @media (min-width: 900px) {
   .cases .case-item { max-width: none; }
   .cases .row {
-    grid-template-columns: 92px minmax(0, 1fr) 70px;
-    column-gap: 15px; align-items: center;
+    grid-template-columns: 92px minmax(0, 1fr) 94px;
+    column-gap: 22px; align-items: center;
     padding: 24px 10px 24px 34px;
   }
   .cases .case-item.flagship .row { padding-top: 40px; }
