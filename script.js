@@ -250,7 +250,7 @@
     } else {
       out.textContent = ''; // hide immediately so the scroll-triggered typing has nothing to clear
       let typed = false;
-      const typeSpeed = window.matchMedia('(max-width: 700px)').matches ? 65 : 90;
+      const typeSpeed = window.matchMedia('(max-width: 700px)').matches ? 38 : 45;
       const runType = () => {
         if (typed) return;
         typed = true;
