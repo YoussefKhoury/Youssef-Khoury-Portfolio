@@ -251,7 +251,7 @@
         const step = () => {
           out.textContent = text.slice(0, i);
           i += 1;
-          if (i <= text.length) setTimeout(step, 42);
+          if (i <= text.length) setTimeout(step, 90);
           else finishReveal();
         };
         step();
