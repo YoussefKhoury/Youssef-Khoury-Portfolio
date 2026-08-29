@@ -817,7 +817,7 @@ h2 {
 @media (min-width: 900px) {
   .cases .case-item { max-width: none; }
   .cases .row {
-    grid-template-columns: 92px minmax(0, 1fr) 132px;
+    grid-template-columns: 92px minmax(0, 1fr) 80px;
     column-gap: 34px; align-items: center;
     padding: 24px 10px 24px 34px;
   }
