@@ -1016,14 +1016,18 @@ h2 {
   .ch-ic svg { width: 21px; height: 21px; }
 
   .channels .ch:last-child {
-    flex-basis: 100%; width: auto; height: auto; margin-top: 6px;
-    display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px;
-    padding: 15px 18px; background: var(--accent); color: #1a1204;
+    flex-basis: 100%; width: auto; height: auto; margin-top: 10px;
+    display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 9px;
+    padding: 0 0 9px; background: none; color: var(--accent);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   }
   .channels .ch:last-child .ch-ic { width: auto; height: auto; border: 0; background: none; color: inherit; }
-  .channels .ch:last-child .ch-ic svg { width: 16px; height: 16px; }
+  .channels .ch:last-child .ch-ic svg { width: 15px; height: 15px; }
   .channels .ch:last-child .ch-body { display: flex; }
   .channels .ch:last-child .ch-k { color: inherit; font-size: 12px; letter-spacing: 0.12em; }
+
+  /* the mark alone carries the footer on a phone */
+  .stamp span:not(.fmark) { display: none; }
 }
 
 /* ---------- footer ---------- */
@@ -1046,7 +1050,6 @@ footer { border-top: 1px solid var(--line); padding: 42px 0 48px; }
 .stamp {
   display: flex; align-items: center; gap: 9px;
   color: var(--faint); font-size: 11px; letter-spacing: 0.12em;
-  padding-top: 20px; border-top: 1px solid var(--line);
 }
 .stamp .fmark {
   width: 16px; height: 16px;
