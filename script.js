@@ -589,13 +589,14 @@
     // hero cost ~17k arcs per frame (a phone costs ~3k) — that gap is why
     // desktop scrolling stuttered while mobile stayed smooth. Spacing is now
     // derived from the buffer area so the cost is flat across screen sizes.
-    const DOTS = 6000;
+    const DOTS = 5200;
     let fStep = 5;                      // grid spacing in buffer px
     let fw = 1, fh = 1, fNarrow = false, fRun = false, fLast = 0, fTime = Math.random() * 100;
-    // ratio of the (over-scanned) buffer to the visible hero box. The vignette
-    // is measured in visible coords via these, so full-strength dots sit right
-    // out to the visible edge and keep streaming in from the clipped overscan.
-    let fOverX = 1, fOverY = 1;
+    // the canvas bleeds past the hero (see styles.css). fV* is the visible hero
+    // region expressed in buffer px, fVX/fVY its top-left inside the buffer —
+    // density and the edge vignette are measured against this, not the whole
+    // buffer, so the bleed is pure overscan that hides the black border strip.
+    let fVW = 1, fVH = 1, fVX = 0, fVY = 0;
     // cursor state, all in buffer coords; pm* trails toward pt* for a soft lag
     let ptX = -999, ptY = -999, pmX = -999, pmY = -999, pStr = 0, pWant = 0;
 
@@ -638,9 +639,9 @@
 
     const fPaint = () => {
       fx.clearRect(0, 0, fw, fh);
-      const cx = fw / 2, cy = fh / 2;
+      const cx = fVX + fVW / 2, cy = fVY + fVH / 2;   // visible-hero centre
       if (!reduced) fWash();
-      const R = fw * 0.22;               // cursor influence radius
+      const R = fVW * 0.22;              // cursor influence radius
       const R2 = R * R;
       const rs = fStep / 5;              // keep dot mass constant as spacing grows
       for (let y = fStep * 0.5; y < fh; y += fStep) {
@@ -651,7 +652,7 @@
           // two thin side strips — drive it mostly off the horizontal axis
           // instead, so dots run full-strength right out to both edges even as
           // the wave pushes them around.
-          const ux = (x - cx) / cx * fOverX, uy = (y - cy) / cy * fOverY;
+          const ux = (x - cx) / (fVW / 2), uy = (y - cy) / (fVH / 2);
           let edge;
           if (fNarrow) {
             edge = Math.max((Math.abs(ux) - 0.02) / 0.72, (Math.abs(uy) - 0.34) / 0.66);
@@ -708,12 +709,15 @@
     const fResize = () => {
       const r = fog.getBoundingClientRect();
       const pr = (fog.parentElement || fog).getBoundingClientRect();
-      fOverX = pr.width ? Math.max(1, r.width / pr.width) : 1;
-      fOverY = pr.height ? Math.max(1, r.height / pr.height) : 1;
       fw = Math.max(1, Math.round(r.width * SCALE));
       fh = Math.max(1, Math.round(r.height * SCALE));
-      fNarrow = pr.width < 720;
-      fStep = Math.max(5, Math.sqrt((fw * fh) / DOTS));
+      // visible hero region, in buffer px, and where it sits inside the buffer
+      fVW = Math.max(1, (pr.width || r.width) * SCALE);
+      fVH = Math.max(1, (pr.height || r.height) * SCALE);
+      fVX = (fw - fVW) / 2;
+      fVY = (fh - fVH) / 2;
+      fNarrow = (pr.width || r.width) < 720;
+      fStep = Math.max(5, Math.sqrt((fVW * fVH) / DOTS));
       fog.width = fw; fog.height = fh;
       fPaint();                         // never leave the canvas blank
     };
