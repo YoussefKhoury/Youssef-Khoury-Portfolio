@@ -1,4 +1,6 @@
 (() => {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const root = document.documentElement;
   // Content is visible by default; only allow the hidden/reveal state now that JS runs.
