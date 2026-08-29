@@ -782,7 +782,7 @@
       clearInterval(el._scr);
       if (el.dataset.text) el.textContent = el.dataset.text;
     };
-    document.querySelectorAll('.topnav a, .ov-nav a span').forEach((el) => {
+    document.querySelectorAll('.menu-scramble-disabled').forEach((el) => {
       el.addEventListener('mouseenter', () => scramble(el));
       el.addEventListener('mouseleave', () => restore(el));
       el.addEventListener('focus', () => scramble(el));
