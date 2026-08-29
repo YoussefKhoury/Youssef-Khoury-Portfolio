@@ -547,10 +547,13 @@
     // so it can still be read off the screen
     flashToast(ok ? 'Email copied' : ADDR);
   };
-  // every email affordance copies the address as a convenience, but the
-  // mailto: navigation still fires — a click has to actually open a mail app
+  // Every email affordance copies the address without opening a mail app.
+  // Keep the mailto: href as a no-JavaScript fallback.
   document.querySelectorAll('[data-copy-email]').forEach((el) => {
-    el.addEventListener('click', () => { copyEmail(); });
+    el.addEventListener('click', (event) => {
+      event.preventDefault();
+      copyEmail();
+    });
   });
   // tapping the toast dismisses it
   toast?.addEventListener('click', () => toast.classList.remove('show'));
