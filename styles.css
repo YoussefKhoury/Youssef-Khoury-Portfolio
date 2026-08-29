@@ -280,7 +280,10 @@ html.booting .idcard .dsr-body { animation: bootIn .34s var(--ease) .5s both; }
 /* no CSS filter here: it forces a full-layer GPU pass every animation frame,
    which is what dropped desktop scroll below 60fps. The 2x buffer upscale
    already softens the dots. */
-.hero #herofog { opacity: .52; }
+/* the buffer extends past the hero edges (clipped by .hero's overflow:hidden)
+   so the drifting grid never exposes a black strip at the left/right borders
+   when the wave shoves the outermost dots inward — see fOverX/fOverY in script.js */
+.hero #herofog { opacity: .52; inset: -6% -7%; width: auto; height: auto; }
 /* a faint fixed amber wash so the hero never reads as flat black */
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
