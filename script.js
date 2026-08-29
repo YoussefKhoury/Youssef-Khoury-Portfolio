@@ -236,8 +236,14 @@
   if (typeHeading) {
     const out = typeHeading.querySelector('.type-out');
     const text = out ? out.textContent : '';
+    const cursor = typeHeading.querySelector('.type-cursor');
     const revealAfter = document.querySelector('.contact-reveal');
-    const finishReveal = () => revealAfter && revealAfter.classList.add('visible');
+    // the cursor only adds width on the right, so leaving it on after typing
+    // ends pulls the centered heading visibly off-centre — drop it once done
+    const finishReveal = () => {
+      if (cursor) cursor.style.display = 'none';
+      revealAfter && revealAfter.classList.add('visible');
+    };
     if (reduced || !out) {
       if (out) out.textContent = text;
       finishReveal();
