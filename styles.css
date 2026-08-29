@@ -1008,17 +1008,18 @@ h2 {
 /* phone: three logo chips as the secondary row, CV promoted to a full-width
    amber slab so the block has one obvious action instead of four equal ones */
 @media (max-width: 700px) {
-  .contact-clean { text-align: center; gap: 44px; }
+  .contact.section { padding-block: clamp(80px, 16vw, 120px); }
+  .contact-clean { text-align: center; gap: 28px; }
   /* grid, not flex-wrap: lets the CV row size to its own text instead of
      stretching the full width, so its rule sits only under the label */
-  .channels { display: grid; grid-template-columns: repeat(3, 54px); justify-content: center; gap: 22px; }
+  .channels { display: grid; grid-template-columns: repeat(3, 54px); justify-content: center; gap: 14px; }
   .ch { width: 54px; height: 54px; padding: 0; display: grid; place-items: center; gap: 0; }
   .ch-body, .ch-go { display: none; }
   .ch-ic { width: 100%; height: 100%; border: 1px solid var(--line); background: var(--surface); }
   .ch-ic svg { width: 21px; height: 21px; }
 
   .channels .ch:last-child {
-    grid-column: 1 / -1; justify-self: center; width: fit-content; height: auto; margin-top: 24px;
+    grid-column: 1 / -1; justify-self: center; width: fit-content; height: auto; margin-top: 10px;
     display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 9px;
     padding: 0 0 9px; background: none; color: var(--accent);
     border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
