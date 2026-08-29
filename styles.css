@@ -961,47 +961,58 @@ h2 {
 
 /* ---------- experience -> contact handoff ---------- */
 .case-handoff {
-  height: clamp(76px, 7vw, 96px); overflow: hidden;
-  display: flex; align-items: center;
+  min-height: clamp(160px, 13vw, 200px); overflow: hidden;
+  display: flex; align-items: center; padding: 24px 0;
 }
 .case-handoff .shell { width: 100%; }
-.case-handoff-track {
-  position: relative; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-}
-.case-handoff-track::before {
-  content: ""; position: absolute; inset: 50% 0 auto;
-  height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  transform: scaleX(0); transform-origin: left center;
-}
-.case-handoff-tab {
-  position: relative; z-index: 2; padding: 9px 16px;
+.case-handoff-panel {
+  position: relative; min-height: 132px; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 58px 1fr; align-items: stretch;
   border: 1px solid var(--line); background: var(--surface);
-  color: var(--faint); font-size: 9.5px; letter-spacing: .14em;
-  text-transform: uppercase; white-space: nowrap;
-  clip-path: inset(0 100% 0 0); opacity: 0;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 1px, transparent 1px);
+  background-size: 14px 14px;
 }
-.case-handoff-tab b { color: var(--accent); font-weight: 400; padding: 0 8px; }
-.case-handoff-pulse {
-  position: absolute; z-index: 3; top: calc(50% - 3px); left: 0;
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--accent); box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 72%, transparent);
-  opacity: 0; pointer-events: none;
+.case-handoff-panel::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 34%, color-mix(in srgb, var(--accent) 10%, transparent) 50%, transparent 66%);
+  transform: translateX(-100%);
 }
-.case-handoff.visible .case-handoff-track::before { animation: handoff-line 1.05s var(--ease) forwards; }
-.case-handoff.visible .case-handoff-tab { animation: handoff-tab .62s var(--ease) .58s forwards; }
-.case-handoff.visible .case-handoff-pulse { animation: handoff-pulse 1.2s var(--ease) .08s forwards; }
+.case-handoff-side {
+  position: relative; z-index: 1; padding: 28px clamp(20px, 3vw, 46px);
+  display: flex; flex-direction: column; justify-content: center;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  opacity: 0;
+}
+.case-handoff-side span {
+  color: var(--accent-2); font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+}
+.case-handoff-side strong {
+  margin-top: 8px; color: var(--ink); font-family: var(--display);
+  font-size: clamp(27px, 2.5vw, 38px); font-weight: 600; letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+.case-handoff-from { align-items: flex-end; text-align: right; transform: translateX(-28px); }
+.case-handoff-to { align-items: flex-start; transform: translateX(28px); }
+.case-handoff-switch {
+  position: relative; z-index: 2; align-self: center; justify-self: center;
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border: 1px solid var(--accent); background: var(--bg); color: var(--accent);
+  font-size: 18px; opacity: 0; transform: scale(.65) rotate(-45deg);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.case-handoff.visible .case-handoff-panel::before { animation: handoff-scan 1.35s var(--ease) forwards; }
+.case-handoff.visible .case-handoff-side { animation: handoff-side .62s var(--ease) .18s forwards; }
+.case-handoff.visible .case-handoff-to { animation-delay: .34s; }
+.case-handoff.visible .case-handoff-switch { animation: handoff-switch .55s var(--ease) .72s forwards; }
 
-@keyframes handoff-line {
-  to { transform: scaleX(1); }
+@keyframes handoff-scan {
+  to { transform: translateX(100%); }
 }
-@keyframes handoff-tab {
-  to { clip-path: inset(0 0 0 0); opacity: 1; }
+@keyframes handoff-side {
+  to { opacity: 1; transform: translateX(0); }
 }
-@keyframes handoff-pulse {
-  0% { left: 0; opacity: 0; }
-  12%, 82% { opacity: 1; }
-  100% { left: calc(100% - 6px); opacity: 0; }
+@keyframes handoff-switch {
+  to { opacity: 1; transform: scale(1) rotate(0); }
 }
 
 /* ---------- contact ---------- */
@@ -1121,9 +1132,12 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 64px 0 
   footer { padding: 40px 0 40px; }
   .to-top { position: static; margin: 0 auto 24px; display: flex; width: max-content; }
   footer .foot-inner { margin-top: 0; }
-  .case-handoff { height: 64px; }
-  .case-handoff-tab { padding: 8px 10px; font-size: 8px; letter-spacing: .08em; }
-  .case-handoff-tab b { padding: 0 4px; }
+  .case-handoff { min-height: 130px; padding: 16px 0; }
+  .case-handoff-panel { min-height: 104px; grid-template-columns: 1fr 36px 1fr; }
+  .case-handoff-side { padding: 18px 10px; }
+  .case-handoff-side span { font-size: 7.5px; letter-spacing: .09em; }
+  .case-handoff-side strong { margin-top: 6px; font-size: 18px; }
+  .case-handoff-switch { width: 32px; height: 32px; font-size: 14px; }
 }
 
 /* arrow stays put; the label slides right on hover (defined late so it wins source order) */
@@ -1598,9 +1612,9 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 64px 0 
   .spark polyline, .spark.gauge circle.val { stroke-dashoffset: 0; transition: none; }
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
-  .case-handoff-track::before { transform: scaleX(1); animation: none !important; }
-  .case-handoff-tab { clip-path: none; opacity: 1; animation: none !important; }
-  .case-handoff-pulse { display: none; animation: none !important; }
+  .case-handoff-panel::before { display: none; animation: none !important; }
+  .case-handoff-side { opacity: 1; transform: none; animation: none !important; }
+  .case-handoff-switch { opacity: 1; transform: none; animation: none !important; }
   .ov-nav a::before, .ov-nav a::after { transition: opacity .15s ease; transform: none; }
   .row:hover { transition: none; }
   .row:hover .spark { transform: none; }
