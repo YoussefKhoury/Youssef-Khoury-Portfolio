@@ -357,8 +357,6 @@
     const head = sec.querySelector('.sec-head');
     const body = sec.querySelector('.sec-body');
     if (!head || !body) return;
-    if (open) body.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
-
     let t;
     const done = (e) => {
       // transitionend bubbles up from every child that finishes a transition;
@@ -388,6 +386,9 @@
       body.style.height = target + 'px';
       body.style.paddingTop = '';
       body.style.paddingBottom = '';
+      requestAnimationFrame(() => {
+        body.querySelectorAll('.reveal').forEach((el) => el.classList.add('visible'));
+      });
     } else {
       body.style.transition = 'none';
       body.style.height = body.offsetHeight + 'px';
