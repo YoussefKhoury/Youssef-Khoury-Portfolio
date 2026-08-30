@@ -799,7 +799,9 @@
   if (ptTargets.length && !reduced &&
       window.matchMedia('(pointer: fine)').matches &&
       window.matchMedia('(min-width: 721px)').matches) {
-    const W0 = 700, W1 = 900, WD0 = 100, WD1 = 136, RADIUS = 155;
+    // Keep each glyph at its natural width. The pressure effect still adds
+    // weight, but cannot change a word's measured width and reflow the title.
+    const W0 = 700, W1 = 900, WD0 = 100, WD1 = 100, RADIUS = 155;
 
     // per-letter spans, grouped into non-breaking word wrappers so lines only
     // break at real spaces; keeps the <em> wrapper intact
