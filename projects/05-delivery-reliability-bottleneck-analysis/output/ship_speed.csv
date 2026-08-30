@@ -1,0 +1,5 @@
+ship_speed_band,orders,late_orders,late_rate,avg_review,low_review_rate,band_order,share_of_orders,share_of_late_orders,expected_late_orders_at_network_rate,excess_late_orders
+Within 2 days,42356,2118,0.05,4.2781,0.1011,1,0.4483,0.2808,3381.5761,-1263.5761
+2-4 days,27741,2036,0.0734,4.1757,0.1239,2,0.2936,0.2699,2214.7583,-178.7583
+4-7 days,16639,1626,0.0977,4.0679,0.1442,3,0.1761,0.2156,1328.4079,297.5921
+Over 7 days,7744,1763,0.2277,3.6439,0.2462,4,0.082,0.2337,618.2577,1144.7423

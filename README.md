@@ -12,6 +12,7 @@ Double-click `index.html` or run a small local web server from this folder.
 
 - Dark responsive portfolio with accessible motion and keyboard support
 - Order-to-Delivery Control Tower case study
+- Delivery Reliability & Bottleneck Analysis using public e-commerce data
 - Live dashboard, Excel, Power BI and PDF deliverables
 - Verified professional experience, tools and completed Microsoft certificates
 - One general Data, Business & Operations Analyst CV
