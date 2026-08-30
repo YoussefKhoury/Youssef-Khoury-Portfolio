@@ -29,7 +29,6 @@
   const workSec = document.getElementById('work');
   const workRail = workSec?.querySelector('.work-rail span');
   const workRows = [...(workSec ? workSec.querySelectorAll('.row') : [])];
-  const mobileRail = window.matchMedia('(max-width: 720px)');
 
   // one renderer for the rail. normally the fill tracks whichever row sits on
   // the scroll focus line; while a case is open it pins to that row's dot.
@@ -123,7 +122,7 @@
   onScroll();
   let ticking = false;
   window.addEventListener('scroll', () => {
-    if (railPin && !railAnimating && !mobileRail.matches) railPin = null; // mobile keeps the selected dot pinned while open
+    if (railPin && !railAnimating) railPin = null; // release the opening pin as soon as the user scrolls
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => { onScroll(); ticking = false; });
