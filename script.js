@@ -576,7 +576,8 @@
     // hero cost ~17k arcs per frame (a phone costs ~3k) — that gap is why
     // desktop scrolling stuttered while mobile stayed smooth. Spacing is now
     // derived from the buffer area so the cost is flat across screen sizes.
-    const DOTS = 5200;
+    const DOTS = 2800;
+    const DOTS_NARROW = 1100;
     let fStep = 5;                      // grid spacing in buffer px
     let fw = 1, fh = 1, fNarrow = false, fRun = false, fLast = 0, fTime = Math.random() * 100;
     // the canvas bleeds past the hero (see styles.css). fV* is the visible hero
@@ -704,7 +705,8 @@
       fVX = (fw - fVW) / 2;
       fVY = (fh - fVH) / 2;
       fNarrow = (pr.width || r.width) < 720;
-      fStep = Math.max(5, Math.sqrt((fVW * fVH) / DOTS));
+      const dotBudget = fNarrow ? DOTS_NARROW : DOTS;
+      fStep = Math.max(5, Math.sqrt((fVW * fVH) / dotBudget));
       fog.width = fw; fog.height = fh;
       fPaint();                         // never leave the canvas blank
     };
@@ -801,7 +803,7 @@
       window.matchMedia('(pointer: fine)').matches) {
     // Keep each glyph at its natural width. The pressure effect still adds
     // weight, but cannot change a word's measured width and reflow the title.
-    const W0 = 700, W1 = 900, WD0 = 100, WD1 = 100, RADIUS = 155;
+    const W0 = 700, W1 = 900, WD0 = 100, WD1 = 100, RADIUS = 185;
 
     // per-letter spans, grouped into non-breaking word wrappers so lines only
     // break at real spaces; keeps the <em> wrapper intact
@@ -853,7 +855,7 @@
     const loop = (ts) => {
       const dt = tpLast ? Math.min(48, ts - tpLast) : 16;
       tpLast = ts;
-      const k = 1 - Math.exp(-dt / 120);            // gentle, frame-rate independent
+      const k = 1 - Math.exp(-dt / 110);            // responsive, frame-rate independent
       let moving = false;
       for (const c of chars) {
         const d = Math.hypot(c.cx - mx, c.cy - my);
