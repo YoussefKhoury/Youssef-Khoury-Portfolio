@@ -1317,6 +1317,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   }
   .dossier.filing { overflow-anchor: none; }
   .dossier + .section { padding-top: 34px; }
+  .dossier + .section-divider { display: none; }
   /* the drawer hangs off the box above it, so that box drops its bottom padding */
   .section:has(+ .dossier) { padding-bottom: 0; }
 
