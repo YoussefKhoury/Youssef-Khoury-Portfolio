@@ -121,8 +121,15 @@
   };
   onScroll();
   let ticking = false;
+  const releaseRailPin = () => {
+    if (railPin && !railAnimating) railPin = null;
+  };
+  window.addEventListener('wheel', releaseRailPin, { passive: true });
+  window.addEventListener('touchmove', releaseRailPin, { passive: true });
+  window.addEventListener('keydown', (e) => {
+    if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(e.key)) releaseRailPin();
+  });
   window.addEventListener('scroll', () => {
-    if (railPin && !railAnimating) railPin = null; // release the opening pin as soon as the user scrolls
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => { onScroll(); ticking = false; });
