@@ -1239,6 +1239,9 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
 
 @media (max-width: 720px) {
   :root { --shell: calc(100% - 28px); --dossier-breath: 92px; }
+  /* Keep phone typography stable across browsers and leave anchor targets clear
+     of the fixed navigation strip. */
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: 98px; }
   #contact { padding-top: var(--dossier-breath); }
 
   /* let the heading use the full centred width and breathe a little smaller */
@@ -1284,7 +1287,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   .secnav::-webkit-scrollbar { display: none; }
   .secnav.show { transform: none; opacity: 1; }
   .secnav a {
-    flex: 0 0 auto; padding: 10px 13px;
+    flex: 0 0 auto; min-height: 44px; display: inline-flex; align-items: center; padding: 10px 13px;
     border: 1px solid var(--line); border-radius: 999px;
     font-size: 12px; color: var(--muted); white-space: nowrap;
     transition: color .2s ease, background .2s ease, border-color .2s ease;
