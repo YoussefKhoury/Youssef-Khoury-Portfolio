@@ -350,6 +350,9 @@ h1 .tp-ch {
   display: inline-block; will-change: font-variation-settings;
   font-variation-settings: "wght" 700, "wdth" 100;
 }
+/* Keep the headline locked to its intended line breaks. The hover pressure
+   effect widened individual characters enough to reflow the sentence. */
+.hero-copy h1 .tp-ch { font-variation-settings: "wght" 700, "wdth" 100 !important; }
 
 /* birthdate stamp, upper-right of the hero — same pressure-type morph as the headline */
 .birthdate {
