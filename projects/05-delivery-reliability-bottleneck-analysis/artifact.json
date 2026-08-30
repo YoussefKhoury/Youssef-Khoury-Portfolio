@@ -1,0 +1,5208 @@
+{
+  "surface": "dashboard",
+  "manifest": {
+    "version": 1,
+    "surface": "dashboard",
+    "title": "Delivery Reliability & Bottleneck Analysis",
+    "description": "An operations dashboard identifying where late-delivery risk and customer impact are concentrated across sellers, routes, regions, and product categories.",
+    "generatedAt": "2026-08-30T21:13:30Z",
+    "cards": [
+      {
+        "id": "orders_card",
+        "description": "Unique orders after normalizing the item-level source to order grain.",
+        "dataset": "summary",
+        "sourceId": "summary_source",
+        "metrics": [
+          {
+            "label": "Orders analyzed",
+            "field": "analyzed_orders",
+            "format": "compact"
+          }
+        ]
+      },
+      {
+        "id": "late_rate_card",
+        "description": "Share delivered after the estimated delivery timestamp.",
+        "dataset": "summary",
+        "sourceId": "summary_source",
+        "metrics": [
+          {
+            "label": "Late-delivery rate",
+            "field": "late_rate",
+            "format": "percent"
+          },
+          {
+            "label": "Over 24h late",
+            "field": "late_24h_rate",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "delay_card",
+        "description": "Delay duration among late orders only.",
+        "dataset": "summary",
+        "sourceId": "summary_source",
+        "metrics": [
+          {
+            "label": "Median late days",
+            "field": "median_late_days",
+            "format": "number"
+          },
+          {
+            "label": "90th percentile",
+            "field": "p90_late_days",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "review_gap_card",
+        "description": "Late-order average rating minus on-time average rating; association, not causation.",
+        "dataset": "summary",
+        "sourceId": "summary_source",
+        "metrics": [
+          {
+            "label": "Review-score gap",
+            "field": "review_score_gap",
+            "format": "number",
+            "signed": true
+          },
+          {
+            "label": "Late-order average",
+            "field": "avg_review_late",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "monthly_late_rate",
+        "title": "Monthly late-delivery rate",
+        "subtitle": "2018-03 peaked at 21.1%; the full-period network rate was 8.0%.",
+        "intent": "trend",
+        "question": "When did delivery reliability deteriorate?",
+        "rationale": "A monthly line exposes sustained movement and operational spikes across 20 complete-volume periods.",
+        "type": "line",
+        "dataset": "monthly",
+        "sourceId": "monthly_source",
+        "encodings": {
+          "x": {
+            "field": "month",
+            "type": "temporal",
+            "label": "Purchase month"
+          },
+          "y": {
+            "field": "late_rate",
+            "type": "quantitative",
+            "format": "percent",
+            "label": "Late-delivery rate"
+          },
+          "tooltip": [
+            {
+              "field": "orders",
+              "type": "quantitative",
+              "format": "compact",
+              "label": "Orders"
+            },
+            {
+              "field": "late_orders",
+              "type": "quantitative",
+              "format": "compact",
+              "label": "Late orders"
+            },
+            {
+              "field": "avg_review",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Average review"
+            }
+          ]
+        },
+        "valueFormat": "percent",
+        "layout": "full",
+        "palette": {
+          "kind": "sequential"
+        },
+        "referenceLines": [
+          {
+            "axis": "y",
+            "value": 0.07983700254022015,
+            "label": "Network rate",
+            "color": "neutral",
+            "lineStyle": "dashed"
+          }
+        ],
+        "settings": {
+          "showPoints": "always"
+        }
+      },
+      {
+        "id": "ship_speed_late_rate",
+        "title": "Late-delivery rate by purchase-to-carrier time",
+        "subtitle": "Orders handed to the carrier after seven days were 4.6x as likely to arrive late as orders handed off within two days.",
+        "intent": "comparison",
+        "question": "Does slow carrier handoff identify higher delivery risk?",
+        "rationale": "Ordered bars make the monotonic risk gradient easy to compare without implying causality.",
+        "type": "bar",
+        "dataset": "ship_speed",
+        "sourceId": "ship_speed_source",
+        "encodings": {
+          "x": {
+            "field": "ship_speed_band",
+            "type": "ordinal",
+            "label": "Purchase-to-carrier time"
+          },
+          "y": {
+            "field": "late_rate",
+            "type": "quantitative",
+            "format": "percent",
+            "label": "Late-delivery rate"
+          },
+          "tooltip": [
+            {
+              "field": "orders",
+              "type": "quantitative",
+              "format": "compact",
+              "label": "Orders"
+            },
+            {
+              "field": "avg_review",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Average review"
+            },
+            {
+              "field": "low_review_rate",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "Low-review rate"
+            }
+          ]
+        },
+        "valueFormat": "percent",
+        "layout": "half",
+        "palette": {
+          "kind": "sequential"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "custom",
+          "showValues": true
+        }
+      },
+      {
+        "id": "review_status",
+        "title": "Low-review rate by delivery status",
+        "subtitle": "Low reviews occurred on 54.0% of late orders versus 9.1% of on-time orders.",
+        "intent": "comparison",
+        "question": "How strongly is lateness associated with poor customer ratings?",
+        "rationale": "A two-category bar shows the observed satisfaction gap while retaining denominators in the tooltip.",
+        "type": "bar",
+        "dataset": "review_status",
+        "sourceId": "review_status_source",
+        "encodings": {
+          "x": {
+            "field": "delivery_status",
+            "type": "nominal",
+            "label": "Delivery status"
+          },
+          "y": {
+            "field": "low_review_rate",
+            "type": "quantitative",
+            "format": "percent",
+            "label": "Reviews scored 1-2"
+          },
+          "tooltip": [
+            {
+              "field": "review_eligible_orders",
+              "type": "quantitative",
+              "format": "compact",
+              "label": "Review-eligible orders"
+            },
+            {
+              "field": "avg_review",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Average review"
+            }
+          ]
+        },
+        "valueFormat": "percent",
+        "layout": "half",
+        "palette": {
+          "kind": "sequential"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "showValues": true
+        }
+      },
+      {
+        "id": "seller_opportunity",
+        "title": "Excess late orders by high-volume seller",
+        "subtitle": "Seller 06A2C3 recorded about 56 more late orders than expected at the network rate.",
+        "intent": "comparison",
+        "question": "Which high-volume sellers contribute the largest volume-adjusted delivery gap?",
+        "rationale": "Excess late orders balances seller volume and reliability while excluding ambiguous multi-seller orders.",
+        "type": "horizontalBar",
+        "dataset": "seller_opportunity",
+        "sourceId": "seller_opportunity_source",
+        "encodings": {
+          "x": {
+            "field": "seller",
+            "type": "nominal",
+            "label": "Anonymized seller"
+          },
+          "y": {
+            "field": "excess_late_orders",
+            "type": "quantitative",
+            "format": "number",
+            "label": "Excess late orders"
+          },
+          "tooltip": [
+            {
+              "field": "seller_state",
+              "type": "nominal",
+              "label": "Seller state"
+            },
+            {
+              "field": "orders",
+              "type": "quantitative",
+              "format": "compact",
+              "label": "Orders"
+            },
+            {
+              "field": "late_rate",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "Late-delivery rate"
+            },
+            {
+              "field": "median_ship_days",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Median handoff days"
+            },
+            {
+              "field": "slow_handoff_rate",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "Over four-day handoff"
+            }
+          ]
+        },
+        "layout": "half",
+        "palette": {
+          "kind": "sequential"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true,
+          "limit": 10
+        }
+      },
+      {
+        "id": "route_opportunity",
+        "title": "Excess late orders by seller-to-customer route",
+        "subtitle": "SP to RJ had the largest volume-adjusted route gap at about 587 excess late orders.",
+        "intent": "comparison",
+        "question": "Which state-to-state routes concentrate delivery underperformance?",
+        "rationale": "Route-level excess volume identifies operational lanes where seller origin and customer destination overlap with poor reliability.",
+        "type": "horizontalBar",
+        "dataset": "route_opportunity",
+        "sourceId": "route_opportunity_source",
+        "encodings": {
+          "x": {
+            "field": "route",
+            "type": "nominal",
+            "label": "Seller state to customer state"
+          },
+          "y": {
+            "field": "excess_late_orders",
+            "type": "quantitative",
+            "format": "number",
+            "label": "Excess late orders"
+          },
+          "tooltip": [
+            {
+              "field": "orders",
+              "type": "quantitative",
+              "format": "compact",
+              "label": "Orders"
+            },
+            {
+              "field": "late_rate",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "Late-delivery rate"
+            },
+            {
+              "field": "median_ship_days",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Median handoff days"
+            },
+            {
+              "field": "slow_handoff_rate",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "Over four-day handoff"
+            }
+          ]
+        },
+        "layout": "half",
+        "palette": {
+          "kind": "sequential"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true,
+          "limit": 10
+        }
+      },
+      {
+        "id": "state_opportunity",
+        "title": "Excess late orders by customer state",
+        "subtitle": "RJ contributed about 640 more late orders than expected at the network rate.",
+        "intent": "comparison",
+        "question": "Where does delivery underperformance create the largest recoverable volume?",
+        "rationale": "Volume-adjusted excess late orders avoids prioritizing tiny states solely because of volatile rates.",
+        "type": "horizontalBar",
+        "dataset": "state_opportunity",
+        "sourceId": "state_opportunity_source",
+        "encodings": {
+          "x": {
+            "field": "customer_state",
+            "type": "nominal",
+            "label": "Customer state"
+          },
+          "y": {
+            "field": "excess_late_orders",
+            "type": "quantitative",
+            "format": "number",
+            "label": "Excess late orders"
+          },
+          "tooltip": [
+            {
+              "field": "orders",
+              "type": "quantitative",
+              "format": "compact",
+              "label": "Orders"
+            },
+            {
+              "field": "late_rate",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "Late-delivery rate"
+            },
+            {
+              "field": "avg_review",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Average review"
+            }
+          ]
+        },
+        "layout": "half",
+        "palette": {
+          "kind": "sequential"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true,
+          "limit": 10
+        }
+      },
+      {
+        "id": "category_opportunity",
+        "title": "Excess late orders by product category",
+        "subtitle": "Health Beauty had the largest volume-adjusted excess among categories with at least 500 orders.",
+        "intent": "comparison",
+        "question": "Which large product categories warrant the first operational audit?",
+        "rationale": "Excess volume balances exposure and rate instead of ranking categories by rate alone.",
+        "type": "horizontalBar",
+        "dataset": "category_opportunity",
+        "sourceId": "category_opportunity_source",
+        "encodings": {
+          "x": {
+            "field": "product_category",
+            "type": "nominal",
+            "label": "Product category"
+          },
+          "y": {
+            "field": "excess_late_orders",
+            "type": "quantitative",
+            "format": "number",
+            "label": "Excess late orders"
+          },
+          "tooltip": [
+            {
+              "field": "orders",
+              "type": "quantitative",
+              "format": "compact",
+              "label": "Orders"
+            },
+            {
+              "field": "late_rate",
+              "type": "quantitative",
+              "format": "percent",
+              "label": "Late-delivery rate"
+            },
+            {
+              "field": "avg_review",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Average review"
+            }
+          ]
+        },
+        "layout": "half",
+        "palette": {
+          "kind": "sequential"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true,
+          "limit": 10
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "seller_detail",
+        "title": "High-volume seller delivery detail",
+        "subtitle": "Single-seller orders only; sellers with at least 100 analyzed orders.",
+        "dataset": "seller_detail",
+        "defaultSort": {
+          "field": "excess_late_orders",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "sourceId": "seller_detail_source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "seller",
+            "label": "Seller",
+            "type": "text"
+          },
+          {
+            "field": "seller_state",
+            "label": "State",
+            "type": "text"
+          },
+          {
+            "field": "orders",
+            "label": "Orders",
+            "format": "compact",
+            "type": "number"
+          },
+          {
+            "field": "late_orders",
+            "label": "Late orders",
+            "format": "compact",
+            "type": "number"
+          },
+          {
+            "field": "late_rate",
+            "label": "Late rate",
+            "format": "percent",
+            "type": "percent"
+          },
+          {
+            "field": "excess_late_orders",
+            "label": "Excess late orders",
+            "format": "number",
+            "type": "number",
+            "movement": true
+          },
+          {
+            "field": "median_ship_days",
+            "label": "Median handoff days",
+            "format": "number",
+            "type": "number"
+          },
+          {
+            "field": "slow_handoff_rate",
+            "label": "Over four-day handoff",
+            "format": "percent",
+            "type": "percent"
+          },
+          {
+            "field": "avg_review",
+            "label": "Average review",
+            "format": "number",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "state_detail",
+        "title": "State delivery-risk detail",
+        "subtitle": "States with at least 200 analyzed orders; sorted by late-delivery rate.",
+        "dataset": "state_detail",
+        "defaultSort": {
+          "field": "late_rate",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "sourceId": "state_detail_source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "customer_state",
+            "label": "State",
+            "type": "text"
+          },
+          {
+            "field": "orders",
+            "label": "Orders",
+            "format": "compact",
+            "type": "number"
+          },
+          {
+            "field": "late_orders",
+            "label": "Late orders",
+            "format": "compact",
+            "type": "number"
+          },
+          {
+            "field": "late_rate",
+            "label": "Late rate",
+            "format": "percent",
+            "type": "percent"
+          },
+          {
+            "field": "excess_late_orders",
+            "label": "Excess late orders",
+            "format": "number",
+            "type": "number",
+            "movement": true
+          },
+          {
+            "field": "avg_review",
+            "label": "Average review",
+            "format": "number",
+            "type": "number"
+          },
+          {
+            "field": "median_ship_days",
+            "label": "Median ship days",
+            "format": "number",
+            "type": "number"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "summary_source",
+        "label": "Delivery summary metrics",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM dashboard_summary",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "One row per complete order"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "dashboard_summary"
+          ]
+        }
+      },
+      {
+        "id": "monthly_source",
+        "label": "Monthly delivery reliability",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM monthly ORDER BY month",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "Purchase months with at least 500 analyzed orders"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "monthly"
+          ]
+        }
+      },
+      {
+        "id": "ship_speed_source",
+        "label": "Purchase-to-carrier speed bands",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM ship_speed ORDER BY band_order",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "One row per complete order"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "ship_speed"
+          ]
+        }
+      },
+      {
+        "id": "review_status_source",
+        "label": "Delivery status and review outcomes",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM review_status ORDER BY sort_order",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "Orders with one consistent review score"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "review_status"
+          ]
+        }
+      },
+      {
+        "id": "seller_opportunity_source",
+        "label": "Seller opportunity ranking",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM seller_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "Single-seller orders",
+            "Sellers with at least 100 analyzed orders"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "seller_opportunity"
+          ]
+        }
+      },
+      {
+        "id": "seller_detail_source",
+        "label": "Seller delivery-risk detail",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM seller_detail ORDER BY late_rate DESC, orders DESC",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "Single-seller orders",
+            "Sellers with at least 100 analyzed orders"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "seller_detail"
+          ]
+        }
+      },
+      {
+        "id": "route_opportunity_source",
+        "label": "Seller-to-customer route ranking",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM route_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "Single-seller orders",
+            "Seller-to-customer state routes with at least 200 analyzed orders"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "route_opportunity"
+          ]
+        }
+      },
+      {
+        "id": "state_opportunity_source",
+        "label": "State opportunity ranking",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM state_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "Customer states with at least 200 analyzed orders"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "state_opportunity"
+          ]
+        }
+      },
+      {
+        "id": "category_opportunity_source",
+        "label": "Category opportunity ranking",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM category_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "Product categories with at least 500 analyzed orders"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "category_opportunity"
+          ]
+        }
+      },
+      {
+        "id": "state_detail_source",
+        "label": "State delivery-risk detail",
+        "path": "outputs/analysis.sqlite",
+        "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT * FROM state_detail ORDER BY late_rate DESC, orders DESC",
+          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+          "executed_at": "2026-08-30T21:13:30Z",
+          "language": "sql",
+          "filters": [
+            "Customer states with at least 200 analyzed orders"
+          ],
+          "metric_definitions": [
+            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+            "Purchase-to-carrier time = time_to_ship_hours / 24",
+            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+            "High-volume seller = at least 100 complete single-seller orders",
+            "High-volume route = at least 200 complete single-seller orders"
+          ],
+          "tables_used": [
+            "state_detail"
+          ]
+        }
+      },
+      {
+        "id": "olist_original",
+        "label": "Brazilian E-Commerce Public Dataset by Olist",
+        "href": "https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "hero_metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "orders_card",
+          "late_rate_card",
+          "delay_card",
+          "review_gap_card"
+        ]
+      },
+      {
+        "id": "monthly_block",
+        "type": "chart",
+        "chartId": "monthly_late_rate",
+        "layout": "full"
+      },
+      {
+        "id": "ship_speed_block",
+        "type": "chart",
+        "chartId": "ship_speed_late_rate",
+        "layout": "half"
+      },
+      {
+        "id": "review_status_block",
+        "type": "chart",
+        "chartId": "review_status",
+        "layout": "half"
+      },
+      {
+        "id": "seller_opportunity_block",
+        "type": "chart",
+        "chartId": "seller_opportunity",
+        "layout": "half"
+      },
+      {
+        "id": "route_opportunity_block",
+        "type": "chart",
+        "chartId": "route_opportunity",
+        "layout": "half"
+      },
+      {
+        "id": "state_opportunity_block",
+        "type": "chart",
+        "chartId": "state_opportunity",
+        "layout": "half"
+      },
+      {
+        "id": "category_opportunity_block",
+        "type": "chart",
+        "chartId": "category_opportunity",
+        "layout": "half"
+      },
+      {
+        "id": "seller_detail_block",
+        "type": "table",
+        "tableId": "seller_detail",
+        "layout": "full"
+      },
+      {
+        "id": "state_detail_block",
+        "type": "table",
+        "tableId": "state_detail",
+        "layout": "full"
+      },
+      {
+        "id": "action_caveats",
+        "type": "markdown",
+        "body": "### Where delay risk becomes visible\nPurchase-to-carrier handoff is the only pre-delivery stage available in this source. Risk rises after four days and reaches 22.8% after seven days, versus 5.0% within two days. The largest seller exception was Seller 06A2C3; the largest route exception was SP to RJ. These are strong operational signals, not proof of fault.\n\n### Three actions\n1. Review Seller 06A2C3 and the next highest excess-volume sellers; trigger follow-up at four days without carrier handoff and escalation at seven.\n2. Audit SP to RJ, RJ deliveries, and the Health Beauty category together to isolate route, assortment, and seller overlap.\n3. Contact customers before a likely promise-date miss and apply service recovery to protect review scores.\n\n### Limits\nThis is descriptive, not causal. The anonymized source covers Brazilian orders from 2016-2018 and does not include carrier scans, warehouse events, or last-mile checkpoints. Seller analysis excludes multi-seller orders to avoid assigning one delivery outcome to several sellers. Conflicting review scores are excluded from review comparisons.",
+        "layout": "full"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-30T21:13:30Z",
+    "status": "ready",
+    "datasets": {
+      "summary": [
+        {
+          "source_rows_item_level": 108449,
+          "analyzed_orders": 94480,
+          "late_orders": 7543,
+          "late_rate": 0.07983700254022015,
+          "late_24h_rate": 0.06652201524132091,
+          "median_late_days": 5.787905092592593,
+          "p90_late_days": 21.036731481481482,
+          "review_eligible_orders": 94294,
+          "late_review_eligible_orders": 7523,
+          "on_time_review_eligible_orders": 86771,
+          "avg_review_on_time": 4.297138444872135,
+          "avg_review_late": 2.5671939385883293,
+          "review_score_gap": -1.7299445062838057,
+          "low_review_rate_on_time": 0.0914706526374019,
+          "low_review_rate_late": 0.5402100225973681,
+          "median_ship_days_on_time": 2.1351157407407406,
+          "median_ship_days_late": 3.4410879629629627,
+          "min_purchase_date": "2016-09-15T12:16:38",
+          "max_purchase_date": "2018-08-29T15:00:37",
+          "single_seller_orders": 93247,
+          "seller_analysis_coverage": 0.9869496189669772,
+          "high_volume_sellers": 197
+        }
+      ],
+      "monthly": [
+        {
+          "month": "2017-01",
+          "orders": 731,
+          "late_orders": 22,
+          "late_rate": 0.0301,
+          "late_24h_rate": 0.0287,
+          "avg_review": 4.2041,
+          "median_ship_days": 2.4736
+        },
+        {
+          "month": "2017-02",
+          "orders": 1593,
+          "late_orders": 44,
+          "late_rate": 0.0276,
+          "late_24h_rate": 0.0251,
+          "avg_review": 4.2029,
+          "median_ship_days": 2.3375
+        },
+        {
+          "month": "2017-03",
+          "orders": 2478,
+          "late_orders": 135,
+          "late_rate": 0.0545,
+          "late_24h_rate": 0.044,
+          "avg_review": 4.1922,
+          "median_ship_days": 1.98
+        },
+        {
+          "month": "2017-04",
+          "orders": 2228,
+          "late_orders": 172,
+          "late_rate": 0.0772,
+          "late_24h_rate": 0.0637,
+          "avg_review": 4.1357,
+          "median_ship_days": 2.6891
+        },
+        {
+          "month": "2017-05",
+          "orders": 3437,
+          "late_orders": 119,
+          "late_rate": 0.0346,
+          "late_24h_rate": 0.0288,
+          "avg_review": 4.2388,
+          "median_ship_days": 1.9806
+        },
+        {
+          "month": "2017-06",
+          "orders": 3060,
+          "late_orders": 116,
+          "late_rate": 0.0379,
+          "late_24h_rate": 0.0297,
+          "avg_review": 4.2307,
+          "median_ship_days": 2.1887
+        },
+        {
+          "month": "2017-07",
+          "orders": 3795,
+          "late_orders": 129,
+          "late_rate": 0.034,
+          "late_24h_rate": 0.0277,
+          "avg_review": 4.2595,
+          "median_ship_days": 2.2823
+        },
+        {
+          "month": "2017-08",
+          "orders": 4102,
+          "late_orders": 135,
+          "late_rate": 0.0329,
+          "late_24h_rate": 0.0288,
+          "avg_review": 4.3193,
+          "median_ship_days": 2.1904
+        },
+        {
+          "month": "2017-09",
+          "orders": 4058,
+          "late_orders": 206,
+          "late_rate": 0.0508,
+          "late_24h_rate": 0.0426,
+          "avg_review": 4.2713,
+          "median_ship_days": 2.3504
+        },
+        {
+          "month": "2017-10",
+          "orders": 4396,
+          "late_orders": 227,
+          "late_rate": 0.0516,
+          "late_24h_rate": 0.0405,
+          "avg_review": 4.2033,
+          "median_ship_days": 2.2919
+        },
+        {
+          "month": "2017-11",
+          "orders": 7135,
+          "late_orders": 1002,
+          "late_rate": 0.1404,
+          "late_24h_rate": 0.1221,
+          "avg_review": 3.9899,
+          "median_ship_days": 3.1684
+        },
+        {
+          "month": "2017-12",
+          "orders": 5333,
+          "late_orders": 436,
+          "late_rate": 0.0818,
+          "late_24h_rate": 0.0733,
+          "avg_review": 4.1018,
+          "median_ship_days": 2.8293
+        },
+        {
+          "month": "2018-01",
+          "orders": 6846,
+          "late_orders": 437,
+          "late_rate": 0.0638,
+          "late_24h_rate": 0.0554,
+          "avg_review": 4.119,
+          "median_ship_days": 2.4173
+        },
+        {
+          "month": "2018-02",
+          "orders": 6402,
+          "late_orders": 1024,
+          "late_rate": 0.16,
+          "late_24h_rate": 0.1414,
+          "avg_review": 3.8814,
+          "median_ship_days": 2.5238
+        },
+        {
+          "month": "2018-03",
+          "orders": 6830,
+          "late_orders": 1443,
+          "late_rate": 0.2113,
+          "late_24h_rate": 0.1868,
+          "avg_review": 3.8104,
+          "median_ship_days": 2.3756
+        },
+        {
+          "month": "2018-04",
+          "orders": 6685,
+          "late_orders": 349,
+          "late_rate": 0.0522,
+          "late_24h_rate": 0.0441,
+          "avg_review": 4.2068,
+          "median_ship_days": 2.0626
+        },
+        {
+          "month": "2018-05",
+          "orders": 6687,
+          "late_orders": 548,
+          "late_rate": 0.082,
+          "late_24h_rate": 0.0651,
+          "avg_review": 4.2373,
+          "median_ship_days": 1.8049
+        },
+        {
+          "month": "2018-06",
+          "orders": 6051,
+          "late_orders": 83,
+          "late_rate": 0.0137,
+          "late_24h_rate": 0.0117,
+          "avg_review": 4.308,
+          "median_ship_days": 1.7593
+        },
+        {
+          "month": "2018-07",
+          "orders": 6073,
+          "late_orders": 265,
+          "late_rate": 0.0436,
+          "late_24h_rate": 0.0328,
+          "avg_review": 4.3206,
+          "median_ship_days": 1.7905
+        },
+        {
+          "month": "2018-08",
+          "orders": 6298,
+          "late_orders": 648,
+          "late_rate": 0.1029,
+          "late_24h_rate": 0.061,
+          "avg_review": 4.3094,
+          "median_ship_days": 1.7561
+        }
+      ],
+      "ship_speed": [
+        {
+          "ship_speed_band": "Within 2 days",
+          "orders": 42356,
+          "late_orders": 2118,
+          "late_rate": 0.05,
+          "avg_review": 4.2781,
+          "low_review_rate": 0.1011,
+          "band_order": 1,
+          "share_of_orders": 0.4483,
+          "share_of_late_orders": 0.2808,
+          "expected_late_orders_at_network_rate": 3381.5761,
+          "excess_late_orders": -1263.5761
+        },
+        {
+          "ship_speed_band": "2-4 days",
+          "orders": 27741,
+          "late_orders": 2036,
+          "late_rate": 0.0734,
+          "avg_review": 4.1757,
+          "low_review_rate": 0.1239,
+          "band_order": 2,
+          "share_of_orders": 0.2936,
+          "share_of_late_orders": 0.2699,
+          "expected_late_orders_at_network_rate": 2214.7583,
+          "excess_late_orders": -178.7583
+        },
+        {
+          "ship_speed_band": "4-7 days",
+          "orders": 16639,
+          "late_orders": 1626,
+          "late_rate": 0.0977,
+          "avg_review": 4.0679,
+          "low_review_rate": 0.1442,
+          "band_order": 3,
+          "share_of_orders": 0.1761,
+          "share_of_late_orders": 0.2156,
+          "expected_late_orders_at_network_rate": 1328.4079,
+          "excess_late_orders": 297.5921
+        },
+        {
+          "ship_speed_band": "Over 7 days",
+          "orders": 7744,
+          "late_orders": 1763,
+          "late_rate": 0.2277,
+          "avg_review": 3.6439,
+          "low_review_rate": 0.2462,
+          "band_order": 4,
+          "share_of_orders": 0.082,
+          "share_of_late_orders": 0.2337,
+          "expected_late_orders_at_network_rate": 618.2577,
+          "excess_late_orders": 1144.7423
+        }
+      ],
+      "review_status": [
+        {
+          "delivery_status": "On time",
+          "sort_order": 1,
+          "review_eligible_orders": 86771,
+          "avg_review": 4.2971,
+          "low_review_rate": 0.0915
+        },
+        {
+          "delivery_status": "Late",
+          "sort_order": 2,
+          "review_eligible_orders": 7523,
+          "avg_review": 2.5672,
+          "low_review_rate": 0.5402
+        }
+      ],
+      "seller_opportunity": [
+        {
+          "seller_id": "06a2c3af7b3aee5d69171b0e14f0ee87",
+          "seller_state": "MA",
+          "orders": 384,
+          "late_orders": 87,
+          "late_rate": 0.2266,
+          "avg_review": 4.0182,
+          "low_review_rate": 0.1589,
+          "median_ship_days": 2.865,
+          "slow_handoff_rate": 0.4089,
+          "expected_late_orders_at_network_rate": 30.6574,
+          "excess_late_orders": 56.3426,
+          "seller": "Seller 06A2C3",
+          "rank": 1
+        },
+        {
+          "seller_id": "4a3ca9315b744ce9f8e9374361493884",
+          "seller_state": "SP",
+          "orders": 1656,
+          "late_orders": 188,
+          "late_rate": 0.1135,
+          "avg_review": 3.9101,
+          "low_review_rate": 0.17,
+          "median_ship_days": 2.1758,
+          "slow_handoff_rate": 0.2361,
+          "expected_late_orders_at_network_rate": 132.2101,
+          "excess_late_orders": 55.7899,
+          "seller": "Seller 4A3CA9",
+          "rank": 2
+        },
+        {
+          "seller_id": "4869f7a5dfa277a7dca6462dcf3b52b2",
+          "seller_state": "SP",
+          "orders": 1103,
+          "late_orders": 128,
+          "late_rate": 0.116,
+          "avg_review": 4.1777,
+          "low_review_rate": 0.1224,
+          "median_ship_days": 2.3896,
+          "slow_handoff_rate": 0.1922,
+          "expected_late_orders_at_network_rate": 88.0602,
+          "excess_late_orders": 39.9398,
+          "seller": "Seller 4869F7",
+          "rank": 3
+        },
+        {
+          "seller_id": "1f50f920176fa81dab994f9023523100",
+          "seller_state": "SP",
+          "orders": 1359,
+          "late_orders": 145,
+          "late_rate": 0.1067,
+          "avg_review": 4.1835,
+          "low_review_rate": 0.1282,
+          "median_ship_days": 3.9561,
+          "slow_handoff_rate": 0.4937,
+          "expected_late_orders_at_network_rate": 108.4985,
+          "excess_late_orders": 36.5015,
+          "seller": "Seller 1F50F9",
+          "rank": 4
+        },
+        {
+          "seller_id": "8160255418d5aaa7dbdc9f4c64ebda44",
+          "seller_state": "SP",
+          "orders": 351,
+          "late_orders": 59,
+          "late_rate": 0.1681,
+          "avg_review": 4.0256,
+          "low_review_rate": 0.1453,
+          "median_ship_days": 2.8036,
+          "slow_handoff_rate": 0.3875,
+          "expected_late_orders_at_network_rate": 28.0228,
+          "excess_late_orders": 30.9772,
+          "seller": "Seller 816025",
+          "rank": 5
+        },
+        {
+          "seller_id": "88460e8ebdecbfecb5f9601833981930",
+          "seller_state": "PR",
+          "orders": 226,
+          "late_orders": 47,
+          "late_rate": 0.208,
+          "avg_review": 3.5336,
+          "low_review_rate": 0.278,
+          "median_ship_days": 6.9464,
+          "slow_handoff_rate": 0.6593,
+          "expected_late_orders_at_network_rate": 18.0432,
+          "excess_late_orders": 28.9568,
+          "seller": "Seller 88460E",
+          "rank": 6
+        },
+        {
+          "seller_id": "ea8482cd71df3c1969d7b9473ff13abc",
+          "seller_state": "SP",
+          "orders": 1110,
+          "late_orders": 117,
+          "late_rate": 0.1054,
+          "avg_review": 4.0541,
+          "low_review_rate": 0.1387,
+          "median_ship_days": 3.2366,
+          "slow_handoff_rate": 0.373,
+          "expected_late_orders_at_network_rate": 88.6191,
+          "excess_late_orders": 28.3809,
+          "seller": "Seller EA8482",
+          "rank": 7
+        },
+        {
+          "seller_id": "7d13fca15225358621be4086e1eb0964",
+          "seller_state": "SP",
+          "orders": 545,
+          "late_orders": 68,
+          "late_rate": 0.1248,
+          "avg_review": 4.0752,
+          "low_review_rate": 0.1633,
+          "median_ship_days": 3.4418,
+          "slow_handoff_rate": 0.4128,
+          "expected_late_orders_at_network_rate": 43.5112,
+          "excess_late_orders": 24.4888,
+          "seller": "Seller 7D13FC",
+          "rank": 8
+        },
+        {
+          "seller_id": "8b321bb669392f5163d04c59e235e066",
+          "seller_state": "SP",
+          "orders": 913,
+          "late_orders": 96,
+          "late_rate": 0.1051,
+          "avg_review": 4.1227,
+          "low_review_rate": 0.1347,
+          "median_ship_days": 1.969,
+          "slow_handoff_rate": 0.1665,
+          "expected_late_orders_at_network_rate": 72.8912,
+          "excess_late_orders": 23.1088,
+          "seller": "Seller 8B321B",
+          "rank": 9
+        },
+        {
+          "seller_id": "1025f0e2d44d7041d6cf58b6550e0bfa",
+          "seller_state": "SP",
+          "orders": 872,
+          "late_orders": 91,
+          "late_rate": 0.1044,
+          "avg_review": 4.0483,
+          "low_review_rate": 0.1588,
+          "median_ship_days": 3.4535,
+          "slow_handoff_rate": 0.4106,
+          "expected_late_orders_at_network_rate": 69.6179,
+          "excess_late_orders": 21.3821,
+          "seller": "Seller 1025F0",
+          "rank": 10
+        },
+        {
+          "seller_id": "e5a3438891c0bfdb9394643f95273d8e",
+          "seller_state": "SP",
+          "orders": 139,
+          "late_orders": 31,
+          "late_rate": 0.223,
+          "avg_review": 3.8777,
+          "low_review_rate": 0.2086,
+          "median_ship_days": 3.8707,
+          "slow_handoff_rate": 0.4676,
+          "expected_late_orders_at_network_rate": 11.0973,
+          "excess_late_orders": 19.9027,
+          "seller": "Seller E5A343",
+          "rank": 11
+        },
+        {
+          "seller_id": "7c67e1448b00f6e969d365cea6b010ab",
+          "seller_state": "SP",
+          "orders": 957,
+          "late_orders": 96,
+          "late_rate": 0.1003,
+          "avg_review": 3.5094,
+          "low_review_rate": 0.2516,
+          "median_ship_days": 11.3486,
+          "slow_handoff_rate": 0.976,
+          "expected_late_orders_at_network_rate": 76.404,
+          "excess_late_orders": 19.596,
+          "seller": "Seller 7C67E1",
+          "rank": 12
+        }
+      ],
+      "seller_detail": [
+        {
+          "seller_id": "06a2c3af7b3aee5d69171b0e14f0ee87",
+          "seller_state": "MA",
+          "orders": 384,
+          "late_orders": 87,
+          "late_rate": 0.2266,
+          "avg_review": 4.0182,
+          "low_review_rate": 0.1589,
+          "median_ship_days": 2.865,
+          "slow_handoff_rate": 0.4089,
+          "expected_late_orders_at_network_rate": 30.6574,
+          "excess_late_orders": 56.3426,
+          "seller": "Seller 06A2C3"
+        },
+        {
+          "seller_id": "e5a3438891c0bfdb9394643f95273d8e",
+          "seller_state": "SP",
+          "orders": 139,
+          "late_orders": 31,
+          "late_rate": 0.223,
+          "avg_review": 3.8777,
+          "low_review_rate": 0.2086,
+          "median_ship_days": 3.8707,
+          "slow_handoff_rate": 0.4676,
+          "expected_late_orders_at_network_rate": 11.0973,
+          "excess_late_orders": 19.9027,
+          "seller": "Seller E5A343"
+        },
+        {
+          "seller_id": "88460e8ebdecbfecb5f9601833981930",
+          "seller_state": "PR",
+          "orders": 226,
+          "late_orders": 47,
+          "late_rate": 0.208,
+          "avg_review": 3.5336,
+          "low_review_rate": 0.278,
+          "median_ship_days": 6.9464,
+          "slow_handoff_rate": 0.6593,
+          "expected_late_orders_at_network_rate": 18.0432,
+          "excess_late_orders": 28.9568,
+          "seller": "Seller 88460E"
+        },
+        {
+          "seller_id": "cd68562d3f44870c08922d380acae552",
+          "seller_state": "SP",
+          "orders": 121,
+          "late_orders": 21,
+          "late_rate": 0.1736,
+          "avg_review": 4.0165,
+          "low_review_rate": 0.1653,
+          "median_ship_days": 3.0819,
+          "slow_handoff_rate": 0.3306,
+          "expected_late_orders_at_network_rate": 9.6603,
+          "excess_late_orders": 11.3397,
+          "seller": "Seller CD6856"
+        },
+        {
+          "seller_id": "8160255418d5aaa7dbdc9f4c64ebda44",
+          "seller_state": "SP",
+          "orders": 351,
+          "late_orders": 59,
+          "late_rate": 0.1681,
+          "avg_review": 4.0256,
+          "low_review_rate": 0.1453,
+          "median_ship_days": 2.8036,
+          "slow_handoff_rate": 0.3875,
+          "expected_late_orders_at_network_rate": 28.0228,
+          "excess_late_orders": 30.9772,
+          "seller": "Seller 816025"
+        },
+        {
+          "seller_id": "f7ba60f8c3f99e7ee4042fdef03b70c4",
+          "seller_state": "SP",
+          "orders": 213,
+          "late_orders": 34,
+          "late_rate": 0.1596,
+          "avg_review": 4.2582,
+          "low_review_rate": 0.0939,
+          "median_ship_days": 2.4263,
+          "slow_handoff_rate": 0.1831,
+          "expected_late_orders_at_network_rate": 17.0053,
+          "excess_late_orders": 16.9947,
+          "seller": "Seller F7BA60"
+        },
+        {
+          "seller_id": "431af27f296bc6519d890aa5a05fdb11",
+          "seller_state": "SP",
+          "orders": 113,
+          "late_orders": 18,
+          "late_rate": 0.1593,
+          "avg_review": 3.8407,
+          "low_review_rate": 0.2212,
+          "median_ship_days": 4.0082,
+          "slow_handoff_rate": 0.5044,
+          "expected_late_orders_at_network_rate": 9.0216,
+          "excess_late_orders": 8.9784,
+          "seller": "Seller 431AF2"
+        },
+        {
+          "seller_id": "2c9e548be18521d1c43cde1c582c6de8",
+          "seller_state": "SP",
+          "orders": 121,
+          "late_orders": 19,
+          "late_rate": 0.157,
+          "avg_review": 4.124,
+          "low_review_rate": 0.1322,
+          "median_ship_days": 1.5679,
+          "slow_handoff_rate": 0.1074,
+          "expected_late_orders_at_network_rate": 9.6603,
+          "excess_late_orders": 9.3397,
+          "seller": "Seller 2C9E54"
+        },
+        {
+          "seller_id": "c31eff8334d6b3047ed34bebd4d62c36",
+          "seller_state": "SP",
+          "orders": 115,
+          "late_orders": 17,
+          "late_rate": 0.1478,
+          "avg_review": 3.8957,
+          "low_review_rate": 0.1739,
+          "median_ship_days": 5.1005,
+          "slow_handoff_rate": 0.6609,
+          "expected_late_orders_at_network_rate": 9.1813,
+          "excess_late_orders": 7.8187,
+          "seller": "Seller C31EFF"
+        },
+        {
+          "seller_id": "8f2ce03f928b567e3d56181ae20ae952",
+          "seller_state": "SP",
+          "orders": 150,
+          "late_orders": 22,
+          "late_rate": 0.1467,
+          "avg_review": 4.1467,
+          "low_review_rate": 0.12,
+          "median_ship_days": 3.0777,
+          "slow_handoff_rate": 0.3867,
+          "expected_late_orders_at_network_rate": 11.9756,
+          "excess_late_orders": 10.0244,
+          "seller": "Seller 8F2CE0"
+        },
+        {
+          "seller_id": "7aa4334be125fcdd2ba64b3180029f14",
+          "seller_state": "SP",
+          "orders": 210,
+          "late_orders": 29,
+          "late_rate": 0.1381,
+          "avg_review": 4.1381,
+          "low_review_rate": 0.1381,
+          "median_ship_days": 4.908,
+          "slow_handoff_rate": 0.5429,
+          "expected_late_orders_at_network_rate": 16.7658,
+          "excess_late_orders": 12.2342,
+          "seller": "Seller 7AA433"
+        },
+        {
+          "seller_id": "855668e0971d4dfd7bef1b6a4133b41b",
+          "seller_state": "SP",
+          "orders": 292,
+          "late_orders": 40,
+          "late_rate": 0.137,
+          "avg_review": 3.8836,
+          "low_review_rate": 0.1986,
+          "median_ship_days": 3.8477,
+          "slow_handoff_rate": 0.4726,
+          "expected_late_orders_at_network_rate": 23.3124,
+          "excess_late_orders": 16.6876,
+          "seller": "Seller 855668"
+        },
+        {
+          "seller_id": "2e90cb1677d35cfe24eef47d441b7c87",
+          "seller_state": "SP",
+          "orders": 126,
+          "late_orders": 17,
+          "late_rate": 0.1349,
+          "avg_review": 4.1111,
+          "low_review_rate": 0.1429,
+          "median_ship_days": 1.9817,
+          "slow_handoff_rate": 0.119,
+          "expected_late_orders_at_network_rate": 10.0595,
+          "excess_late_orders": 6.9405,
+          "seller": "Seller 2E90CB"
+        },
+        {
+          "seller_id": "b499c00f28f4b7069ff6550af8c1348a",
+          "seller_state": "SP",
+          "orders": 141,
+          "late_orders": 19,
+          "late_rate": 0.1348,
+          "avg_review": 4.2643,
+          "low_review_rate": 0.0929,
+          "median_ship_days": 2.272,
+          "slow_handoff_rate": 0.305,
+          "expected_late_orders_at_network_rate": 11.257,
+          "excess_late_orders": 7.743,
+          "seller": "Seller B499C0"
+        },
+        {
+          "seller_id": "2eb70248d66e0e3ef83659f71b244378",
+          "seller_state": "SP",
+          "orders": 181,
+          "late_orders": 24,
+          "late_rate": 0.1326,
+          "avg_review": 2.7833,
+          "low_review_rate": 0.4778,
+          "median_ship_days": 9.8536,
+          "slow_handoff_rate": 0.8066,
+          "expected_late_orders_at_network_rate": 14.4505,
+          "excess_late_orders": 9.5495,
+          "seller": "Seller 2EB702"
+        },
+        {
+          "seller_id": "1835b56ce799e6a4dc4eddc053f04066",
+          "seller_state": "SP",
+          "orders": 372,
+          "late_orders": 49,
+          "late_rate": 0.1317,
+          "avg_review": 3.7661,
+          "low_review_rate": 0.207,
+          "median_ship_days": 1.7138,
+          "slow_handoff_rate": 0.1129,
+          "expected_late_orders_at_network_rate": 29.6994,
+          "excess_late_orders": 19.3006,
+          "seller": "Seller 1835B5"
+        },
+        {
+          "seller_id": "7ad32824caee82087b3e2e5f33b1bf32",
+          "seller_state": "SP",
+          "orders": 137,
+          "late_orders": 18,
+          "late_rate": 0.1314,
+          "avg_review": 3.927,
+          "low_review_rate": 0.1825,
+          "median_ship_days": 1.2665,
+          "slow_handoff_rate": 0.0803,
+          "expected_late_orders_at_network_rate": 10.9377,
+          "excess_late_orders": 7.0623,
+          "seller": "Seller 7AD328"
+        },
+        {
+          "seller_id": "59b22a78efb79a4797979612b885db36",
+          "seller_state": "MG",
+          "orders": 122,
+          "late_orders": 16,
+          "late_rate": 0.1311,
+          "avg_review": 4.0,
+          "low_review_rate": 0.1967,
+          "median_ship_days": 1.913,
+          "slow_handoff_rate": 0.1148,
+          "expected_late_orders_at_network_rate": 9.7401,
+          "excess_late_orders": 6.2599,
+          "seller": "Seller 59B22A"
+        },
+        {
+          "seller_id": "b33e7c55446eabf8fe1a42d037ac7d6d",
+          "seller_state": "SP",
+          "orders": 146,
+          "late_orders": 19,
+          "late_rate": 0.1301,
+          "avg_review": 4.2192,
+          "low_review_rate": 0.1233,
+          "median_ship_days": 2.299,
+          "slow_handoff_rate": 0.1438,
+          "expected_late_orders_at_network_rate": 11.6562,
+          "excess_late_orders": 7.3438,
+          "seller": "Seller B33E7C"
+        },
+        {
+          "seller_id": "a416b6a846a11724393025641d4edd5e",
+          "seller_state": "SP",
+          "orders": 157,
+          "late_orders": 20,
+          "late_rate": 0.1274,
+          "avg_review": 4.2166,
+          "low_review_rate": 0.1401,
+          "median_ship_days": 2.5318,
+          "slow_handoff_rate": 0.293,
+          "expected_late_orders_at_network_rate": 12.5344,
+          "excess_late_orders": 7.4656,
+          "seller": "Seller A416B6"
+        },
+        {
+          "seller_id": "cfb1a033743668a192316f3c6d1d2671",
+          "seller_state": "SP",
+          "orders": 127,
+          "late_orders": 16,
+          "late_rate": 0.126,
+          "avg_review": 4.2381,
+          "low_review_rate": 0.1111,
+          "median_ship_days": 2.8195,
+          "slow_handoff_rate": 0.3465,
+          "expected_late_orders_at_network_rate": 10.1393,
+          "excess_late_orders": 5.8607,
+          "seller": "Seller CFB1A0"
+        },
+        {
+          "seller_id": "7e1fb0a3ebfb01ffb3a7dae98bf3238d",
+          "seller_state": "SP",
+          "orders": 152,
+          "late_orders": 19,
+          "late_rate": 0.125,
+          "avg_review": 4.1842,
+          "low_review_rate": 0.1053,
+          "median_ship_days": 1.1904,
+          "slow_handoff_rate": 0.0592,
+          "expected_late_orders_at_network_rate": 12.1352,
+          "excess_late_orders": 6.8648,
+          "seller": "Seller 7E1FB0"
+        },
+        {
+          "seller_id": "7d13fca15225358621be4086e1eb0964",
+          "seller_state": "SP",
+          "orders": 545,
+          "late_orders": 68,
+          "late_rate": 0.1248,
+          "avg_review": 4.0752,
+          "low_review_rate": 0.1633,
+          "median_ship_days": 3.4418,
+          "slow_handoff_rate": 0.4128,
+          "expected_late_orders_at_network_rate": 43.5112,
+          "excess_late_orders": 24.4888,
+          "seller": "Seller 7D13FC"
+        },
+        {
+          "seller_id": "0dd184061fb0eaa7ca37932c68ab91c5",
+          "seller_state": "SP",
+          "orders": 155,
+          "late_orders": 19,
+          "late_rate": 0.1226,
+          "avg_review": 4.0645,
+          "low_review_rate": 0.129,
+          "median_ship_days": 2.4585,
+          "slow_handoff_rate": 0.3097,
+          "expected_late_orders_at_network_rate": 12.3747,
+          "excess_late_orders": 6.6253,
+          "seller": "Seller 0DD184"
+        },
+        {
+          "seller_id": "77530e9772f57a62c906e1c21538ab82",
+          "seller_state": "PR",
+          "orders": 297,
+          "late_orders": 36,
+          "late_rate": 0.1212,
+          "avg_review": 4.2088,
+          "low_review_rate": 0.1313,
+          "median_ship_days": 1.9922,
+          "slow_handoff_rate": 0.1347,
+          "expected_late_orders_at_network_rate": 23.7116,
+          "excess_late_orders": 12.2884,
+          "seller": "Seller 77530E"
+        },
+        {
+          "seller_id": "7d76b645482be4a332374e8223836592",
+          "seller_state": "SP",
+          "orders": 166,
+          "late_orders": 20,
+          "late_rate": 0.1205,
+          "avg_review": 4.012,
+          "low_review_rate": 0.1386,
+          "median_ship_days": 3.6024,
+          "slow_handoff_rate": 0.4277,
+          "expected_late_orders_at_network_rate": 13.2529,
+          "excess_late_orders": 6.7471,
+          "seller": "Seller 7D76B6"
+        },
+        {
+          "seller_id": "c3867b4666c7d76867627c2f7fb22e21",
+          "seller_state": "SP",
+          "orders": 220,
+          "late_orders": 26,
+          "late_rate": 0.1182,
+          "avg_review": 4.1,
+          "low_review_rate": 0.1545,
+          "median_ship_days": 1.988,
+          "slow_handoff_rate": 0.1773,
+          "expected_late_orders_at_network_rate": 17.5641,
+          "excess_late_orders": 8.4359,
+          "seller": "Seller C3867B"
+        },
+        {
+          "seller_id": "9c0e69c7bf2619675bbadf47b43f655a",
+          "seller_state": "SP",
+          "orders": 136,
+          "late_orders": 16,
+          "late_rate": 0.1176,
+          "avg_review": 4.2836,
+          "low_review_rate": 0.0896,
+          "median_ship_days": 3.9764,
+          "slow_handoff_rate": 0.4926,
+          "expected_late_orders_at_network_rate": 10.8578,
+          "excess_late_orders": 5.1422,
+          "seller": "Seller 9C0E69"
+        },
+        {
+          "seller_id": "4869f7a5dfa277a7dca6462dcf3b52b2",
+          "seller_state": "SP",
+          "orders": 1103,
+          "late_orders": 128,
+          "late_rate": 0.116,
+          "avg_review": 4.1777,
+          "low_review_rate": 0.1224,
+          "median_ship_days": 2.3896,
+          "slow_handoff_rate": 0.1922,
+          "expected_late_orders_at_network_rate": 88.0602,
+          "excess_late_orders": 39.9398,
+          "seller": "Seller 4869F7"
+        },
+        {
+          "seller_id": "1900267e848ceeba8fa32d80c1a5f5a8",
+          "seller_state": "SP",
+          "orders": 354,
+          "late_orders": 41,
+          "late_rate": 0.1158,
+          "avg_review": 3.9773,
+          "low_review_rate": 0.1591,
+          "median_ship_days": 1.789,
+          "slow_handoff_rate": 0.161,
+          "expected_late_orders_at_network_rate": 28.2623,
+          "excess_late_orders": 12.7377,
+          "seller": "Seller 190026"
+        },
+        {
+          "seller_id": "e9bc59e7b60fc3063eb2290deda4cced",
+          "seller_state": "PR",
+          "orders": 200,
+          "late_orders": 23,
+          "late_rate": 0.115,
+          "avg_review": 4.11,
+          "low_review_rate": 0.14,
+          "median_ship_days": 4.6197,
+          "slow_handoff_rate": 0.585,
+          "expected_late_orders_at_network_rate": 15.9674,
+          "excess_late_orders": 7.0326,
+          "seller": "Seller E9BC59"
+        },
+        {
+          "seller_id": "4a3ca9315b744ce9f8e9374361493884",
+          "seller_state": "SP",
+          "orders": 1656,
+          "late_orders": 188,
+          "late_rate": 0.1135,
+          "avg_review": 3.9101,
+          "low_review_rate": 0.17,
+          "median_ship_days": 2.1758,
+          "slow_handoff_rate": 0.2361,
+          "expected_late_orders_at_network_rate": 132.2101,
+          "excess_late_orders": 55.7899,
+          "seller": "Seller 4A3CA9"
+        },
+        {
+          "seller_id": "8b28d096634035667e8263d57ba3368c",
+          "seller_state": "SP",
+          "orders": 133,
+          "late_orders": 15,
+          "late_rate": 0.1128,
+          "avg_review": 4.0602,
+          "low_review_rate": 0.1353,
+          "median_ship_days": 2.1863,
+          "slow_handoff_rate": 0.1955,
+          "expected_late_orders_at_network_rate": 10.6183,
+          "excess_late_orders": 4.3817,
+          "seller": "Seller 8B28D0"
+        },
+        {
+          "seller_id": "70a12e78e608ac31179aea7f8422044b",
+          "seller_state": "SP",
+          "orders": 305,
+          "late_orders": 34,
+          "late_rate": 0.1115,
+          "avg_review": 3.8,
+          "low_review_rate": 0.2,
+          "median_ship_days": 2.9734,
+          "slow_handoff_rate": 0.3836,
+          "expected_late_orders_at_network_rate": 24.3503,
+          "excess_late_orders": 9.6497,
+          "seller": "Seller 70A12E"
+        },
+        {
+          "seller_id": "897060da8b9a21f655304d50fd935913",
+          "seller_state": "SP",
+          "orders": 288,
+          "late_orders": 32,
+          "late_rate": 0.1111,
+          "avg_review": 3.7188,
+          "low_review_rate": 0.2326,
+          "median_ship_days": 2.7929,
+          "slow_handoff_rate": 0.2361,
+          "expected_late_orders_at_network_rate": 22.9931,
+          "excess_late_orders": 9.0069,
+          "seller": "Seller 897060"
+        },
+        {
+          "seller_id": "4e922959ae960d389249c378d1c939f5",
+          "seller_state": "SP",
+          "orders": 392,
+          "late_orders": 43,
+          "late_rate": 0.1097,
+          "avg_review": 3.9617,
+          "low_review_rate": 0.1786,
+          "median_ship_days": 3.065,
+          "slow_handoff_rate": 0.3597,
+          "expected_late_orders_at_network_rate": 31.2961,
+          "excess_late_orders": 11.7039,
+          "seller": "Seller 4E9229"
+        },
+        {
+          "seller_id": "f5a590cf36251cf1162ea35bef76fe84",
+          "seller_state": "SP",
+          "orders": 110,
+          "late_orders": 12,
+          "late_rate": 0.1091,
+          "avg_review": 4.2545,
+          "low_review_rate": 0.1091,
+          "median_ship_days": 2.0016,
+          "slow_handoff_rate": 0.2,
+          "expected_late_orders_at_network_rate": 8.7821,
+          "excess_late_orders": 3.2179,
+          "seller": "Seller F5A590"
+        },
+        {
+          "seller_id": "16090f2ca825584b5a147ab24aa30c86",
+          "seller_state": "SP",
+          "orders": 395,
+          "late_orders": 43,
+          "late_rate": 0.1089,
+          "avg_review": 4.0861,
+          "low_review_rate": 0.1316,
+          "median_ship_days": 1.4809,
+          "slow_handoff_rate": 0.1089,
+          "expected_late_orders_at_network_rate": 31.5356,
+          "excess_late_orders": 11.4644,
+          "seller": "Seller 16090F"
+        },
+        {
+          "seller_id": "1f50f920176fa81dab994f9023523100",
+          "seller_state": "SP",
+          "orders": 1359,
+          "late_orders": 145,
+          "late_rate": 0.1067,
+          "avg_review": 4.1835,
+          "low_review_rate": 0.1282,
+          "median_ship_days": 3.9561,
+          "slow_handoff_rate": 0.4937,
+          "expected_late_orders_at_network_rate": 108.4985,
+          "excess_late_orders": 36.5015,
+          "seller": "Seller 1F50F9"
+        },
+        {
+          "seller_id": "a673821011d0cec28146ea42f5ab767f",
+          "seller_state": "SP",
+          "orders": 113,
+          "late_orders": 12,
+          "late_rate": 0.1062,
+          "avg_review": 4.1455,
+          "low_review_rate": 0.1455,
+          "median_ship_days": 3.2023,
+          "slow_handoff_rate": 0.4336,
+          "expected_late_orders_at_network_rate": 9.0216,
+          "excess_late_orders": 2.9784,
+          "seller": "Seller A67382"
+        },
+        {
+          "seller_id": "8d956fec2e4337affcb520f56fd8cbfd",
+          "seller_state": "SP",
+          "orders": 208,
+          "late_orders": 22,
+          "late_rate": 0.1058,
+          "avg_review": 4.2356,
+          "low_review_rate": 0.0913,
+          "median_ship_days": 1.1996,
+          "slow_handoff_rate": 0.0865,
+          "expected_late_orders_at_network_rate": 16.6061,
+          "excess_late_orders": 5.3939,
+          "seller": "Seller 8D956F"
+        },
+        {
+          "seller_id": "ea8482cd71df3c1969d7b9473ff13abc",
+          "seller_state": "SP",
+          "orders": 1110,
+          "late_orders": 117,
+          "late_rate": 0.1054,
+          "avg_review": 4.0541,
+          "low_review_rate": 0.1387,
+          "median_ship_days": 3.2366,
+          "slow_handoff_rate": 0.373,
+          "expected_late_orders_at_network_rate": 88.6191,
+          "excess_late_orders": 28.3809,
+          "seller": "Seller EA8482"
+        },
+        {
+          "seller_id": "8b321bb669392f5163d04c59e235e066",
+          "seller_state": "SP",
+          "orders": 913,
+          "late_orders": 96,
+          "late_rate": 0.1051,
+          "avg_review": 4.1227,
+          "low_review_rate": 0.1347,
+          "median_ship_days": 1.969,
+          "slow_handoff_rate": 0.1665,
+          "expected_late_orders_at_network_rate": 72.8912,
+          "excess_late_orders": 23.1088,
+          "seller": "Seller 8B321B"
+        },
+        {
+          "seller_id": "634964b17796e64304cadf1ad3050fb7",
+          "seller_state": "RJ",
+          "orders": 257,
+          "late_orders": 27,
+          "late_rate": 0.1051,
+          "avg_review": 4.1206,
+          "low_review_rate": 0.1323,
+          "median_ship_days": 3.3561,
+          "slow_handoff_rate": 0.4397,
+          "expected_late_orders_at_network_rate": 20.5181,
+          "excess_late_orders": 6.4819,
+          "seller": "Seller 634964"
+        },
+        {
+          "seller_id": "37515688008a7a40ac93e3b2e4ab203f",
+          "seller_state": "SP",
+          "orders": 219,
+          "late_orders": 23,
+          "late_rate": 0.105,
+          "avg_review": 4.1279,
+          "low_review_rate": 0.1005,
+          "median_ship_days": 5.1778,
+          "slow_handoff_rate": 0.653,
+          "expected_late_orders_at_network_rate": 17.4843,
+          "excess_late_orders": 5.5157,
+          "seller": "Seller 375156"
+        },
+        {
+          "seller_id": "391fc6631aebcf3004804e51b40bcf1e",
+          "seller_state": "SP",
+          "orders": 487,
+          "late_orders": 51,
+          "late_rate": 0.1047,
+          "avg_review": 4.1185,
+          "low_review_rate": 0.1289,
+          "median_ship_days": 2.8551,
+          "slow_handoff_rate": 0.306,
+          "expected_late_orders_at_network_rate": 38.8806,
+          "excess_late_orders": 12.1194,
+          "seller": "Seller 391FC6"
+        },
+        {
+          "seller_id": "1025f0e2d44d7041d6cf58b6550e0bfa",
+          "seller_state": "SP",
+          "orders": 872,
+          "late_orders": 91,
+          "late_rate": 0.1044,
+          "avg_review": 4.0483,
+          "low_review_rate": 0.1588,
+          "median_ship_days": 3.4535,
+          "slow_handoff_rate": 0.4106,
+          "expected_late_orders_at_network_rate": 69.6179,
+          "excess_late_orders": 21.3821,
+          "seller": "Seller 1025F0"
+        },
+        {
+          "seller_id": "4c2b230173bb36f9b240f2b8ac11786e",
+          "seller_state": "SP",
+          "orders": 249,
+          "late_orders": 26,
+          "late_rate": 0.1044,
+          "avg_review": 3.992,
+          "low_review_rate": 0.1767,
+          "median_ship_days": 5.26,
+          "slow_handoff_rate": 0.759,
+          "expected_late_orders_at_network_rate": 19.8794,
+          "excess_late_orders": 6.1206,
+          "seller": "Seller 4C2B23"
+        },
+        {
+          "seller_id": "c9c7905cffc4ef9ff9f113554423e671",
+          "seller_state": "SP",
+          "orders": 125,
+          "late_orders": 13,
+          "late_rate": 0.104,
+          "avg_review": 4.152,
+          "low_review_rate": 0.112,
+          "median_ship_days": 1.7802,
+          "slow_handoff_rate": 0.096,
+          "expected_late_orders_at_network_rate": 9.9796,
+          "excess_late_orders": 3.0204,
+          "seller": "Seller C9C790"
+        },
+        {
+          "seller_id": "a3e9a2c700480d9bb01fba070ba80a0e",
+          "seller_state": "SP",
+          "orders": 117,
+          "late_orders": 12,
+          "late_rate": 0.1026,
+          "avg_review": 4.069,
+          "low_review_rate": 0.1466,
+          "median_ship_days": 2.7052,
+          "slow_handoff_rate": 0.2051,
+          "expected_late_orders_at_network_rate": 9.3409,
+          "excess_late_orders": 2.6591,
+          "seller": "Seller A3E9A2"
+        },
+        {
+          "seller_id": "de23c3b98a88888289c6f5cc1209054a",
+          "seller_state": "SP",
+          "orders": 157,
+          "late_orders": 16,
+          "late_rate": 0.1019,
+          "avg_review": 4.3121,
+          "low_review_rate": 0.1019,
+          "median_ship_days": 2.0395,
+          "slow_handoff_rate": 0.1975,
+          "expected_late_orders_at_network_rate": 12.5344,
+          "excess_late_orders": 3.4656,
+          "seller": "Seller DE23C3"
+        },
+        {
+          "seller_id": "522620dcb18a6b31cd7bdf73665113a9",
+          "seller_state": "PR",
+          "orders": 167,
+          "late_orders": 17,
+          "late_rate": 0.1018,
+          "avg_review": 3.9162,
+          "low_review_rate": 0.1856,
+          "median_ship_days": 2.1208,
+          "slow_handoff_rate": 0.1916,
+          "expected_late_orders_at_network_rate": 13.3328,
+          "excess_late_orders": 3.6672,
+          "seller": "Seller 522620"
+        },
+        {
+          "seller_id": "8581055ce74af1daba164fdbd55a40de",
+          "seller_state": "SP",
+          "orders": 374,
+          "late_orders": 38,
+          "late_rate": 0.1016,
+          "avg_review": 4.3182,
+          "low_review_rate": 0.0936,
+          "median_ship_days": 2.8332,
+          "slow_handoff_rate": 0.2941,
+          "expected_late_orders_at_network_rate": 29.859,
+          "excess_late_orders": 8.141,
+          "seller": "Seller 858105"
+        },
+        {
+          "seller_id": "e9d99831abad74458942f21e16f33f92",
+          "seller_state": "SP",
+          "orders": 128,
+          "late_orders": 13,
+          "late_rate": 0.1016,
+          "avg_review": 3.9453,
+          "low_review_rate": 0.1562,
+          "median_ship_days": 2.3123,
+          "slow_handoff_rate": 0.2812,
+          "expected_late_orders_at_network_rate": 10.2191,
+          "excess_late_orders": 2.7809,
+          "seller": "Seller E9D998"
+        },
+        {
+          "seller_id": "7c67e1448b00f6e969d365cea6b010ab",
+          "seller_state": "SP",
+          "orders": 957,
+          "late_orders": 96,
+          "late_rate": 0.1003,
+          "avg_review": 3.5094,
+          "low_review_rate": 0.2516,
+          "median_ship_days": 11.3486,
+          "slow_handoff_rate": 0.976,
+          "expected_late_orders_at_network_rate": 76.404,
+          "excess_late_orders": 19.596,
+          "seller": "Seller 7C67E1"
+        },
+        {
+          "seller_id": "fa1c13f2614d7b5c4749cbc52fecda94",
+          "seller_state": "SP",
+          "orders": 562,
+          "late_orders": 56,
+          "late_rate": 0.0996,
+          "avg_review": 4.3879,
+          "low_review_rate": 0.0907,
+          "median_ship_days": 2.2683,
+          "slow_handoff_rate": 0.21,
+          "expected_late_orders_at_network_rate": 44.8684,
+          "excess_late_orders": 11.1316,
+          "seller": "Seller FA1C13"
+        },
+        {
+          "seller_id": "d1c281d3ae149232351cd8c8cc885f0d",
+          "seller_state": "SP",
+          "orders": 191,
+          "late_orders": 19,
+          "late_rate": 0.0995,
+          "avg_review": 3.9309,
+          "low_review_rate": 0.1862,
+          "median_ship_days": 1.7416,
+          "slow_handoff_rate": 0.1204,
+          "expected_late_orders_at_network_rate": 15.2489,
+          "excess_late_orders": 3.7511,
+          "seller": "Seller D1C281"
+        },
+        {
+          "seller_id": "7040e82f899a04d1b434b795a43b4617",
+          "seller_state": "SP",
+          "orders": 202,
+          "late_orders": 20,
+          "late_rate": 0.099,
+          "avg_review": 3.6485,
+          "low_review_rate": 0.2574,
+          "median_ship_days": 1.7885,
+          "slow_handoff_rate": 0.1832,
+          "expected_late_orders_at_network_rate": 16.1271,
+          "excess_late_orders": 3.8729,
+          "seller": "Seller 7040E8"
+        },
+        {
+          "seller_id": "620c87c171fb2a6dd6e8bb4dec959fc6",
+          "seller_state": "RJ",
+          "orders": 711,
+          "late_orders": 70,
+          "late_rate": 0.0985,
+          "avg_review": 4.3179,
+          "low_review_rate": 0.1097,
+          "median_ship_days": 1.716,
+          "slow_handoff_rate": 0.1913,
+          "expected_late_orders_at_network_rate": 56.7641,
+          "excess_late_orders": 13.2359,
+          "seller": "Seller 620C87"
+        },
+        {
+          "seller_id": "218d46b86c1881d022bce9c68a7d4b15",
+          "seller_state": "SP",
+          "orders": 371,
+          "late_orders": 36,
+          "late_rate": 0.097,
+          "avg_review": 4.2027,
+          "low_review_rate": 0.1162,
+          "median_ship_days": 1.4796,
+          "slow_handoff_rate": 0.0916,
+          "expected_late_orders_at_network_rate": 29.6195,
+          "excess_late_orders": 6.3805,
+          "seller": "Seller 218D46"
+        },
+        {
+          "seller_id": "213b25e6f54661939f11710a6fddb871",
+          "seller_state": "SP",
+          "orders": 134,
+          "late_orders": 13,
+          "late_rate": 0.097,
+          "avg_review": 4.0896,
+          "low_review_rate": 0.1269,
+          "median_ship_days": 8.892,
+          "slow_handoff_rate": 0.8657,
+          "expected_late_orders_at_network_rate": 10.6982,
+          "excess_late_orders": 2.3018,
+          "seller": "Seller 213B25"
+        },
+        {
+          "seller_id": "76d5af76d0271110f9af36c92573f765",
+          "seller_state": "SP",
+          "orders": 124,
+          "late_orders": 12,
+          "late_rate": 0.0968,
+          "avg_review": 4.1774,
+          "low_review_rate": 0.129,
+          "median_ship_days": 2.2537,
+          "slow_handoff_rate": 0.2581,
+          "expected_late_orders_at_network_rate": 9.8998,
+          "excess_late_orders": 2.1002,
+          "seller": "Seller 76D5AF"
+        },
+        {
+          "seller_id": "54a1852d1b8f10312c55e906355666ee",
+          "seller_state": "SP",
+          "orders": 197,
+          "late_orders": 19,
+          "late_rate": 0.0964,
+          "avg_review": 4.3553,
+          "low_review_rate": 0.0812,
+          "median_ship_days": 1.3497,
+          "slow_handoff_rate": 0.0863,
+          "expected_late_orders_at_network_rate": 15.7279,
+          "excess_late_orders": 3.2721,
+          "seller": "Seller 54A185"
+        },
+        {
+          "seller_id": "00ee68308b45bc5e2660cd833c3f81cc",
+          "seller_state": "SP",
+          "orders": 129,
+          "late_orders": 12,
+          "late_rate": 0.093,
+          "avg_review": 4.3333,
+          "low_review_rate": 0.1008,
+          "median_ship_days": 1.5065,
+          "slow_handoff_rate": 0.1008,
+          "expected_late_orders_at_network_rate": 10.299,
+          "excess_late_orders": 1.701,
+          "seller": "Seller 00EE68"
+        },
+        {
+          "seller_id": "f262cbc1c910c83959f849465454ddd3",
+          "seller_state": "SP",
+          "orders": 187,
+          "late_orders": 17,
+          "late_rate": 0.0909,
+          "avg_review": 4.1765,
+          "low_review_rate": 0.139,
+          "median_ship_days": 1.2353,
+          "slow_handoff_rate": 0.0749,
+          "expected_late_orders_at_network_rate": 14.9295,
+          "excess_late_orders": 2.0705,
+          "seller": "Seller F262CB"
+        },
+        {
+          "seller_id": "cbd996ad3c1b7dc71fd0e5f5df9087e2",
+          "seller_state": "SP",
+          "orders": 156,
+          "late_orders": 14,
+          "late_rate": 0.0897,
+          "avg_review": 4.2051,
+          "low_review_rate": 0.1154,
+          "median_ship_days": 1.4392,
+          "slow_handoff_rate": 0.1026,
+          "expected_late_orders_at_network_rate": 12.4546,
+          "excess_late_orders": 1.5454,
+          "seller": "Seller CBD996"
+        },
+        {
+          "seller_id": "6a8b085f816a1f75f92dbac6eb545f8f",
+          "seller_state": "SP",
+          "orders": 123,
+          "late_orders": 11,
+          "late_rate": 0.0894,
+          "avg_review": 4.1967,
+          "low_review_rate": 0.0984,
+          "median_ship_days": 1.9627,
+          "slow_handoff_rate": 0.1626,
+          "expected_late_orders_at_network_rate": 9.82,
+          "excess_late_orders": 1.18,
+          "seller": "Seller 6A8B08"
+        },
+        {
+          "seller_id": "b2ba3715d723d245138f291a6fe42594",
+          "seller_state": "SP",
+          "orders": 317,
+          "late_orders": 28,
+          "late_rate": 0.0883,
+          "avg_review": 4.2303,
+          "low_review_rate": 0.1104,
+          "median_ship_days": 5.1724,
+          "slow_handoff_rate": 0.735,
+          "expected_late_orders_at_network_rate": 25.3083,
+          "excess_late_orders": 2.6917,
+          "seller": "Seller B2BA37"
+        },
+        {
+          "seller_id": "fe2032dab1a61af8794248c8196565c9",
+          "seller_state": "SP",
+          "orders": 284,
+          "late_orders": 25,
+          "late_rate": 0.088,
+          "avg_review": 4.419,
+          "low_review_rate": 0.088,
+          "median_ship_days": 1.1791,
+          "slow_handoff_rate": 0.1232,
+          "expected_late_orders_at_network_rate": 22.6737,
+          "excess_late_orders": 2.3263,
+          "seller": "Seller FE2032"
+        },
+        {
+          "seller_id": "ef0ace09169ac090589d85746e3e036f",
+          "seller_state": "RJ",
+          "orders": 125,
+          "late_orders": 11,
+          "late_rate": 0.088,
+          "avg_review": 4.416,
+          "low_review_rate": 0.072,
+          "median_ship_days": 3.0603,
+          "slow_handoff_rate": 0.32,
+          "expected_late_orders_at_network_rate": 9.9796,
+          "excess_late_orders": 1.0204,
+          "seller": "Seller EF0ACE"
+        },
+        {
+          "seller_id": "17e34d8224d27a541263c4c64b11a56b",
+          "seller_state": "SP",
+          "orders": 244,
+          "late_orders": 21,
+          "late_rate": 0.0861,
+          "avg_review": 4.2623,
+          "low_review_rate": 0.1066,
+          "median_ship_days": 1.9302,
+          "slow_handoff_rate": 0.2131,
+          "expected_late_orders_at_network_rate": 19.4802,
+          "excess_late_orders": 1.5198,
+          "seller": "Seller 17E34D"
+        },
+        {
+          "seller_id": "c70c1b0d8ca86052f45a432a38b73958",
+          "seller_state": "SP",
+          "orders": 256,
+          "late_orders": 22,
+          "late_rate": 0.0859,
+          "avg_review": 4.3789,
+          "low_review_rate": 0.0859,
+          "median_ship_days": 2.9572,
+          "slow_handoff_rate": 0.3711,
+          "expected_late_orders_at_network_rate": 20.4383,
+          "excess_late_orders": 1.5617,
+          "seller": "Seller C70C1B"
+        },
+        {
+          "seller_id": "ef506c96320abeedfb894c34db06f478",
+          "seller_state": "SP",
+          "orders": 307,
+          "late_orders": 26,
+          "late_rate": 0.0847,
+          "avg_review": 3.9837,
+          "low_review_rate": 0.1564,
+          "median_ship_days": 2.8022,
+          "slow_handoff_rate": 0.2834,
+          "expected_late_orders_at_network_rate": 24.51,
+          "excess_late_orders": 1.49,
+          "seller": "Seller EF506C"
+        },
+        {
+          "seller_id": "e5a38146df062edaf55c38afa99e42dc",
+          "seller_state": "SP",
+          "orders": 118,
+          "late_orders": 10,
+          "late_rate": 0.0847,
+          "avg_review": 4.0,
+          "low_review_rate": 0.161,
+          "median_ship_days": 2.468,
+          "slow_handoff_rate": 0.2288,
+          "expected_late_orders_at_network_rate": 9.4208,
+          "excess_late_orders": 0.5792,
+          "seller": "Seller E5A381"
+        },
+        {
+          "seller_id": "7ddcbb64b5bc1ef36ca8c151f6ec77df",
+          "seller_state": "SP",
+          "orders": 321,
+          "late_orders": 27,
+          "late_rate": 0.0841,
+          "avg_review": 4.0406,
+          "low_review_rate": 0.1469,
+          "median_ship_days": 2.0525,
+          "slow_handoff_rate": 0.1807,
+          "expected_late_orders_at_network_rate": 25.6277,
+          "excess_late_orders": 1.3723,
+          "seller": "Seller 7DDCBB"
+        },
+        {
+          "seller_id": "7142540dd4c91e2237acb7e911c4eba2",
+          "seller_state": "SP",
+          "orders": 309,
+          "late_orders": 26,
+          "late_rate": 0.0841,
+          "avg_review": 4.0844,
+          "low_review_rate": 0.1299,
+          "median_ship_days": 2.2456,
+          "slow_handoff_rate": 0.3398,
+          "expected_late_orders_at_network_rate": 24.6696,
+          "excess_late_orders": 1.3304,
+          "seller": "Seller 714254"
+        },
+        {
+          "seller_id": "3c7c4a49ec3c6550809089c6a2ca9370",
+          "seller_state": "SP",
+          "orders": 135,
+          "late_orders": 11,
+          "late_rate": 0.0815,
+          "avg_review": 3.7111,
+          "low_review_rate": 0.2667,
+          "median_ship_days": 2.0984,
+          "slow_handoff_rate": 0.163,
+          "expected_late_orders_at_network_rate": 10.778,
+          "excess_late_orders": 0.222,
+          "seller": "Seller 3C7C4A"
+        },
+        {
+          "seller_id": "42b729f859728f5079499127a9c2ef37",
+          "seller_state": "SP",
+          "orders": 100,
+          "late_orders": 8,
+          "late_rate": 0.08,
+          "avg_review": 4.51,
+          "low_review_rate": 0.06,
+          "median_ship_days": 1.7326,
+          "slow_handoff_rate": 0.22,
+          "expected_late_orders_at_network_rate": 7.9837,
+          "excess_late_orders": 0.0163,
+          "seller": "Seller 42B729"
+        },
+        {
+          "seller_id": "92eb0f42c21942b6552362b9b114707d",
+          "seller_state": "SP",
+          "orders": 326,
+          "late_orders": 26,
+          "late_rate": 0.0798,
+          "avg_review": 4.0429,
+          "low_review_rate": 0.138,
+          "median_ship_days": 5.3898,
+          "slow_handoff_rate": 0.6779,
+          "expected_late_orders_at_network_rate": 26.0269,
+          "excess_late_orders": -0.0269,
+          "seller": "Seller 92EB0F"
+        },
+        {
+          "seller_id": "edb1ef5e36e0c8cd84eb3c9b003e486d",
+          "seller_state": "RJ",
+          "orders": 163,
+          "late_orders": 13,
+          "late_rate": 0.0798,
+          "avg_review": 4.4479,
+          "low_review_rate": 0.0736,
+          "median_ship_days": 1.2377,
+          "slow_handoff_rate": 0.0613,
+          "expected_late_orders_at_network_rate": 13.0134,
+          "excess_late_orders": -0.0134,
+          "seller": "Seller EDB1EF"
+        },
+        {
+          "seller_id": "4b9750c8ad28220fe6702d4ecb7c898f",
+          "seller_state": "SP",
+          "orders": 214,
+          "late_orders": 17,
+          "late_rate": 0.0794,
+          "avg_review": 4.3692,
+          "low_review_rate": 0.0701,
+          "median_ship_days": 1.7267,
+          "slow_handoff_rate": 0.1168,
+          "expected_late_orders_at_network_rate": 17.0851,
+          "excess_late_orders": -0.0851,
+          "seller": "Seller 4B9750"
+        },
+        {
+          "seller_id": "f45122a9ab94eb4f3f8953578bc0c560",
+          "seller_state": "SP",
+          "orders": 179,
+          "late_orders": 14,
+          "late_rate": 0.0782,
+          "avg_review": 4.0112,
+          "low_review_rate": 0.162,
+          "median_ship_days": 1.2472,
+          "slow_handoff_rate": 0.0503,
+          "expected_late_orders_at_network_rate": 14.2908,
+          "excess_late_orders": -0.2908,
+          "seller": "Seller F45122"
+        },
+        {
+          "seller_id": "ccc4bbb5f32a6ab2b7066a4130f114e3",
+          "seller_state": "PR",
+          "orders": 180,
+          "late_orders": 14,
+          "late_rate": 0.0778,
+          "avg_review": 4.3611,
+          "low_review_rate": 0.1,
+          "median_ship_days": 2.6536,
+          "slow_handoff_rate": 0.3444,
+          "expected_late_orders_at_network_rate": 14.3707,
+          "excess_late_orders": -0.3707,
+          "seller": "Seller CCC4BB"
+        },
+        {
+          "seller_id": "70eea00b476a314817cefde4aad4f89a",
+          "seller_state": "SP",
+          "orders": 103,
+          "late_orders": 8,
+          "late_rate": 0.0777,
+          "avg_review": 4.4078,
+          "low_review_rate": 0.068,
+          "median_ship_days": 1.4464,
+          "slow_handoff_rate": 0.165,
+          "expected_late_orders_at_network_rate": 8.2232,
+          "excess_late_orders": -0.2232,
+          "seller": "Seller 70EEA0"
+        },
+        {
+          "seller_id": "004c9cd9d87a3c30c522c48c4fc07416",
+          "seller_state": "SP",
+          "orders": 142,
+          "late_orders": 11,
+          "late_rate": 0.0775,
+          "avg_review": 4.1898,
+          "low_review_rate": 0.1168,
+          "median_ship_days": 1.3905,
+          "slow_handoff_rate": 0.0704,
+          "expected_late_orders_at_network_rate": 11.3369,
+          "excess_late_orders": -0.3369,
+          "seller": "Seller 004C9C"
+        },
+        {
+          "seller_id": "955fee9216a65b617aa5c0531780ce60",
+          "seller_state": "SP",
+          "orders": 1244,
+          "late_orders": 96,
+          "late_rate": 0.0772,
+          "avg_review": 4.2098,
+          "low_review_rate": 0.0997,
+          "median_ship_days": 1.8344,
+          "slow_handoff_rate": 0.1383,
+          "expected_late_orders_at_network_rate": 99.3172,
+          "excess_late_orders": -3.3172,
+          "seller": "Seller 955FEE"
+        },
+        {
+          "seller_id": "640e21a7d01df7614a3b4923e990d40c",
+          "seller_state": "SP",
+          "orders": 105,
+          "late_orders": 8,
+          "late_rate": 0.0762,
+          "avg_review": 4.4095,
+          "low_review_rate": 0.0476,
+          "median_ship_days": 0.9443,
+          "slow_handoff_rate": 0.0762,
+          "expected_late_orders_at_network_rate": 8.3829,
+          "excess_late_orders": -0.3829,
+          "seller": "Seller 640E21"
+        },
+        {
+          "seller_id": "48436dade18ac8b2bce089ec2a041202",
+          "seller_state": "SP",
+          "orders": 132,
+          "late_orders": 10,
+          "late_rate": 0.0758,
+          "avg_review": 4.1439,
+          "low_review_rate": 0.1136,
+          "median_ship_days": 4.1688,
+          "slow_handoff_rate": 0.5379,
+          "expected_late_orders_at_network_rate": 10.5385,
+          "excess_late_orders": -0.5385,
+          "seller": "Seller 48436D"
+        },
+        {
+          "seller_id": "da8622b14eb17ae2831f4ac5b9dab84a",
+          "seller_state": "SP",
+          "orders": 1267,
+          "late_orders": 95,
+          "late_rate": 0.075,
+          "avg_review": 4.2227,
+          "low_review_rate": 0.1062,
+          "median_ship_days": 2.1319,
+          "slow_handoff_rate": 0.1942,
+          "expected_late_orders_at_network_rate": 101.1535,
+          "excess_late_orders": -6.1535,
+          "seller": "Seller DA8622"
+        },
+        {
+          "seller_id": "e9779976487b77c6d4ac45f75ec7afe9",
+          "seller_state": "SP",
+          "orders": 628,
+          "late_orders": 46,
+          "late_rate": 0.0732,
+          "avg_review": 4.285,
+          "low_review_rate": 0.1003,
+          "median_ship_days": 2.0304,
+          "slow_handoff_rate": 0.1959,
+          "expected_late_orders_at_network_rate": 50.1376,
+          "excess_late_orders": -4.1376,
+          "seller": "Seller E97799"
+        },
+        {
+          "seller_id": "4830e40640734fc1c52cd21127c341d4",
+          "seller_state": "SP",
+          "orders": 197,
+          "late_orders": 14,
+          "late_rate": 0.0711,
+          "avg_review": 4.2538,
+          "low_review_rate": 0.1066,
+          "median_ship_days": 1.5565,
+          "slow_handoff_rate": 0.0964,
+          "expected_late_orders_at_network_rate": 15.7279,
+          "excess_late_orders": -1.7279,
+          "seller": "Seller 4830E4"
+        },
+        {
+          "seller_id": "5656537e588803a555b8eb41f07a944b",
+          "seller_state": "DF",
+          "orders": 169,
+          "late_orders": 12,
+          "late_rate": 0.071,
+          "avg_review": 3.9112,
+          "low_review_rate": 0.1834,
+          "median_ship_days": 1.1685,
+          "slow_handoff_rate": 0.1243,
+          "expected_late_orders_at_network_rate": 13.4925,
+          "excess_late_orders": -1.4925,
+          "seller": "Seller 565653"
+        },
+        {
+          "seller_id": "f457c46070d02cadd8a68551231220dd",
+          "seller_state": "PR",
+          "orders": 169,
+          "late_orders": 12,
+          "late_rate": 0.071,
+          "avg_review": 4.0769,
+          "low_review_rate": 0.142,
+          "median_ship_days": 2.182,
+          "slow_handoff_rate": 0.1775,
+          "expected_late_orders_at_network_rate": 13.4925,
+          "excess_late_orders": -1.4925,
+          "seller": "Seller F457C4"
+        },
+        {
+          "seller_id": "25c5c91f63607446a97b143d2d535d31",
+          "seller_state": "MG",
+          "orders": 143,
+          "late_orders": 10,
+          "late_rate": 0.0699,
+          "avg_review": 3.9085,
+          "low_review_rate": 0.1761,
+          "median_ship_days": 4.6616,
+          "slow_handoff_rate": 0.5804,
+          "expected_late_orders_at_network_rate": 11.4167,
+          "excess_late_orders": -1.4167,
+          "seller": "Seller 25C5C9"
+        },
+        {
+          "seller_id": "2e1c9f22be269ef4643f826c9e650a52",
+          "seller_state": "SP",
+          "orders": 158,
+          "late_orders": 11,
+          "late_rate": 0.0696,
+          "avg_review": 4.2848,
+          "low_review_rate": 0.1013,
+          "median_ship_days": 1.7154,
+          "slow_handoff_rate": 0.0759,
+          "expected_late_orders_at_network_rate": 12.6142,
+          "excess_late_orders": -1.6142,
+          "seller": "Seller 2E1C9F"
+        },
+        {
+          "seller_id": "17a053fcb14bd219540cbde0df490be0",
+          "seller_state": "SP",
+          "orders": 116,
+          "late_orders": 8,
+          "late_rate": 0.069,
+          "avg_review": 4.2931,
+          "low_review_rate": 0.0862,
+          "median_ship_days": 3.8672,
+          "slow_handoff_rate": 0.4828,
+          "expected_late_orders_at_network_rate": 9.2611,
+          "excess_late_orders": -1.2611,
+          "seller": "Seller 17A053"
+        },
+        {
+          "seller_id": "66922902710d126a0e7d26b0e3805106",
+          "seller_state": "MG",
+          "orders": 147,
+          "late_orders": 10,
+          "late_rate": 0.068,
+          "avg_review": 4.517,
+          "low_review_rate": 0.0476,
+          "median_ship_days": 2.9047,
+          "slow_handoff_rate": 0.2925,
+          "expected_late_orders_at_network_rate": 11.736,
+          "excess_late_orders": -1.736,
+          "seller": "Seller 669229"
+        },
+        {
+          "seller_id": "0adac9fbd9a2b63cccaac4f8756c1ca8",
+          "seller_state": "SP",
+          "orders": 103,
+          "late_orders": 7,
+          "late_rate": 0.068,
+          "avg_review": 4.1456,
+          "low_review_rate": 0.1068,
+          "median_ship_days": 4.2276,
+          "slow_handoff_rate": 0.534,
+          "expected_late_orders_at_network_rate": 8.2232,
+          "excess_late_orders": -1.2232,
+          "seller": "Seller 0ADAC9"
+        },
+        {
+          "seller_id": "f4aba7c0bca51484c30ab7bdc34bcdd1",
+          "seller_state": "SP",
+          "orders": 104,
+          "late_orders": 7,
+          "late_rate": 0.0673,
+          "avg_review": 3.9423,
+          "low_review_rate": 0.1538,
+          "median_ship_days": 3.8848,
+          "slow_handoff_rate": 0.4904,
+          "expected_late_orders_at_network_rate": 8.303,
+          "excess_late_orders": -1.303,
+          "seller": "Seller F4ABA7"
+        },
+        {
+          "seller_id": "c003204e1ab016dfa150abc119207b24",
+          "seller_state": "SP",
+          "orders": 194,
+          "late_orders": 13,
+          "late_rate": 0.067,
+          "avg_review": 4.4845,
+          "low_review_rate": 0.0412,
+          "median_ship_days": 1.2204,
+          "slow_handoff_rate": 0.067,
+          "expected_late_orders_at_network_rate": 15.4884,
+          "excess_late_orders": -2.4884,
+          "seller": "Seller C00320"
+        },
+        {
+          "seller_id": "850f4f8af5ea87287ac68de36e29107f",
+          "seller_state": "SP",
+          "orders": 179,
+          "late_orders": 12,
+          "late_rate": 0.067,
+          "avg_review": 4.3352,
+          "low_review_rate": 0.0838,
+          "median_ship_days": 1.1231,
+          "slow_handoff_rate": 0.0503,
+          "expected_late_orders_at_network_rate": 14.2908,
+          "excess_late_orders": -2.2908,
+          "seller": "Seller 850F4F"
+        },
+        {
+          "seller_id": "1554a68530182680ad5c8b042c3ab563",
+          "seller_state": "MG",
+          "orders": 240,
+          "late_orders": 16,
+          "late_rate": 0.0667,
+          "avg_review": 4.3697,
+          "low_review_rate": 0.0924,
+          "median_ship_days": 2.0192,
+          "slow_handoff_rate": 0.1542,
+          "expected_late_orders_at_network_rate": 19.1609,
+          "excess_late_orders": -3.1609,
+          "seller": "Seller 1554A6"
+        },
+        {
+          "seller_id": "0be8ff43f22e456b4e0371b2245e4d01",
+          "seller_state": "SP",
+          "orders": 150,
+          "late_orders": 10,
+          "late_rate": 0.0667,
+          "avg_review": 4.0933,
+          "low_review_rate": 0.1533,
+          "median_ship_days": 1.9505,
+          "slow_handoff_rate": 0.1867,
+          "expected_late_orders_at_network_rate": 11.9756,
+          "excess_late_orders": -1.9756,
+          "seller": "Seller 0BE8FF"
+        },
+        {
+          "seller_id": "dc4a0fc896dc34b0d5bfec8438291c80",
+          "seller_state": "SP",
+          "orders": 211,
+          "late_orders": 14,
+          "late_rate": 0.0664,
+          "avg_review": 3.89,
+          "low_review_rate": 0.1818,
+          "median_ship_days": 3.5644,
+          "slow_handoff_rate": 0.4123,
+          "expected_late_orders_at_network_rate": 16.8456,
+          "excess_late_orders": -2.8456,
+          "seller": "Seller DC4A0F"
+        },
+        {
+          "seller_id": "18a349e75d307f4b4cc646a691ed4216",
+          "seller_state": "SP",
+          "orders": 106,
+          "late_orders": 7,
+          "late_rate": 0.066,
+          "avg_review": 3.6509,
+          "low_review_rate": 0.2547,
+          "median_ship_days": 2.0596,
+          "slow_handoff_rate": 0.2642,
+          "expected_late_orders_at_network_rate": 8.4627,
+          "excess_late_orders": -1.4627,
+          "seller": "Seller 18A349"
+        },
+        {
+          "seller_id": "79ebd9a61bac3eaf882805ed4ecfa12a",
+          "seller_state": "PR",
+          "orders": 122,
+          "late_orders": 8,
+          "late_rate": 0.0656,
+          "avg_review": 4.1967,
+          "low_review_rate": 0.0984,
+          "median_ship_days": 6.0302,
+          "slow_handoff_rate": 0.7541,
+          "expected_late_orders_at_network_rate": 9.7401,
+          "excess_late_orders": -1.7401,
+          "seller": "Seller 79EBD9"
+        },
+        {
+          "seller_id": "46dc3b2cc0980fb8ec44634e21d2718e",
+          "seller_state": "RJ",
+          "orders": 458,
+          "late_orders": 30,
+          "late_rate": 0.0655,
+          "avg_review": 4.2969,
+          "low_review_rate": 0.1048,
+          "median_ship_days": 2.1642,
+          "slow_handoff_rate": 0.1921,
+          "expected_late_orders_at_network_rate": 36.5653,
+          "excess_late_orders": -6.5653,
+          "seller": "Seller 46DC3B"
+        },
+        {
+          "seller_id": "1b4c3a6f53068f0b6944d2d005c9fc89",
+          "seller_state": "SC",
+          "orders": 107,
+          "late_orders": 7,
+          "late_rate": 0.0654,
+          "avg_review": 4.271,
+          "low_review_rate": 0.1028,
+          "median_ship_days": 1.4473,
+          "slow_handoff_rate": 0.0748,
+          "expected_late_orders_at_network_rate": 8.5426,
+          "excess_late_orders": -1.5426,
+          "seller": "Seller 1B4C3A"
+        },
+        {
+          "seller_id": "59fb871bf6f4522a87ba567b42dafecf",
+          "seller_state": "SP",
+          "orders": 123,
+          "late_orders": 8,
+          "late_rate": 0.065,
+          "avg_review": 4.2764,
+          "low_review_rate": 0.0732,
+          "median_ship_days": 1.5596,
+          "slow_handoff_rate": 0.2195,
+          "expected_late_orders_at_network_rate": 9.82,
+          "excess_late_orders": -1.82,
+          "seller": "Seller 59FB87"
+        },
+        {
+          "seller_id": "6560211a19b47992c3666cc44a7e94c0",
+          "seller_state": "SP",
+          "orders": 1774,
+          "late_orders": 114,
+          "late_rate": 0.0643,
+          "avg_review": 4.0028,
+          "low_review_rate": 0.1536,
+          "median_ship_days": 1.1546,
+          "slow_handoff_rate": 0.0468,
+          "expected_late_orders_at_network_rate": 141.6308,
+          "excess_late_orders": -27.6308,
+          "seller": "Seller 656021"
+        },
+        {
+          "seller_id": "128639473a139ac0f3e5f5ade55873a5",
+          "seller_state": "PR",
+          "orders": 514,
+          "late_orders": 33,
+          "late_rate": 0.0642,
+          "avg_review": 4.2296,
+          "low_review_rate": 0.0992,
+          "median_ship_days": 2.2739,
+          "slow_handoff_rate": 0.2451,
+          "expected_late_orders_at_network_rate": 41.0362,
+          "excess_late_orders": -8.0362,
+          "seller": "Seller 128639"
+        },
+        {
+          "seller_id": "5dceca129747e92ff8ef7a997dc4f8ca",
+          "seller_state": "SP",
+          "orders": 313,
+          "late_orders": 20,
+          "late_rate": 0.0639,
+          "avg_review": 4.0288,
+          "low_review_rate": 0.1885,
+          "median_ship_days": 2.0548,
+          "slow_handoff_rate": 0.1629,
+          "expected_late_orders_at_network_rate": 24.989,
+          "excess_late_orders": -4.989,
+          "seller": "Seller 5DCECA"
+        },
+        {
+          "seller_id": "fa40cc5b934574b62717c68f3d678b6d",
+          "seller_state": "SP",
+          "orders": 298,
+          "late_orders": 19,
+          "late_rate": 0.0638,
+          "avg_review": 4.4832,
+          "low_review_rate": 0.0705,
+          "median_ship_days": 2.6956,
+          "slow_handoff_rate": 0.2282,
+          "expected_late_orders_at_network_rate": 23.7914,
+          "excess_late_orders": -4.7914,
+          "seller": "Seller FA40CC"
+        },
+        {
+          "seller_id": "01fdefa7697d26ad920e9e0346d4bd1b",
+          "seller_state": "PR",
+          "orders": 126,
+          "late_orders": 8,
+          "late_rate": 0.0635,
+          "avg_review": 4.373,
+          "low_review_rate": 0.0556,
+          "median_ship_days": 1.6611,
+          "slow_handoff_rate": 0.0556,
+          "expected_late_orders_at_network_rate": 10.0595,
+          "excess_late_orders": -2.0595,
+          "seller": "Seller 01FDEF"
+        },
+        {
+          "seller_id": "5a8e7d5003a1f221f9e1d6e411de7c23",
+          "seller_state": "SP",
+          "orders": 126,
+          "late_orders": 8,
+          "late_rate": 0.0635,
+          "avg_review": 4.1984,
+          "low_review_rate": 0.119,
+          "median_ship_days": 2.0943,
+          "slow_handoff_rate": 0.1508,
+          "expected_late_orders_at_network_rate": 10.0595,
+          "excess_late_orders": -2.0595,
+          "seller": "Seller 5A8E7D"
+        },
+        {
+          "seller_id": "0241d4d5d36f10f80c644447315af0bd",
+          "seller_state": "PR",
+          "orders": 223,
+          "late_orders": 14,
+          "late_rate": 0.0628,
+          "avg_review": 4.4574,
+          "low_review_rate": 0.0762,
+          "median_ship_days": 1.7581,
+          "slow_handoff_rate": 0.1525,
+          "expected_late_orders_at_network_rate": 17.8037,
+          "excess_late_orders": -3.8037,
+          "seller": "Seller 0241D4"
+        },
+        {
+          "seller_id": "001cca7ae9ae17fb1caed9dfb1094831",
+          "seller_state": "ES",
+          "orders": 191,
+          "late_orders": 12,
+          "late_rate": 0.0628,
+          "avg_review": 4.0785,
+          "low_review_rate": 0.1361,
+          "median_ship_days": 2.0805,
+          "slow_handoff_rate": 0.1885,
+          "expected_late_orders_at_network_rate": 15.2489,
+          "excess_late_orders": -3.2489,
+          "seller": "Seller 001CCA"
+        },
+        {
+          "seller_id": "41b39e28db005d9731d9d485a83b4c38",
+          "seller_state": "SP",
+          "orders": 176,
+          "late_orders": 11,
+          "late_rate": 0.0625,
+          "avg_review": 4.2428,
+          "low_review_rate": 0.1156,
+          "median_ship_days": 2.6152,
+          "slow_handoff_rate": 0.2273,
+          "expected_late_orders_at_network_rate": 14.0513,
+          "excess_late_orders": -3.0513,
+          "seller": "Seller 41B39E"
+        },
+        {
+          "seller_id": "d2374cbcbb3ca4ab1086534108cc3ab7",
+          "seller_state": "SP",
+          "orders": 485,
+          "late_orders": 30,
+          "late_rate": 0.0619,
+          "avg_review": 3.8745,
+          "low_review_rate": 0.1736,
+          "median_ship_days": 4.123,
+          "slow_handoff_rate": 0.5299,
+          "expected_late_orders_at_network_rate": 38.7209,
+          "excess_late_orders": -8.7209,
+          "seller": "Seller D2374C"
+        },
+        {
+          "seller_id": "0c8380b62e38e8a1e6adbeba7eb9688c",
+          "seller_state": "MG",
+          "orders": 146,
+          "late_orders": 9,
+          "late_rate": 0.0616,
+          "avg_review": 4.1027,
+          "low_review_rate": 0.1164,
+          "median_ship_days": 2.7412,
+          "slow_handoff_rate": 0.2808,
+          "expected_late_orders_at_network_rate": 11.6562,
+          "excess_late_orders": -2.6562,
+          "seller": "Seller 0C8380"
+        },
+        {
+          "seller_id": "cc419e0650a3c5ba77189a1882b7556a",
+          "seller_state": "SP",
+          "orders": 1642,
+          "late_orders": 101,
+          "late_rate": 0.0615,
+          "avg_review": 4.1582,
+          "low_review_rate": 0.1275,
+          "median_ship_days": 2.5601,
+          "slow_handoff_rate": 0.2266,
+          "expected_late_orders_at_network_rate": 131.0924,
+          "excess_late_orders": -30.0924,
+          "seller": "Seller CC419E"
+        },
+        {
+          "seller_id": "d91fb3b7d041e83b64a00a3edfb37e4f",
+          "seller_state": "SP",
+          "orders": 520,
+          "late_orders": 32,
+          "late_rate": 0.0615,
+          "avg_review": 4.1445,
+          "low_review_rate": 0.1367,
+          "median_ship_days": 2.1318,
+          "slow_handoff_rate": 0.1942,
+          "expected_late_orders_at_network_rate": 41.5152,
+          "excess_late_orders": -9.5152,
+          "seller": "Seller D91FB3"
+        },
+        {
+          "seller_id": "6edacfd9f9074789dad6d62ba7950b9c",
+          "seller_state": "SP",
+          "orders": 196,
+          "late_orders": 12,
+          "late_rate": 0.0612,
+          "avg_review": 4.4821,
+          "low_review_rate": 0.0615,
+          "median_ship_days": 1.6687,
+          "slow_handoff_rate": 0.1071,
+          "expected_late_orders_at_network_rate": 15.6481,
+          "excess_late_orders": -3.6481,
+          "seller": "Seller 6EDACF"
+        },
+        {
+          "seller_id": "7a67c85e85bb2ce8582c35f2203ad736",
+          "seller_state": "SP",
+          "orders": 1112,
+          "late_orders": 67,
+          "late_rate": 0.0603,
+          "avg_review": 4.3183,
+          "low_review_rate": 0.0872,
+          "median_ship_days": 1.5124,
+          "slow_handoff_rate": 0.0926,
+          "expected_late_orders_at_network_rate": 88.7787,
+          "excess_late_orders": -21.7787,
+          "seller": "Seller 7A67C8"
+        },
+        {
+          "seller_id": "9b013e03b2ab786505a1d3b5c0756754",
+          "seller_state": "SP",
+          "orders": 166,
+          "late_orders": 10,
+          "late_rate": 0.0602,
+          "avg_review": 4.253,
+          "low_review_rate": 0.1145,
+          "median_ship_days": 2.1029,
+          "slow_handoff_rate": 0.1687,
+          "expected_late_orders_at_network_rate": 13.2529,
+          "excess_late_orders": -3.2529,
+          "seller": "Seller 9B013E"
+        },
+        {
+          "seller_id": "3d871de0142ce09b7081e2b9d1733cb1",
+          "seller_state": "SP",
+          "orders": 1033,
+          "late_orders": 62,
+          "late_rate": 0.06,
+          "avg_review": 4.2101,
+          "low_review_rate": 0.0997,
+          "median_ship_days": 2.9197,
+          "slow_handoff_rate": 0.3679,
+          "expected_late_orders_at_network_rate": 82.4716,
+          "excess_late_orders": -20.4716,
+          "seller": "Seller 3D871D"
+        },
+        {
+          "seller_id": "1c129092bf23f28a5930387c980c0dfc",
+          "seller_state": "SP",
+          "orders": 184,
+          "late_orders": 11,
+          "late_rate": 0.0598,
+          "avg_review": 4.3641,
+          "low_review_rate": 0.087,
+          "median_ship_days": 4.1468,
+          "slow_handoff_rate": 0.5435,
+          "expected_late_orders_at_network_rate": 14.69,
+          "excess_late_orders": -3.69,
+          "seller": "Seller 1C1290"
+        },
+        {
+          "seller_id": "dd2bdf855a9172734fbc3744021ae9b9",
+          "seller_state": "MG",
+          "orders": 101,
+          "late_orders": 6,
+          "late_rate": 0.0594,
+          "avg_review": 3.87,
+          "low_review_rate": 0.18,
+          "median_ship_days": 3.4953,
+          "slow_handoff_rate": 0.4554,
+          "expected_late_orders_at_network_rate": 8.0635,
+          "excess_late_orders": -2.0635,
+          "seller": "Seller DD2BDF"
+        },
+        {
+          "seller_id": "1da3aeb70d7989d1e6d9b0e887f97c23",
+          "seller_state": "SP",
+          "orders": 253,
+          "late_orders": 15,
+          "late_rate": 0.0593,
+          "avg_review": 4.1739,
+          "low_review_rate": 0.1186,
+          "median_ship_days": 1.4971,
+          "slow_handoff_rate": 0.0514,
+          "expected_late_orders_at_network_rate": 20.1988,
+          "excess_late_orders": -5.1988,
+          "seller": "Seller 1DA3AE"
+        },
+        {
+          "seller_id": "25e6ffe976bd75618accfe16cefcbd0d",
+          "seller_state": "SP",
+          "orders": 103,
+          "late_orders": 6,
+          "late_rate": 0.0583,
+          "avg_review": 4.5146,
+          "low_review_rate": 0.0583,
+          "median_ship_days": 1.5636,
+          "slow_handoff_rate": 0.0874,
+          "expected_late_orders_at_network_rate": 8.2232,
+          "excess_late_orders": -2.2232,
+          "seller": "Seller 25E6FF"
+        },
+        {
+          "seller_id": "a1043bafd471dff536d0c462352beb48",
+          "seller_state": "MG",
+          "orders": 692,
+          "late_orders": 40,
+          "late_rate": 0.0578,
+          "avg_review": 4.2934,
+          "low_review_rate": 0.091,
+          "median_ship_days": 1.7416,
+          "slow_handoff_rate": 0.0824,
+          "expected_late_orders_at_network_rate": 55.2472,
+          "excess_late_orders": -15.2472,
+          "seller": "Seller A1043B"
+        },
+        {
+          "seller_id": "2138ccb85b11a4ec1e37afbd1c8eda1f",
+          "seller_state": "SP",
+          "orders": 368,
+          "late_orders": 21,
+          "late_rate": 0.0571,
+          "avg_review": 3.9946,
+          "low_review_rate": 0.1603,
+          "median_ship_days": 2.2819,
+          "slow_handoff_rate": 0.1929,
+          "expected_late_orders_at_network_rate": 29.38,
+          "excess_late_orders": -8.38,
+          "seller": "Seller 2138CC"
+        },
+        {
+          "seller_id": "6d66611d7c44cc30ce351abc49a68421",
+          "seller_state": "SP",
+          "orders": 158,
+          "late_orders": 9,
+          "late_rate": 0.057,
+          "avg_review": 3.9684,
+          "low_review_rate": 0.1519,
+          "median_ship_days": 3.3691,
+          "slow_handoff_rate": 0.4051,
+          "expected_late_orders_at_network_rate": 12.6142,
+          "excess_late_orders": -3.6142,
+          "seller": "Seller 6D6661"
+        },
+        {
+          "seller_id": "87142160b41353c4e5fca2360caf6f92",
+          "seller_state": "RS",
+          "orders": 300,
+          "late_orders": 17,
+          "late_rate": 0.0567,
+          "avg_review": 4.4247,
+          "low_review_rate": 0.0569,
+          "median_ship_days": 2.1069,
+          "slow_handoff_rate": 0.22,
+          "expected_late_orders_at_network_rate": 23.9511,
+          "excess_late_orders": -6.9511,
+          "seller": "Seller 871421"
+        },
+        {
+          "seller_id": "ceaec5548eefc6e23e6607c5435102e7",
+          "seller_state": "SP",
+          "orders": 194,
+          "late_orders": 11,
+          "late_rate": 0.0567,
+          "avg_review": 4.1959,
+          "low_review_rate": 0.1134,
+          "median_ship_days": 2.882,
+          "slow_handoff_rate": 0.3041,
+          "expected_late_orders_at_network_rate": 15.4884,
+          "excess_late_orders": -4.4884,
+          "seller": "Seller CEAEC5"
+        },
+        {
+          "seller_id": "cca3071e3e9bb7d12640c9fbe2301306",
+          "seller_state": "SP",
+          "orders": 654,
+          "late_orders": 37,
+          "late_rate": 0.0566,
+          "avg_review": 3.9754,
+          "low_review_rate": 0.1677,
+          "median_ship_days": 3.2146,
+          "slow_handoff_rate": 0.3654,
+          "expected_late_orders_at_network_rate": 52.2134,
+          "excess_late_orders": -15.2134,
+          "seller": "Seller CCA307"
+        },
+        {
+          "seller_id": "53e4c6e0f4312d4d2107a8c9cddf45cd",
+          "seller_state": "SP",
+          "orders": 443,
+          "late_orders": 25,
+          "late_rate": 0.0564,
+          "avg_review": 4.14,
+          "low_review_rate": 0.1264,
+          "median_ship_days": 3.9483,
+          "slow_handoff_rate": 0.4876,
+          "expected_late_orders_at_network_rate": 35.3678,
+          "excess_late_orders": -10.3678,
+          "seller": "Seller 53E4C6"
+        },
+        {
+          "seller_id": "1a3df491d1c4f1589fc2b934ada68bf2",
+          "seller_state": "SC",
+          "orders": 160,
+          "late_orders": 9,
+          "late_rate": 0.0562,
+          "avg_review": 4.2704,
+          "low_review_rate": 0.0943,
+          "median_ship_days": 3.6503,
+          "slow_handoff_rate": 0.4188,
+          "expected_late_orders_at_network_rate": 12.7739,
+          "excess_late_orders": -3.7739,
+          "seller": "Seller 1A3DF4"
+        },
+        {
+          "seller_id": "2528513dd95219a6013d4d05176e391a",
+          "seller_state": "SP",
+          "orders": 145,
+          "late_orders": 8,
+          "late_rate": 0.0552,
+          "avg_review": 4.1172,
+          "low_review_rate": 0.131,
+          "median_ship_days": 1.9587,
+          "slow_handoff_rate": 0.2138,
+          "expected_late_orders_at_network_rate": 11.5764,
+          "excess_late_orders": -3.5764,
+          "seller": "Seller 252851"
+        },
+        {
+          "seller_id": "f80edd2c5aaa505cc4b0a3b219abf4b8",
+          "seller_state": "SP",
+          "orders": 109,
+          "late_orders": 6,
+          "late_rate": 0.055,
+          "avg_review": 4.2477,
+          "low_review_rate": 0.1101,
+          "median_ship_days": 2.7404,
+          "slow_handoff_rate": 0.3394,
+          "expected_late_orders_at_network_rate": 8.7022,
+          "excess_late_orders": -2.7022,
+          "seller": "Seller F80EDD"
+        },
+        {
+          "seller_id": "7e93a43ef30c4f03f38b393420bc753a",
+          "seller_state": "SP",
+          "orders": 314,
+          "late_orders": 17,
+          "late_rate": 0.0541,
+          "avg_review": 4.3917,
+          "low_review_rate": 0.0732,
+          "median_ship_days": 1.9525,
+          "slow_handoff_rate": 0.1656,
+          "expected_late_orders_at_network_rate": 25.0688,
+          "excess_late_orders": -8.0688,
+          "seller": "Seller 7E93A4"
+        },
+        {
+          "seller_id": "537eb890efff034a88679788b647c564",
+          "seller_state": "RJ",
+          "orders": 148,
+          "late_orders": 8,
+          "late_rate": 0.0541,
+          "avg_review": 4.3129,
+          "low_review_rate": 0.068,
+          "median_ship_days": 1.2179,
+          "slow_handoff_rate": 0.0676,
+          "expected_late_orders_at_network_rate": 11.8159,
+          "excess_late_orders": -3.8159,
+          "seller": "Seller 537EB8"
+        },
+        {
+          "seller_id": "813348c996469b40f2e028d5429d3495",
+          "seller_state": "SP",
+          "orders": 167,
+          "late_orders": 9,
+          "late_rate": 0.0539,
+          "avg_review": 4.0838,
+          "low_review_rate": 0.1437,
+          "median_ship_days": 1.4816,
+          "slow_handoff_rate": 0.0838,
+          "expected_late_orders_at_network_rate": 13.3328,
+          "excess_late_orders": -4.3328,
+          "seller": "Seller 813348"
+        },
+        {
+          "seller_id": "bfd27a966d91cfaafdb25d076585f0da",
+          "seller_state": "SP",
+          "orders": 113,
+          "late_orders": 6,
+          "late_rate": 0.0531,
+          "avg_review": 4.3186,
+          "low_review_rate": 0.1062,
+          "median_ship_days": 1.8455,
+          "slow_handoff_rate": 0.1239,
+          "expected_late_orders_at_network_rate": 9.0216,
+          "excess_late_orders": -3.0216,
+          "seller": "Seller BFD27A"
+        },
+        {
+          "seller_id": "f8db351d8c4c4c22c6835c19a46f01b0",
+          "seller_state": "SP",
+          "orders": 642,
+          "late_orders": 34,
+          "late_rate": 0.053,
+          "avg_review": 4.298,
+          "low_review_rate": 0.0874,
+          "median_ship_days": 1.2744,
+          "slow_handoff_rate": 0.0545,
+          "expected_late_orders_at_network_rate": 51.2554,
+          "excess_late_orders": -17.2554,
+          "seller": "Seller F8DB35"
+        },
+        {
+          "seller_id": "1e8b33f18b4f7598d87f5cbee2282cc2",
+          "seller_state": "SP",
+          "orders": 115,
+          "late_orders": 6,
+          "late_rate": 0.0522,
+          "avg_review": 4.4696,
+          "low_review_rate": 0.087,
+          "median_ship_days": 1.2413,
+          "slow_handoff_rate": 0.0435,
+          "expected_late_orders_at_network_rate": 9.1813,
+          "excess_late_orders": -3.1813,
+          "seller": "Seller 1E8B33"
+        },
+        {
+          "seller_id": "9f505651f4a6abe901a56cdc21508025",
+          "seller_state": "SP",
+          "orders": 387,
+          "late_orders": 20,
+          "late_rate": 0.0517,
+          "avg_review": 4.3824,
+          "low_review_rate": 0.0904,
+          "median_ship_days": 1.0493,
+          "slow_handoff_rate": 0.031,
+          "expected_late_orders_at_network_rate": 30.8969,
+          "excess_late_orders": -10.8969,
+          "seller": "Seller 9F5056"
+        },
+        {
+          "seller_id": "7178f9f4dd81dcef02f62acdf8151e01",
+          "seller_state": "SC",
+          "orders": 201,
+          "late_orders": 10,
+          "late_rate": 0.0498,
+          "avg_review": 4.0597,
+          "low_review_rate": 0.1443,
+          "median_ship_days": 4.3217,
+          "slow_handoff_rate": 0.5522,
+          "expected_late_orders_at_network_rate": 16.0472,
+          "excess_late_orders": -6.0472,
+          "seller": "Seller 7178F9"
+        },
+        {
+          "seller_id": "7299e27ed73d2ad986de7f7c77d919fa",
+          "seller_state": "MG",
+          "orders": 331,
+          "late_orders": 16,
+          "late_rate": 0.0483,
+          "avg_review": 4.435,
+          "low_review_rate": 0.0665,
+          "median_ship_days": 1.1069,
+          "slow_handoff_rate": 0.0453,
+          "expected_late_orders_at_network_rate": 26.426,
+          "excess_late_orders": -10.426,
+          "seller": "Seller 7299E2"
+        },
+        {
+          "seller_id": "36a968b544695394e4e9d7572688598f",
+          "seller_state": "SP",
+          "orders": 146,
+          "late_orders": 7,
+          "late_rate": 0.0479,
+          "avg_review": 3.7379,
+          "low_review_rate": 0.2138,
+          "median_ship_days": 3.032,
+          "slow_handoff_rate": 0.3836,
+          "expected_late_orders_at_network_rate": 11.6562,
+          "excess_late_orders": -4.6562,
+          "seller": "Seller 36A968"
+        },
+        {
+          "seller_id": "4d6d651bd7684af3fffabd5f08d12e5a",
+          "seller_state": "SP",
+          "orders": 356,
+          "late_orders": 17,
+          "late_rate": 0.0478,
+          "avg_review": 4.264,
+          "low_review_rate": 0.1096,
+          "median_ship_days": 3.1846,
+          "slow_handoff_rate": 0.4298,
+          "expected_late_orders_at_network_rate": 28.422,
+          "excess_late_orders": -11.422,
+          "seller": "Seller 4D6D65"
+        },
+        {
+          "seller_id": "aafe36600ce604f205b86b5084d3d767",
+          "seller_state": "SC",
+          "orders": 127,
+          "late_orders": 6,
+          "late_rate": 0.0472,
+          "avg_review": 4.4016,
+          "low_review_rate": 0.0945,
+          "median_ship_days": 1.7091,
+          "slow_handoff_rate": 0.1417,
+          "expected_late_orders_at_network_rate": 10.1393,
+          "excess_late_orders": -4.1393,
+          "seller": "Seller AAFE36"
+        },
+        {
+          "seller_id": "c33847515fa6305ce6feb1e818569f13",
+          "seller_state": "SC",
+          "orders": 108,
+          "late_orders": 5,
+          "late_rate": 0.0463,
+          "avg_review": 3.8981,
+          "low_review_rate": 0.1944,
+          "median_ship_days": 1.8,
+          "slow_handoff_rate": 0.0556,
+          "expected_late_orders_at_network_rate": 8.6224,
+          "excess_late_orders": -3.6224,
+          "seller": "Seller C33847"
+        },
+        {
+          "seller_id": "a3a38f4affed601eb87a97788c949667",
+          "seller_state": "SC",
+          "orders": 244,
+          "late_orders": 11,
+          "late_rate": 0.0451,
+          "avg_review": 4.4385,
+          "low_review_rate": 0.0738,
+          "median_ship_days": 1.3716,
+          "slow_handoff_rate": 0.0615,
+          "expected_late_orders_at_network_rate": 19.4802,
+          "excess_late_orders": -8.4802,
+          "seller": "Seller A3A38F"
+        },
+        {
+          "seller_id": "669ae81880e08f269a64487cfb287169",
+          "seller_state": "SC",
+          "orders": 158,
+          "late_orders": 7,
+          "late_rate": 0.0443,
+          "avg_review": 4.2975,
+          "low_review_rate": 0.1076,
+          "median_ship_days": 1.3812,
+          "slow_handoff_rate": 0.0633,
+          "expected_late_orders_at_network_rate": 12.6142,
+          "excess_late_orders": -5.6142,
+          "seller": "Seller 669AE8"
+        },
+        {
+          "seller_id": "de722cd6dad950a92b7d4f82673f8833",
+          "seller_state": "PE",
+          "orders": 334,
+          "late_orders": 14,
+          "late_rate": 0.0419,
+          "avg_review": 4.3204,
+          "low_review_rate": 0.0868,
+          "median_ship_days": 1.815,
+          "slow_handoff_rate": 0.1138,
+          "expected_late_orders_at_network_rate": 26.6656,
+          "excess_late_orders": -12.6656,
+          "seller": "Seller DE722C"
+        },
+        {
+          "seller_id": "080102cd0a76b09e0dcf55fcacc60e05",
+          "seller_state": "MG",
+          "orders": 120,
+          "late_orders": 5,
+          "late_rate": 0.0417,
+          "avg_review": 4.5417,
+          "low_review_rate": 0.0333,
+          "median_ship_days": 1.1922,
+          "slow_handoff_rate": 0.0417,
+          "expected_late_orders_at_network_rate": 9.5804,
+          "excess_late_orders": -4.5804,
+          "seller": "Seller 080102"
+        },
+        {
+          "seller_id": "7008613ea464bad5cb9b83456e1e6a8f",
+          "seller_state": "SC",
+          "orders": 122,
+          "late_orders": 5,
+          "late_rate": 0.041,
+          "avg_review": 4.2787,
+          "low_review_rate": 0.0738,
+          "median_ship_days": 2.539,
+          "slow_handoff_rate": 0.1967,
+          "expected_late_orders_at_network_rate": 9.7401,
+          "excess_late_orders": -4.7401,
+          "seller": "Seller 700861"
+        },
+        {
+          "seller_id": "53243585a1d6dc2643021fd1853d8905",
+          "seller_state": "BA",
+          "orders": 346,
+          "late_orders": 14,
+          "late_rate": 0.0405,
+          "avg_review": 4.1936,
+          "low_review_rate": 0.104,
+          "median_ship_days": 3.0669,
+          "slow_handoff_rate": 0.341,
+          "expected_late_orders_at_network_rate": 27.6236,
+          "excess_late_orders": -13.6236,
+          "seller": "Seller 532435"
+        },
+        {
+          "seller_id": "db4350fd57ae30082dec7acbaacc17f9",
+          "seller_state": "SP",
+          "orders": 127,
+          "late_orders": 5,
+          "late_rate": 0.0394,
+          "avg_review": 4.2441,
+          "low_review_rate": 0.0945,
+          "median_ship_days": 1.9681,
+          "slow_handoff_rate": 0.1417,
+          "expected_late_orders_at_network_rate": 10.1393,
+          "excess_late_orders": -5.1393,
+          "seller": "Seller DB4350"
+        },
+        {
+          "seller_id": "710e3548e02bc1d2831dfc4f1b5b14d4",
+          "seller_state": "PR",
+          "orders": 128,
+          "late_orders": 5,
+          "late_rate": 0.0391,
+          "avg_review": 3.4375,
+          "low_review_rate": 0.3047,
+          "median_ship_days": 1.8562,
+          "slow_handoff_rate": 0.3281,
+          "expected_late_orders_at_network_rate": 10.2191,
+          "excess_late_orders": -5.2191,
+          "seller": "Seller 710E35"
+        },
+        {
+          "seller_id": "0db783cfcd3b73998abc6e10e59a102f",
+          "seller_state": "SP",
+          "orders": 129,
+          "late_orders": 5,
+          "late_rate": 0.0388,
+          "avg_review": 4.2171,
+          "low_review_rate": 0.124,
+          "median_ship_days": 2.2285,
+          "slow_handoff_rate": 0.2481,
+          "expected_late_orders_at_network_rate": 10.299,
+          "excess_late_orders": -5.299,
+          "seller": "Seller 0DB783"
+        },
+        {
+          "seller_id": "dbb9b48c841a0e39e21f98e1a6b2ec3e",
+          "seller_state": "SP",
+          "orders": 103,
+          "late_orders": 4,
+          "late_rate": 0.0388,
+          "avg_review": 4.301,
+          "low_review_rate": 0.0971,
+          "median_ship_days": 1.9587,
+          "slow_handoff_rate": 0.165,
+          "expected_late_orders_at_network_rate": 8.2232,
+          "excess_late_orders": -4.2232,
+          "seller": "Seller DBB9B4"
+        },
+        {
+          "seller_id": "1c68394e931a64f90ea236c5ea590300",
+          "seller_state": "PR",
+          "orders": 132,
+          "late_orders": 5,
+          "late_rate": 0.0379,
+          "avg_review": 4.0078,
+          "low_review_rate": 0.1395,
+          "median_ship_days": 4.4393,
+          "slow_handoff_rate": 0.5303,
+          "expected_late_orders_at_network_rate": 10.5385,
+          "excess_late_orders": -5.5385,
+          "seller": "Seller 1C6839"
+        },
+        {
+          "seller_id": "562fc2f2c2863ab7e79a9e4388a58a14",
+          "seller_state": "SP",
+          "orders": 246,
+          "late_orders": 9,
+          "late_rate": 0.0366,
+          "avg_review": 4.2642,
+          "low_review_rate": 0.0894,
+          "median_ship_days": 1.5963,
+          "slow_handoff_rate": 0.126,
+          "expected_late_orders_at_network_rate": 19.6399,
+          "excess_late_orders": -10.6399,
+          "seller": "Seller 562FC2"
+        },
+        {
+          "seller_id": "44073f8b7e41514de3b7815dd0237f4f",
+          "seller_state": "DF",
+          "orders": 137,
+          "late_orders": 5,
+          "late_rate": 0.0365,
+          "avg_review": 3.7591,
+          "low_review_rate": 0.2044,
+          "median_ship_days": 2.3989,
+          "slow_handoff_rate": 0.2993,
+          "expected_late_orders_at_network_rate": 10.9377,
+          "excess_late_orders": -5.9377,
+          "seller": "Seller 44073F"
+        },
+        {
+          "seller_id": "85d9eb9ddc5d00ca9336a2219c97bb13",
+          "seller_state": "MG",
+          "orders": 494,
+          "late_orders": 18,
+          "late_rate": 0.0364,
+          "avg_review": 4.2348,
+          "low_review_rate": 0.0891,
+          "median_ship_days": 5.9947,
+          "slow_handoff_rate": 0.6842,
+          "expected_late_orders_at_network_rate": 39.4395,
+          "excess_late_orders": -21.4395,
+          "seller": "Seller 85D9EB"
+        },
+        {
+          "seller_id": "86ccac0b835037332a596a33b6949ee1",
+          "seller_state": "SC",
+          "orders": 169,
+          "late_orders": 6,
+          "late_rate": 0.0355,
+          "avg_review": 4.2738,
+          "low_review_rate": 0.1071,
+          "median_ship_days": 2.5382,
+          "slow_handoff_rate": 0.2426,
+          "expected_late_orders_at_network_rate": 13.4925,
+          "excess_late_orders": -7.4925,
+          "seller": "Seller 86CCAC"
+        },
+        {
+          "seller_id": "5cf13accae3222c70a9cac40818ae839",
+          "seller_state": "MG",
+          "orders": 141,
+          "late_orders": 5,
+          "late_rate": 0.0355,
+          "avg_review": 4.5603,
+          "low_review_rate": 0.0496,
+          "median_ship_days": 1.6466,
+          "slow_handoff_rate": 0.0709,
+          "expected_late_orders_at_network_rate": 11.257,
+          "excess_late_orders": -6.257,
+          "seller": "Seller 5CF13A"
+        },
+        {
+          "seller_id": "2a84855fd20af891be03bc5924d2b453",
+          "seller_state": "MG",
+          "orders": 152,
+          "late_orders": 5,
+          "late_rate": 0.0329,
+          "avg_review": 4.375,
+          "low_review_rate": 0.0789,
+          "median_ship_days": 1.4526,
+          "slow_handoff_rate": 0.1118,
+          "expected_late_orders_at_network_rate": 12.1352,
+          "excess_late_orders": -7.1352,
+          "seller": "Seller 2A8485"
+        },
+        {
+          "seller_id": "8a32e327fe2c1b3511609d81aaf9f042",
+          "seller_state": "SP",
+          "orders": 123,
+          "late_orders": 4,
+          "late_rate": 0.0325,
+          "avg_review": 3.9675,
+          "low_review_rate": 0.1545,
+          "median_ship_days": 1.6993,
+          "slow_handoff_rate": 0.1138,
+          "expected_late_orders_at_network_rate": 9.82,
+          "excess_late_orders": -5.82,
+          "seller": "Seller 8A32E3"
+        },
+        {
+          "seller_id": "b76dba6c951ab00dc4edf0a1aa88037e",
+          "seller_state": "SP",
+          "orders": 155,
+          "late_orders": 5,
+          "late_rate": 0.0323,
+          "avg_review": 4.2194,
+          "low_review_rate": 0.1032,
+          "median_ship_days": 1.7946,
+          "slow_handoff_rate": 0.0774,
+          "expected_late_orders_at_network_rate": 12.3747,
+          "excess_late_orders": -7.3747,
+          "seller": "Seller B76DBA"
+        },
+        {
+          "seller_id": "7722b1df1b0e383e000397b2c11e3e19",
+          "seller_state": "SP",
+          "orders": 124,
+          "late_orders": 4,
+          "late_rate": 0.0323,
+          "avg_review": 4.2661,
+          "low_review_rate": 0.1048,
+          "median_ship_days": 1.9913,
+          "slow_handoff_rate": 0.121,
+          "expected_late_orders_at_network_rate": 9.8998,
+          "excess_late_orders": -5.8998,
+          "seller": "Seller 7722B1"
+        },
+        {
+          "seller_id": "0b90b6df587eb83608a64ea8b390cf07",
+          "seller_state": "PR",
+          "orders": 157,
+          "late_orders": 5,
+          "late_rate": 0.0318,
+          "avg_review": 4.0705,
+          "low_review_rate": 0.1603,
+          "median_ship_days": 2.0626,
+          "slow_handoff_rate": 0.172,
+          "expected_late_orders_at_network_rate": 12.5344,
+          "excess_late_orders": -7.5344,
+          "seller": "Seller 0B90B6"
+        },
+        {
+          "seller_id": "95e03ca3d4146e4011985981aeb959b9",
+          "seller_state": "RJ",
+          "orders": 166,
+          "late_orders": 5,
+          "late_rate": 0.0301,
+          "avg_review": 4.0793,
+          "low_review_rate": 0.128,
+          "median_ship_days": 1.8383,
+          "slow_handoff_rate": 0.1386,
+          "expected_late_orders_at_network_rate": 13.2529,
+          "excess_late_orders": -8.2529,
+          "seller": "Seller 95E03C"
+        },
+        {
+          "seller_id": "aaed1309374718fdd995ee4c58c9dfcd",
+          "seller_state": "SC",
+          "orders": 103,
+          "late_orders": 3,
+          "late_rate": 0.0291,
+          "avg_review": 4.0874,
+          "low_review_rate": 0.1262,
+          "median_ship_days": 1.5057,
+          "slow_handoff_rate": 0.0777,
+          "expected_late_orders_at_network_rate": 8.2232,
+          "excess_late_orders": -5.2232,
+          "seller": "Seller AAED13"
+        },
+        {
+          "seller_id": "1127b7f2594683f2510f1c2c834a486b",
+          "seller_state": "SP",
+          "orders": 108,
+          "late_orders": 3,
+          "late_rate": 0.0278,
+          "avg_review": 4.2407,
+          "low_review_rate": 0.1296,
+          "median_ship_days": 2.0512,
+          "slow_handoff_rate": 0.1944,
+          "expected_late_orders_at_network_rate": 8.6224,
+          "excess_late_orders": -5.6224,
+          "seller": "Seller 1127B7"
+        },
+        {
+          "seller_id": "17ca9b9e9b9ef8fdb529001b49ebb50f",
+          "seller_state": "MG",
+          "orders": 112,
+          "late_orders": 3,
+          "late_rate": 0.0268,
+          "avg_review": 4.0804,
+          "low_review_rate": 0.1339,
+          "median_ship_days": 1.2552,
+          "slow_handoff_rate": 0.1071,
+          "expected_late_orders_at_network_rate": 8.9417,
+          "excess_late_orders": -5.9417,
+          "seller": "Seller 17CA9B"
+        },
+        {
+          "seller_id": "37be5a7c751166fbc5f8ccba4119e043",
+          "seller_state": "SP",
+          "orders": 266,
+          "late_orders": 7,
+          "late_rate": 0.0263,
+          "avg_review": 4.3245,
+          "low_review_rate": 0.0906,
+          "median_ship_days": 2.8685,
+          "slow_handoff_rate": 0.2857,
+          "expected_late_orders_at_network_rate": 21.2366,
+          "excess_late_orders": -14.2366,
+          "seller": "Seller 37BE5A"
+        },
+        {
+          "seller_id": "dbc22125167c298ef99da25668e1011f",
+          "seller_state": "MG",
+          "orders": 382,
+          "late_orders": 10,
+          "late_rate": 0.0262,
+          "avg_review": 4.3508,
+          "low_review_rate": 0.0681,
+          "median_ship_days": 1.0689,
+          "slow_handoff_rate": 0.0393,
+          "expected_late_orders_at_network_rate": 30.4977,
+          "excess_late_orders": -20.4977,
+          "seller": "Seller DBC221"
+        },
+        {
+          "seller_id": "c3cfdc648177fdbbbb35635a37472c53",
+          "seller_state": "PR",
+          "orders": 272,
+          "late_orders": 7,
+          "late_rate": 0.0257,
+          "avg_review": 4.5147,
+          "low_review_rate": 0.0625,
+          "median_ship_days": 1.3638,
+          "slow_handoff_rate": 0.0588,
+          "expected_late_orders_at_network_rate": 21.7157,
+          "excess_late_orders": -14.7157,
+          "seller": "Seller C3CFDC"
+        },
+        {
+          "seller_id": "cab85505710c7cb9b720bceb52b01cee",
+          "seller_state": "SP",
+          "orders": 198,
+          "late_orders": 5,
+          "late_rate": 0.0253,
+          "avg_review": 4.3452,
+          "low_review_rate": 0.0609,
+          "median_ship_days": 2.3165,
+          "slow_handoff_rate": 0.2626,
+          "expected_late_orders_at_network_rate": 15.8077,
+          "excess_late_orders": -10.8077,
+          "seller": "Seller CAB855"
+        },
+        {
+          "seller_id": "259f7b5e6e482c230e5bfaa670b6bb8f",
+          "seller_state": "SP",
+          "orders": 131,
+          "late_orders": 3,
+          "late_rate": 0.0229,
+          "avg_review": 4.4308,
+          "low_review_rate": 0.0769,
+          "median_ship_days": 1.3952,
+          "slow_handoff_rate": 0.0458,
+          "expected_late_orders_at_network_rate": 10.4586,
+          "excess_late_orders": -7.4586,
+          "seller": "Seller 259F7B"
+        },
+        {
+          "seller_id": "6cd68b3ed6d59aaa9fece558ad360c0a",
+          "seller_state": "MG",
+          "orders": 136,
+          "late_orders": 3,
+          "late_rate": 0.0221,
+          "avg_review": 4.4559,
+          "low_review_rate": 0.0294,
+          "median_ship_days": 1.6637,
+          "slow_handoff_rate": 0.0956,
+          "expected_late_orders_at_network_rate": 10.8578,
+          "excess_late_orders": -7.8578,
+          "seller": "Seller 6CD68B"
+        },
+        {
+          "seller_id": "e26901d5ab434ce92fd9b5c256820a4e",
+          "seller_state": "SP",
+          "orders": 183,
+          "late_orders": 4,
+          "late_rate": 0.0219,
+          "avg_review": 4.2186,
+          "low_review_rate": 0.0984,
+          "median_ship_days": 2.5199,
+          "slow_handoff_rate": 0.224,
+          "expected_late_orders_at_network_rate": 14.6102,
+          "excess_late_orders": -10.6102,
+          "seller": "Seller E26901"
+        },
+        {
+          "seller_id": "b4ffb71f0cb1b1c3d63fad021ecf93e1",
+          "seller_state": "SP",
+          "orders": 139,
+          "late_orders": 3,
+          "late_rate": 0.0216,
+          "avg_review": 4.3015,
+          "low_review_rate": 0.0882,
+          "median_ship_days": 1.265,
+          "slow_handoff_rate": 0.0647,
+          "expected_late_orders_at_network_rate": 11.0973,
+          "excess_late_orders": -8.0973,
+          "seller": "Seller B4FFB7"
+        },
+        {
+          "seller_id": "33a6f4b1e7cdc205511e76ba1b6e0186",
+          "seller_state": "SP",
+          "orders": 100,
+          "late_orders": 2,
+          "late_rate": 0.02,
+          "avg_review": 4.46,
+          "low_review_rate": 0.07,
+          "median_ship_days": 1.4393,
+          "slow_handoff_rate": 0.05,
+          "expected_late_orders_at_network_rate": 7.9837,
+          "excess_late_orders": -5.9837,
+          "seller": "Seller 33A6F4"
+        },
+        {
+          "seller_id": "6c7d50c24b3ccd2fd83b44d8bb34e073",
+          "seller_state": "SP",
+          "orders": 102,
+          "late_orders": 2,
+          "late_rate": 0.0196,
+          "avg_review": 4.598,
+          "low_review_rate": 0.0294,
+          "median_ship_days": 2.8961,
+          "slow_handoff_rate": 0.2549,
+          "expected_late_orders_at_network_rate": 8.1434,
+          "excess_late_orders": -6.1434,
+          "seller": "Seller 6C7D50"
+        },
+        {
+          "seller_id": "289cdb325fb7e7f891c38608bf9e0962",
+          "seller_state": "SP",
+          "orders": 103,
+          "late_orders": 2,
+          "late_rate": 0.0194,
+          "avg_review": 4.6408,
+          "low_review_rate": 0.0388,
+          "median_ship_days": 1.1527,
+          "slow_handoff_rate": 0.0485,
+          "expected_late_orders_at_network_rate": 8.2232,
+          "excess_late_orders": -6.2232,
+          "seller": "Seller 289CDB"
+        },
+        {
+          "seller_id": "0ea22c1cfbdc755f86b9b54b39c16043",
+          "seller_state": "MG",
+          "orders": 210,
+          "late_orders": 4,
+          "late_rate": 0.019,
+          "avg_review": 4.5,
+          "low_review_rate": 0.0385,
+          "median_ship_days": 1.6469,
+          "slow_handoff_rate": 0.0762,
+          "expected_late_orders_at_network_rate": 16.7658,
+          "excess_late_orders": -12.7658,
+          "seller": "Seller 0EA22C"
+        },
+        {
+          "seller_id": "612170e34b97004b3ba37eae81836b4c",
+          "seller_state": "RS",
+          "orders": 106,
+          "late_orders": 2,
+          "late_rate": 0.0189,
+          "avg_review": 4.434,
+          "low_review_rate": 0.0755,
+          "median_ship_days": 4.1364,
+          "slow_handoff_rate": 0.5377,
+          "expected_late_orders_at_network_rate": 8.4627,
+          "excess_late_orders": -6.4627,
+          "seller": "Seller 612170"
+        },
+        {
+          "seller_id": "d98eec89afa3380e14463da2aabaea72",
+          "seller_state": "RS",
+          "orders": 163,
+          "late_orders": 3,
+          "late_rate": 0.0184,
+          "avg_review": 4.4136,
+          "low_review_rate": 0.0617,
+          "median_ship_days": 1.8298,
+          "slow_handoff_rate": 0.135,
+          "expected_late_orders_at_network_rate": 13.0134,
+          "excess_late_orders": -10.0134,
+          "seller": "Seller D98EEC"
+        },
+        {
+          "seller_id": "229c3efbfb0ea2058de4ccdfbc3d784a",
+          "seller_state": "MG",
+          "orders": 117,
+          "late_orders": 2,
+          "late_rate": 0.0171,
+          "avg_review": 3.6239,
+          "low_review_rate": 0.2564,
+          "median_ship_days": 1.2226,
+          "slow_handoff_rate": 0.0684,
+          "expected_late_orders_at_network_rate": 9.3409,
+          "excess_late_orders": -7.3409,
+          "seller": "Seller 229C3E"
+        },
+        {
+          "seller_id": "ce27a3cc3c8cc1ea79d11e561e9bebb6",
+          "seller_state": "SP",
+          "orders": 117,
+          "late_orders": 2,
+          "late_rate": 0.0171,
+          "avg_review": 4.188,
+          "low_review_rate": 0.1111,
+          "median_ship_days": 1.8198,
+          "slow_handoff_rate": 0.1538,
+          "expected_late_orders_at_network_rate": 9.3409,
+          "excess_late_orders": -7.3409,
+          "seller": "Seller CE27A3"
+        },
+        {
+          "seller_id": "12b9676b00f60f3b700e83af21824c0e",
+          "seller_state": "RS",
+          "orders": 132,
+          "late_orders": 2,
+          "late_rate": 0.0152,
+          "avg_review": 4.5496,
+          "low_review_rate": 0.0382,
+          "median_ship_days": 4.9881,
+          "slow_handoff_rate": 0.6515,
+          "expected_late_orders_at_network_rate": 10.5385,
+          "excess_late_orders": -8.5385,
+          "seller": "Seller 12B967"
+        },
+        {
+          "seller_id": "8c16d1f32a54d92897cc437244442e1b",
+          "seller_state": "SC",
+          "orders": 105,
+          "late_orders": 1,
+          "late_rate": 0.0095,
+          "avg_review": 4.4,
+          "low_review_rate": 0.0667,
+          "median_ship_days": 1.4422,
+          "slow_handoff_rate": 0.1143,
+          "expected_late_orders_at_network_rate": 8.3829,
+          "excess_late_orders": -7.3829,
+          "seller": "Seller 8C16D1"
+        },
+        {
+          "seller_id": "0bae85eb84b9fb3bd773911e89288d54",
+          "seller_state": "SP",
+          "orders": 130,
+          "late_orders": 1,
+          "late_rate": 0.0077,
+          "avg_review": 4.3231,
+          "low_review_rate": 0.0615,
+          "median_ship_days": 1.1194,
+          "slow_handoff_rate": 0.0154,
+          "expected_late_orders_at_network_rate": 10.3788,
+          "excess_late_orders": -9.3788,
+          "seller": "Seller 0BAE85"
+        }
+      ],
+      "route_opportunity": [
+        {
+          "seller_state": "SP",
+          "customer_state": "RJ",
+          "orders": 7850,
+          "late_orders": 1214,
+          "late_rate": 0.1546,
+          "avg_review": 3.9062,
+          "median_ship_days": 2.3052,
+          "slow_handoff_rate": 0.2794,
+          "expected_late_orders_at_network_rate": 626.7205,
+          "excess_late_orders": 587.2795,
+          "route": "SP to RJ",
+          "rank": 1
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "BA",
+          "orders": 2233,
+          "late_orders": 333,
+          "late_rate": 0.1491,
+          "avg_review": 3.8968,
+          "median_ship_days": 2.3438,
+          "slow_handoff_rate": 0.27,
+          "expected_late_orders_at_network_rate": 178.276,
+          "excess_late_orders": 154.724,
+          "route": "SP to BA",
+          "rank": 2
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "ES",
+          "orders": 1419,
+          "late_orders": 195,
+          "late_rate": 0.1374,
+          "avg_review": 4.0656,
+          "median_ship_days": 2.4094,
+          "slow_handoff_rate": 0.2678,
+          "expected_late_orders_at_network_rate": 113.2887,
+          "excess_late_orders": 81.7113,
+          "route": "SP to ES",
+          "rank": 3
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "CE",
+          "orders": 945,
+          "late_orders": 142,
+          "late_rate": 0.1503,
+          "avg_review": 3.981,
+          "median_ship_days": 2.2025,
+          "slow_handoff_rate": 0.2772,
+          "expected_late_orders_at_network_rate": 75.446,
+          "excess_late_orders": 66.554,
+          "route": "SP to CE",
+          "rank": 4
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "SC",
+          "orders": 2243,
+          "late_orders": 242,
+          "late_rate": 0.1079,
+          "avg_review": 4.0598,
+          "median_ship_days": 2.2641,
+          "slow_handoff_rate": 0.2769,
+          "expected_late_orders_at_network_rate": 179.0744,
+          "excess_late_orders": 62.9256,
+          "route": "SP to SC",
+          "rank": 5
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "MA",
+          "orders": 478,
+          "late_orders": 101,
+          "late_rate": 0.2113,
+          "avg_review": 3.717,
+          "median_ship_days": 2.4839,
+          "slow_handoff_rate": 0.2657,
+          "expected_late_orders_at_network_rate": 38.1621,
+          "excess_late_orders": 62.8379,
+          "route": "SP to MA",
+          "rank": 6
+        },
+        {
+          "seller_state": "PR",
+          "customer_state": "RJ",
+          "orders": 932,
+          "late_orders": 129,
+          "late_rate": 0.1384,
+          "avg_review": 3.9138,
+          "median_ship_days": 2.2602,
+          "slow_handoff_rate": 0.2661,
+          "expected_late_orders_at_network_rate": 74.4081,
+          "excess_late_orders": 54.5919,
+          "route": "PR to RJ",
+          "rank": 7
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "AL",
+          "orders": 249,
+          "late_orders": 64,
+          "late_rate": 0.257,
+          "avg_review": 3.7177,
+          "median_ship_days": 2.7105,
+          "slow_handoff_rate": 0.3012,
+          "expected_late_orders_at_network_rate": 19.8794,
+          "excess_late_orders": 44.1206,
+          "route": "SP to AL",
+          "rank": 8
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "PI",
+          "orders": 318,
+          "late_orders": 58,
+          "late_rate": 0.1824,
+          "avg_review": 3.9717,
+          "median_ship_days": 2.2855,
+          "slow_handoff_rate": 0.2893,
+          "expected_late_orders_at_network_rate": 25.3882,
+          "excess_late_orders": 32.6118,
+          "route": "SP to PI",
+          "rank": 9
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "PA",
+          "orders": 652,
+          "late_orders": 84,
+          "late_rate": 0.1288,
+          "avg_review": 3.8892,
+          "median_ship_days": 2.4945,
+          "slow_handoff_rate": 0.2623,
+          "expected_late_orders_at_network_rate": 52.0537,
+          "excess_late_orders": 31.9463,
+          "route": "SP to PA",
+          "rank": 10
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "MS",
+          "orders": 463,
+          "late_orders": 68,
+          "late_rate": 0.1469,
+          "avg_review": 4.1,
+          "median_ship_days": 2.26,
+          "slow_handoff_rate": 0.2851,
+          "expected_late_orders_at_network_rate": 36.9645,
+          "excess_late_orders": 31.0355,
+          "route": "SP to MS",
+          "rank": 11
+        },
+        {
+          "seller_state": "SP",
+          "customer_state": "PE",
+          "orders": 1100,
+          "late_orders": 117,
+          "late_rate": 0.1064,
+          "avg_review": 4.061,
+          "median_ship_days": 2.2842,
+          "slow_handoff_rate": 0.2645,
+          "expected_late_orders_at_network_rate": 87.8207,
+          "excess_late_orders": 29.1793,
+          "route": "SP to PE",
+          "rank": 12
+        }
+      ],
+      "state_opportunity": [
+        {
+          "customer_state": "RJ",
+          "orders": 12032,
+          "late_orders": 1601,
+          "late_rate": 0.1331,
+          "avg_review": 3.9682,
+          "low_review_rate": 0.1824,
+          "median_ship_days": 2.2071,
+          "expected_late_orders_at_network_rate": 960.5988,
+          "excess_late_orders": 640.4012,
+          "rank": 1
+        },
+        {
+          "customer_state": "BA",
+          "orders": 3188,
+          "late_orders": 438,
+          "late_rate": 0.1374,
+          "avg_review": 3.9349,
+          "low_review_rate": 0.1698,
+          "median_ship_days": 2.306,
+          "expected_late_orders_at_network_rate": 254.5204,
+          "excess_late_orders": 183.4796,
+          "rank": 2
+        },
+        {
+          "customer_state": "CE",
+          "orders": 1260,
+          "late_orders": 190,
+          "late_rate": 0.1508,
+          "avg_review": 3.9515,
+          "low_review_rate": 0.1685,
+          "median_ship_days": 2.2005,
+          "expected_late_orders_at_network_rate": 100.5946,
+          "excess_late_orders": 89.4054,
+          "rank": 3
+        },
+        {
+          "customer_state": "MA",
+          "orders": 704,
+          "late_orders": 137,
+          "late_rate": 0.1946,
+          "avg_review": 3.8293,
+          "low_review_rate": 0.2006,
+          "median_ship_days": 2.4962,
+          "expected_late_orders_at_network_rate": 56.2052,
+          "excess_late_orders": 80.7948,
+          "rank": 4
+        },
+        {
+          "customer_state": "ES",
+          "orders": 1952,
+          "late_orders": 230,
+          "late_rate": 0.1178,
+          "avg_review": 4.0841,
+          "low_review_rate": 0.1369,
+          "median_ship_days": 2.4016,
+          "expected_late_orders_at_network_rate": 155.8418,
+          "excess_late_orders": 74.1582,
+          "rank": 5
+        },
+        {
+          "customer_state": "AL",
+          "orders": 390,
+          "late_orders": 91,
+          "late_rate": 0.2333,
+          "avg_review": 3.8535,
+          "low_review_rate": 0.2108,
+          "median_ship_days": 2.6938,
+          "expected_late_orders_at_network_rate": 31.1364,
+          "excess_late_orders": 59.8636,
+          "rank": 6
+        },
+        {
+          "customer_state": "SC",
+          "orders": 3464,
+          "late_orders": 329,
+          "late_rate": 0.095,
+          "avg_review": 4.1402,
+          "low_review_rate": 0.1283,
+          "median_ship_days": 2.2746,
+          "expected_late_orders_at_network_rate": 276.5554,
+          "excess_late_orders": 52.4446,
+          "rank": 7
+        },
+        {
+          "customer_state": "PE",
+          "orders": 1561,
+          "late_orders": 165,
+          "late_rate": 0.1057,
+          "avg_review": 4.0866,
+          "low_review_rate": 0.1476,
+          "median_ship_days": 2.2194,
+          "expected_late_orders_at_network_rate": 124.6256,
+          "excess_late_orders": 40.3744,
+          "rank": 8
+        },
+        {
+          "customer_state": "PI",
+          "orders": 464,
+          "late_orders": 74,
+          "late_rate": 0.1595,
+          "avg_review": 3.9935,
+          "low_review_rate": 0.1616,
+          "median_ship_days": 2.25,
+          "expected_late_orders_at_network_rate": 37.0444,
+          "excess_late_orders": 36.9556,
+          "rank": 9
+        },
+        {
+          "customer_state": "PA",
+          "orders": 915,
+          "late_orders": 110,
+          "late_rate": 0.1202,
+          "avg_review": 3.9113,
+          "low_review_rate": 0.1785,
+          "median_ship_days": 2.4739,
+          "expected_late_orders_at_network_rate": 73.0509,
+          "excess_late_orders": 36.9491,
+          "rank": 10
+        },
+        {
+          "customer_state": "MS",
+          "orders": 690,
+          "late_orders": 80,
+          "late_rate": 0.1159,
+          "avg_review": 4.1618,
+          "low_review_rate": 0.1327,
+          "median_ship_days": 2.2194,
+          "expected_late_orders_at_network_rate": 55.0875,
+          "excess_late_orders": 24.9125,
+          "rank": 11
+        },
+        {
+          "customer_state": "SE",
+          "orders": 332,
+          "late_orders": 50,
+          "late_rate": 0.1506,
+          "avg_review": 3.9006,
+          "low_review_rate": 0.1898,
+          "median_ship_days": 2.6097,
+          "expected_late_orders_at_network_rate": 26.5059,
+          "excess_late_orders": 23.4941,
+          "rank": 12
+        }
+      ],
+      "category_opportunity": [
+        {
+          "product_category": "Health Beauty",
+          "orders": 8601,
+          "late_orders": 758,
+          "late_rate": 0.0881,
+          "avg_review": 4.2302,
+          "expected_late_orders_at_network_rate": 686.6781,
+          "excess_late_orders": 71.3219,
+          "rank": 1
+        },
+        {
+          "product_category": "Bed Bath Table",
+          "orders": 9177,
+          "late_orders": 788,
+          "late_rate": 0.0859,
+          "avg_review": 4.003,
+          "expected_late_orders_at_network_rate": 732.6642,
+          "excess_late_orders": 55.3358,
+          "rank": 2
+        },
+        {
+          "product_category": "Electronics",
+          "orders": 2498,
+          "late_orders": 245,
+          "late_rate": 0.0981,
+          "avg_review": 4.1245,
+          "expected_late_orders_at_network_rate": 199.4328,
+          "excess_late_orders": 45.5672,
+          "rank": 3
+        },
+        {
+          "product_category": "Baby",
+          "orders": 2787,
+          "late_orders": 251,
+          "late_rate": 0.0901,
+          "avg_review": 4.1042,
+          "expected_late_orders_at_network_rate": 222.5057,
+          "excess_late_orders": 28.4943,
+          "rank": 4
+        },
+        {
+          "product_category": "Furniture Decor",
+          "orders": 6259,
+          "late_orders": 525,
+          "late_rate": 0.0839,
+          "avg_review": 4.0624,
+          "expected_late_orders_at_network_rate": 499.6998,
+          "excess_late_orders": 25.3002,
+          "rank": 5
+        },
+        {
+          "product_category": "Watches Gifts",
+          "orders": 5452,
+          "late_orders": 456,
+          "late_rate": 0.0836,
+          "avg_review": 4.1214,
+          "expected_late_orders_at_network_rate": 435.2713,
+          "excess_late_orders": 20.7287,
+          "rank": 6
+        },
+        {
+          "product_category": "Auto",
+          "orders": 3791,
+          "late_orders": 323,
+          "late_rate": 0.0852,
+          "avg_review": 4.1466,
+          "expected_late_orders_at_network_rate": 302.6621,
+          "excess_late_orders": 20.3379,
+          "rank": 7
+        },
+        {
+          "product_category": "Telephony",
+          "orders": 4069,
+          "late_orders": 345,
+          "late_rate": 0.0848,
+          "avg_review": 4.0519,
+          "expected_late_orders_at_network_rate": 324.8568,
+          "excess_late_orders": 20.1432,
+          "rank": 8
+        },
+        {
+          "product_category": "Office Furniture",
+          "orders": 1244,
+          "late_orders": 112,
+          "late_rate": 0.09,
+          "avg_review": 3.6438,
+          "expected_late_orders_at_network_rate": 99.3172,
+          "excess_late_orders": 12.6828,
+          "rank": 9
+        },
+        {
+          "product_category": "Construction Tools Construction",
+          "orders": 731,
+          "late_orders": 65,
+          "late_rate": 0.0889,
+          "avg_review": 4.1247,
+          "expected_late_orders_at_network_rate": 58.3608,
+          "excess_late_orders": 6.6392,
+          "rank": 10
+        },
+        {
+          "product_category": "Musical Instruments",
+          "orders": 605,
+          "late_orders": 54,
+          "late_rate": 0.0893,
+          "avg_review": 4.2347,
+          "expected_late_orders_at_network_rate": 48.3014,
+          "excess_late_orders": 5.6986,
+          "rank": 11
+        },
+        {
+          "product_category": "Consoles Games",
+          "orders": 1009,
+          "late_orders": 80,
+          "late_rate": 0.0793,
+          "avg_review": 4.1786,
+          "expected_late_orders_at_network_rate": 80.5555,
+          "excess_late_orders": -0.5555,
+          "rank": 12
+        }
+      ],
+      "state_detail": [
+        {
+          "customer_state": "AL",
+          "orders": 390,
+          "late_orders": 91,
+          "late_rate": 0.2333,
+          "avg_review": 3.8535,
+          "low_review_rate": 0.2108,
+          "median_ship_days": 2.6938,
+          "expected_late_orders_at_network_rate": 31.1364,
+          "excess_late_orders": 59.8636
+        },
+        {
+          "customer_state": "MA",
+          "orders": 704,
+          "late_orders": 137,
+          "late_rate": 0.1946,
+          "avg_review": 3.8293,
+          "low_review_rate": 0.2006,
+          "median_ship_days": 2.4962,
+          "expected_late_orders_at_network_rate": 56.2052,
+          "excess_late_orders": 80.7948
+        },
+        {
+          "customer_state": "PI",
+          "orders": 464,
+          "late_orders": 74,
+          "late_rate": 0.1595,
+          "avg_review": 3.9935,
+          "low_review_rate": 0.1616,
+          "median_ship_days": 2.25,
+          "expected_late_orders_at_network_rate": 37.0444,
+          "excess_late_orders": 36.9556
+        },
+        {
+          "customer_state": "CE",
+          "orders": 1260,
+          "late_orders": 190,
+          "late_rate": 0.1508,
+          "avg_review": 3.9515,
+          "low_review_rate": 0.1685,
+          "median_ship_days": 2.2005,
+          "expected_late_orders_at_network_rate": 100.5946,
+          "excess_late_orders": 89.4054
+        },
+        {
+          "customer_state": "SE",
+          "orders": 332,
+          "late_orders": 50,
+          "late_rate": 0.1506,
+          "avg_review": 3.9006,
+          "low_review_rate": 0.1898,
+          "median_ship_days": 2.6097,
+          "expected_late_orders_at_network_rate": 26.5059,
+          "excess_late_orders": 23.4941
+        },
+        {
+          "customer_state": "BA",
+          "orders": 3188,
+          "late_orders": 438,
+          "late_rate": 0.1374,
+          "avg_review": 3.9349,
+          "low_review_rate": 0.1698,
+          "median_ship_days": 2.306,
+          "expected_late_orders_at_network_rate": 254.5204,
+          "excess_late_orders": 183.4796
+        },
+        {
+          "customer_state": "RJ",
+          "orders": 12032,
+          "late_orders": 1601,
+          "late_rate": 0.1331,
+          "avg_review": 3.9682,
+          "low_review_rate": 0.1824,
+          "median_ship_days": 2.2071,
+          "expected_late_orders_at_network_rate": 960.5988,
+          "excess_late_orders": 640.4012
+        },
+        {
+          "customer_state": "TO",
+          "orders": 270,
+          "late_orders": 35,
+          "late_rate": 0.1296,
+          "avg_review": 4.1481,
+          "low_review_rate": 0.1222,
+          "median_ship_days": 2.4789,
+          "expected_late_orders_at_network_rate": 21.556,
+          "excess_late_orders": 13.444
+        },
+        {
+          "customer_state": "PA",
+          "orders": 915,
+          "late_orders": 110,
+          "late_rate": 0.1202,
+          "avg_review": 3.9113,
+          "low_review_rate": 0.1785,
+          "median_ship_days": 2.4739,
+          "expected_late_orders_at_network_rate": 73.0509,
+          "excess_late_orders": 36.9491
+        },
+        {
+          "customer_state": "ES",
+          "orders": 1952,
+          "late_orders": 230,
+          "late_rate": 0.1178,
+          "avg_review": 4.0841,
+          "low_review_rate": 0.1369,
+          "median_ship_days": 2.4016,
+          "expected_late_orders_at_network_rate": 155.8418,
+          "excess_late_orders": 74.1582
+        },
+        {
+          "customer_state": "MS",
+          "orders": 690,
+          "late_orders": 80,
+          "late_rate": 0.1159,
+          "avg_review": 4.1618,
+          "low_review_rate": 0.1327,
+          "median_ship_days": 2.2194,
+          "expected_late_orders_at_network_rate": 55.0875,
+          "excess_late_orders": 24.9125
+        },
+        {
+          "customer_state": "PB",
+          "orders": 504,
+          "late_orders": 55,
+          "late_rate": 0.1091,
+          "avg_review": 4.0635,
+          "low_review_rate": 0.1508,
+          "median_ship_days": 2.7299,
+          "expected_late_orders_at_network_rate": 40.2378,
+          "excess_late_orders": 14.7622
+        },
+        {
+          "customer_state": "RN",
+          "orders": 465,
+          "late_orders": 50,
+          "late_rate": 0.1075,
+          "avg_review": 4.1487,
+          "low_review_rate": 0.1293,
+          "median_ship_days": 2.3834,
+          "expected_late_orders_at_network_rate": 37.1242,
+          "excess_late_orders": 12.8758
+        },
+        {
+          "customer_state": "PE",
+          "orders": 1561,
+          "late_orders": 165,
+          "late_rate": 0.1057,
+          "avg_review": 4.0866,
+          "low_review_rate": 0.1476,
+          "median_ship_days": 2.2194,
+          "expected_late_orders_at_network_rate": 124.6256,
+          "excess_late_orders": 40.3744
+        },
+        {
+          "customer_state": "SC",
+          "orders": 3464,
+          "late_orders": 329,
+          "late_rate": 0.095,
+          "avg_review": 4.1402,
+          "low_review_rate": 0.1283,
+          "median_ship_days": 2.2746,
+          "expected_late_orders_at_network_rate": 276.5554,
+          "excess_late_orders": 52.4446
+        },
+        {
+          "customer_state": "GO",
+          "orders": 1900,
+          "late_orders": 148,
+          "late_rate": 0.0779,
+          "avg_review": 4.1079,
+          "low_review_rate": 0.1306,
+          "median_ship_days": 2.2284,
+          "expected_late_orders_at_network_rate": 151.6903,
+          "excess_late_orders": -3.6903
+        },
+        {
+          "customer_state": "DF",
+          "orders": 2040,
+          "late_orders": 146,
+          "late_rate": 0.0716,
+          "avg_review": 4.1333,
+          "low_review_rate": 0.1318,
+          "median_ship_days": 2.2237,
+          "expected_late_orders_at_network_rate": 162.8675,
+          "excess_late_orders": -16.8675
+        },
+        {
+          "customer_state": "RS",
+          "orders": 5249,
+          "late_orders": 374,
+          "late_rate": 0.0713,
+          "avg_review": 4.1869,
+          "low_review_rate": 0.1187,
+          "median_ship_days": 2.2821,
+          "expected_late_orders_at_network_rate": 419.0644,
+          "excess_late_orders": -45.0644
+        },
+        {
+          "customer_state": "MT",
+          "orders": 868,
+          "late_orders": 57,
+          "late_rate": 0.0657,
+          "avg_review": 4.1488,
+          "low_review_rate": 0.128,
+          "median_ship_days": 2.3521,
+          "expected_late_orders_at_network_rate": 69.2985,
+          "excess_late_orders": -12.2985
+        },
+        {
+          "customer_state": "SP",
+          "orders": 39719,
+          "late_orders": 2306,
+          "late_rate": 0.0581,
+          "avg_review": 4.2509,
+          "low_review_rate": 0.1056,
+          "median_ship_days": 2.138,
+          "expected_late_orders_at_network_rate": 3171.0459,
+          "excess_late_orders": -865.0459
+        },
+        {
+          "customer_state": "MG",
+          "orders": 11118,
+          "late_orders": 615,
+          "late_rate": 0.0553,
+          "avg_review": 4.1914,
+          "low_review_rate": 0.1177,
+          "median_ship_days": 2.1779,
+          "expected_late_orders_at_network_rate": 887.6278,
+          "excess_late_orders": -272.6278
+        },
+        {
+          "customer_state": "PR",
+          "orders": 4832,
+          "late_orders": 238,
+          "late_rate": 0.0493,
+          "avg_review": 4.2415,
+          "low_review_rate": 0.1086,
+          "median_ship_days": 2.2538,
+          "expected_late_orders_at_network_rate": 385.7724,
+          "excess_late_orders": -147.7724
+        },
+        {
+          "customer_state": "RO",
+          "orders": 237,
+          "late_orders": 7,
+          "late_rate": 0.0295,
+          "avg_review": 4.1688,
+          "low_review_rate": 0.1181,
+          "median_ship_days": 2.0977,
+          "expected_late_orders_at_network_rate": 18.9214,
+          "excess_late_orders": -11.9214
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "summary_source",
+      "label": "Delivery summary metrics",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM dashboard_summary",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "One row per complete order"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "dashboard_summary"
+        ]
+      }
+    },
+    {
+      "id": "monthly_source",
+      "label": "Monthly delivery reliability",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM monthly ORDER BY month",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "Purchase months with at least 500 analyzed orders"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "monthly"
+        ]
+      }
+    },
+    {
+      "id": "ship_speed_source",
+      "label": "Purchase-to-carrier speed bands",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM ship_speed ORDER BY band_order",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "One row per complete order"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "ship_speed"
+        ]
+      }
+    },
+    {
+      "id": "review_status_source",
+      "label": "Delivery status and review outcomes",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM review_status ORDER BY sort_order",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "Orders with one consistent review score"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "review_status"
+        ]
+      }
+    },
+    {
+      "id": "seller_opportunity_source",
+      "label": "Seller opportunity ranking",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM seller_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "Single-seller orders",
+          "Sellers with at least 100 analyzed orders"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "seller_opportunity"
+        ]
+      }
+    },
+    {
+      "id": "seller_detail_source",
+      "label": "Seller delivery-risk detail",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM seller_detail ORDER BY late_rate DESC, orders DESC",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "Single-seller orders",
+          "Sellers with at least 100 analyzed orders"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "seller_detail"
+        ]
+      }
+    },
+    {
+      "id": "route_opportunity_source",
+      "label": "Seller-to-customer route ranking",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM route_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "Single-seller orders",
+          "Seller-to-customer state routes with at least 200 analyzed orders"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "route_opportunity"
+        ]
+      }
+    },
+    {
+      "id": "state_opportunity_source",
+      "label": "State opportunity ranking",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM state_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "Customer states with at least 200 analyzed orders"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "state_opportunity"
+        ]
+      }
+    },
+    {
+      "id": "category_opportunity_source",
+      "label": "Category opportunity ranking",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM category_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "Product categories with at least 500 analyzed orders"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "category_opportunity"
+        ]
+      }
+    },
+    {
+      "id": "state_detail_source",
+      "label": "State delivery-risk detail",
+      "path": "outputs/analysis.sqlite",
+      "href": "https://huggingface.co/datasets/miminmoons/olist-ecommerce-for-delivery-and-review-prediction",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT * FROM state_detail ORDER BY late_rate DESC, orders DESC",
+        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+        "executed_at": "2026-08-30T21:13:30Z",
+        "language": "sql",
+        "filters": [
+          "Customer states with at least 200 analyzed orders"
+        ],
+        "metric_definitions": [
+          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
+          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
+          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
+          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
+          "Purchase-to-carrier time = time_to_ship_hours / 24",
+          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
+          "High-volume seller = at least 100 complete single-seller orders",
+          "High-volume route = at least 200 complete single-seller orders"
+        ],
+        "tables_used": [
+          "state_detail"
+        ]
+      }
+    },
+    {
+      "id": "olist_original",
+      "label": "Brazilian E-Commerce Public Dataset by Olist",
+      "href": "https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce"
+    }
+  ]
+}
