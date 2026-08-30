@@ -347,8 +347,7 @@ h1 em { font-style: normal; color: var(--accent); }
 .hero-copy h1 { cursor: default; user-select: none; -webkit-user-select: none; }
 h1 .tp-word { display: inline-block; white-space: nowrap; }
 h1 .tp-ch {
-  display: inline-block; will-change: transform, font-variation-settings;
-  transform-origin: 50% 88%;
+  display: inline-block; will-change: font-variation-settings;
   font-variation-settings: "wght" 700, "wdth" 100;
 }
 
