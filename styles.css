@@ -1310,10 +1310,10 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
     --tab-band: 44px;
   }
   .dossier-label {
-    display: block; margin: 0; padding: 22px 12px 10px;
+    display: block; width: 100%; max-width: none; margin: 0; padding: 32px 18px 24px;
     border-bottom: 1px solid var(--line);
     color: var(--accent); font: 600 10px/1 var(--mono);
-    letter-spacing: 0.22em; text-transform: uppercase;
+    letter-spacing: 0.22em; text-align: right; text-transform: uppercase;
   }
   .dossier.filing { overflow-anchor: none; }
   .dossier + .section { padding-top: 34px; }
