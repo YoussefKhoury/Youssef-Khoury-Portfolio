@@ -1239,6 +1239,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
 
 @media (max-width: 720px) {
   :root { --shell: calc(100% - 28px); }
+  #contact { padding-top: 92px; }
 
   /* let the heading use the full centred width and breathe a little smaller */
   h1 { font-size: clamp(27px, 8vw, 34px); max-width: none; }
