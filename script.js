@@ -798,8 +798,7 @@
   const heroDate = document.querySelector('.hero .birthdate');
   const ptTargets = [heroH1, heroDate].filter(Boolean);
   if (ptTargets.length && !reduced &&
-      window.matchMedia('(pointer: fine)').matches &&
-      window.matchMedia('(min-width: 721px)').matches) {
+      window.matchMedia('(pointer: fine)').matches) {
     // Keep each glyph at its natural width. The pressure effect still adds
     // weight, but cannot change a word's measured width and reflow the title.
     const W0 = 700, W1 = 900, WD0 = 100, WD1 = 100, RADIUS = 155;
@@ -862,11 +861,16 @@
         c.cur += (tgt - c.cur) * k;
         if (Math.abs(tgt - c.cur) > 0.002) moving = true;
         const p = c.cur;
-        // weight/width only — no positional transform, so letters never jump
+        // Use variable-font weight when available, with a subtle scale fallback
+        // so the hover effect still works when fonts are loaded locally/system-side.
         const w = (W0 + p * (W1 - W0)).toFixed(1);
         if (w !== c.lw) {
           c.lw = w;
+          c.el.style.fontWeight = w;
           c.el.style.fontVariationSettings = `"wght" ${w}, "wdth" ${(WD0 + p * (WD1 - WD0)).toFixed(1)}`;
+          const sx = (1 + p * 0.08).toFixed(3);
+          const sy = (1 + p * 0.04).toFixed(3);
+          c.el.style.transform = `scale(${sx}, ${sy})`;
         }
       }
       raf = (moving || active) ? requestAnimationFrame(loop) : (tpLast = 0);
