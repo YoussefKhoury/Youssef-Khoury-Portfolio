@@ -965,6 +965,7 @@ h2 {
   position: relative;
   display: grid; grid-template-columns: 190px 1fr; gap: 26px;
   padding: 22px 0; border-bottom: 1px solid var(--line);
+  transition: background .25s ease, transform .3s var(--ease);
 }
 .js .xrow.reveal {
   opacity: 0;
@@ -977,23 +978,24 @@ h2 {
 .js .xrow.reveal:nth-child(4) { --row-delay: 270ms; }
 .js .xrow.reveal:nth-child(5) { --row-delay: 360ms; }
 .xrow::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-  background: var(--accent); transform: scaleY(0); transform-origin: top;
-  transition: transform .35s var(--ease);
+  content: ""; position: absolute; top: 8px; left: 0; width: 16px; height: 16px;
+  border: 1.5px solid var(--accent); border-right: 0; border-bottom: 0;
+  opacity: 0; pointer-events: none; transform: translate(-10px, -10px);
+  transition: opacity .2s ease, transform .28s var(--ease);
+}
+.xrow::after {
+  content: ""; position: absolute; right: 0; bottom: 8px; width: 16px; height: 16px;
+  border: 1.5px solid var(--accent); border-left: 0; border-top: 0;
+  opacity: 0; pointer-events: none; transform: translate(10px, 10px);
+  transition: opacity .2s ease, transform .28s var(--ease);
 }
 .xrow:hover,
-.xrow:focus-within { background: color-mix(in srgb, var(--accent) 7%, transparent); }
-.xrow:hover::before,
-.xrow:focus-within::before { transform: scaleY(1); }
+.xrow:focus-within { background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 76%); }
 .js .xrow.reveal.visible:hover,
-.js .xrow.reveal.visible:focus-within { transform: translateX(10px); }
-.xrow:hover .xr-when time, .xrow:hover .xr-body,
-.xrow:focus-within .xr-when time, .xrow:focus-within .xr-body { transform: translateX(6px); }
-.xrow:hover .xr-when time, .xrow:focus-within .xr-when time { color: var(--ink); }
+.js .xrow.reveal.visible:focus-within { transform: translateX(8px); }
+.xrow:hover::before, .xrow:hover::after,
+.xrow:focus-within::before, .xrow:focus-within::after { opacity: 1; transform: translate(0, 0); }
 .xrow:hover .xr-body h3, .xrow:focus-within .xr-body h3 { color: var(--accent); }
-.xrow:hover .xr-when .bar::after, .xrow:focus-within .xr-when .bar::after {
-  filter: brightness(1.25); box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 60%, transparent);
-}
 /* the last row's rule has nothing under it but the section's own edge */
 .xrow:last-child { border-bottom: 0; }
 .xr-when time { display: block; color: var(--muted); font-size: 11px; margin-bottom: 10px; }
@@ -1613,8 +1615,8 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   .spark.bars rect { transform: scaleY(1); transition: none; }
   .xr-when .bar::after { transition: none; }
   .js .xrow.reveal, .js .xrow.reveal.visible { opacity: 1; transform: none; transition: none; }
-  .xrow::before { transition: none; }
-  .xrow:hover .xr-when time, .xrow:hover .xr-body { transform: none; }
+  .xrow::before, .xrow::after { transition: none; }
+  .js .xrow.reveal.visible:hover, .js .xrow.reveal.visible:focus-within { transform: none; }
   .ov-nav a::before, .ov-nav a::after { transition: opacity .15s ease; transform: none; }
   .row:hover { transition: none; }
   .row:hover .spark { transform: none; }
