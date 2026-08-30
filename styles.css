@@ -604,6 +604,7 @@ h1 .tp-ch {
 /* phone-only chrome: the metric row and the drawer front */
 .sec-metrics { display: none; }
 .drawer-front { display: none; }
+.dossier-label { display: none; }
 /* section label doubles as the a11y/SEO heading — keep it visually a label */
 .sec-head h2.sk {
   font: inherit; margin: 0; color: var(--accent); font-weight: 400;
@@ -1307,6 +1308,12 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
     --kraft-hi: #121010; --kraft-lo: #0a0908;
     /* clear space an index tab (22.8px) drops into, plus room to breathe */
     --tab-band: 44px;
+  }
+  .dossier-label {
+    display: block; margin: 0; padding: 22px 12px 10px;
+    border-bottom: 1px solid var(--line);
+    color: var(--accent); font: 600 10px/1 var(--mono);
+    letter-spacing: 0.22em; text-transform: uppercase;
   }
   .dossier.filing { overflow-anchor: none; }
   .dossier + .section { padding-top: 34px; }
