@@ -861,16 +861,11 @@
         c.cur += (tgt - c.cur) * k;
         if (Math.abs(tgt - c.cur) > 0.002) moving = true;
         const p = c.cur;
-        // Use variable-font weight when available, with a subtle scale fallback
-        // so the hover effect still works when fonts are loaded locally/system-side.
+        // weight/width only — no positional transform, so letters never jump
         const w = (W0 + p * (W1 - W0)).toFixed(1);
         if (w !== c.lw) {
           c.lw = w;
-          c.el.style.fontWeight = w;
           c.el.style.fontVariationSettings = `"wght" ${w}, "wdth" ${(WD0 + p * (WD1 - WD0)).toFixed(1)}`;
-          const sx = (1 + p * 0.08).toFixed(3);
-          const sy = (1 + p * 0.04).toFixed(3);
-          c.el.style.transform = `scale(${sx}, ${sy})`;
         }
       }
       raf = (moving || active) ? requestAnimationFrame(loop) : (tpLast = 0);
