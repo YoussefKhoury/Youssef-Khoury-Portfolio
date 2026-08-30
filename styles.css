@@ -1238,8 +1238,8 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
 }
 
 @media (max-width: 720px) {
-  :root { --shell: calc(100% - 28px); }
-  #contact { padding-top: 92px; }
+  :root { --shell: calc(100% - 28px); --dossier-breath: 92px; }
+  #contact { padding-top: var(--dossier-breath); }
 
   /* let the heading use the full centred width and breathe a little smaller */
   h1 { font-size: clamp(27px, 8vw, 34px); max-width: none; }
@@ -1307,6 +1307,9 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
        stack is shrinking, anchoring would instead chase the viewport down. */
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #121010; --kraft-lo: #0a0908;
+    /* the first folder's tab needs its own height above the shared visual gap */
+    --folder-tab-h: 23px;
+    --dossier-start-band: calc(var(--dossier-breath) + var(--folder-tab-h));
     /* clear space an index tab (22.8px) drops into, plus room to breathe */
     --tab-band: 44px;
   }
@@ -1323,7 +1326,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   .section:has(+ .dossier) { padding-bottom: 0; }
 
   /* headroom for the first folder's index tab, so it clears the box above */
-  .js .dossier-body { display: block; height: auto; padding-top: var(--tab-band); }
+  .js .dossier-body { display: block; height: auto; padding-top: var(--dossier-start-band); }
 
   /* closed, the folders butt into one stack — adjacent 1px borders overlap into a
      single shared rule and each index tab rides on the front above it */
