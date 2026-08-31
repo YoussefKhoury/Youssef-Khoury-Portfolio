@@ -55,6 +55,14 @@ body {
   overflow-x: clip;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  body { animation: page-enter .32s ease-out both; }
+}
+@keyframes page-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 
