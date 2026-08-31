@@ -6,20 +6,9 @@
   // Content is visible by default; only allow the hidden/reveal state now that JS runs.
   root.classList.add('js');
 
-  /* ---------- one-time hero boot sequence ---------- */
-  if (!reduced) {
-    let booted = false;
-    try { booted = sessionStorage.getItem('v2-booted') === '1'; } catch {}
-    if (!booted) {
-      root.classList.add('booting');
-      // pin the end state so removing .booting can't hide anything
-      document.querySelectorAll('.hero .reveal').forEach((el) => el.classList.add('visible'));
-      setTimeout(() => {
-        root.classList.remove('booting');
-        try { sessionStorage.setItem('v2-booted', '1'); } catch {}
-      }, 1300);
-    }
-  }
+  // The profile must be ready when the page opens. Keep scroll reveals below
+  // the fold, but do not stage the first screen as a loading sequence.
+  document.querySelectorAll('.hero .reveal').forEach((el) => el.classList.add('visible'));
 
   /* ---------- header + scroll progress + work rail ---------- */
   const header = document.querySelector('[data-header]');
