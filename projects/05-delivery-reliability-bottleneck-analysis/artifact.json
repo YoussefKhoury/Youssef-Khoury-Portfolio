@@ -4,8 +4,8 @@
     "version": 1,
     "surface": "dashboard",
     "title": "Delivery Reliability & Bottleneck Analysis",
-    "description": "An operations dashboard identifying where late-delivery risk and customer impact are concentrated across sellers, routes, regions, and product categories.",
-    "generatedAt": "2026-08-30T21:13:30Z",
+    "description": "An operations dashboard separating observable delivery-risk signals from unresolved causes across time, sellers, routes, regions, and product categories.",
+    "generatedAt": "2026-08-31T06:53:31Z",
     "cards": [
       {
         "id": "orders_card",
@@ -80,7 +80,7 @@
       {
         "id": "monthly_late_rate",
         "title": "Monthly late-delivery rate",
-        "subtitle": "2018-03 peaked at 21.1%; the full-period network rate was 8.0%.",
+        "subtitle": "Reliability deteriorated in distinct spikes: 14.0% in Nov 2017, 16.0% in Feb 2018, and 21.1% in Mar 2018.",
         "intent": "trend",
         "question": "When did delivery reliability deteriorate?",
         "rationale": "A monthly line exposes sustained movement and operational spikes across 20 complete-volume periods.",
@@ -113,6 +113,12 @@
               "label": "Late orders"
             },
             {
+              "field": "median_ship_days",
+              "type": "quantitative",
+              "format": "number",
+              "label": "Median handoff days"
+            },
+            {
               "field": "avg_review",
               "type": "quantitative",
               "format": "number",
@@ -141,10 +147,10 @@
       {
         "id": "ship_speed_late_rate",
         "title": "Late-delivery rate by purchase-to-carrier time",
-        "subtitle": "Orders handed to the carrier after seven days were 4.6x as likely to arrive late as orders handed off within two days.",
+        "subtitle": "Late rate rose from 5.0% within two days to 22.8% after seven; use this as an escalation flag, not a causal explanation.",
         "intent": "comparison",
-        "question": "Does slow carrier handoff identify higher delivery risk?",
-        "rationale": "Ordered bars make the monotonic risk gradient easy to compare without implying causality.",
+        "question": "Can carrier-handoff age serve as an early-warning flag?",
+        "rationale": "Ordered bars show the risk gradient while making clear that it does not explain the monthly spikes.",
         "type": "bar",
         "dataset": "ship_speed",
         "sourceId": "ship_speed_source",
@@ -246,7 +252,7 @@
       {
         "id": "seller_opportunity",
         "title": "Excess late orders by high-volume seller",
-        "subtitle": "Seller 06A2C3 recorded about 56 more late orders than expected at the network rate.",
+        "subtitle": "High-volume sellers are ranked by excess late volume; the top exception contributed about 56 more late orders than the network rate predicts.",
         "intent": "comparison",
         "question": "Which high-volume sellers contribute the largest volume-adjusted delivery gap?",
         "rationale": "Excess late orders balances seller volume and reliability while excluding ambiguous multi-seller orders.",
@@ -621,21 +627,15 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM dashboard_summary",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Order-level delivery and review totals after item-level normalization.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "One row per complete order"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "Late-delivery rate = orders delivered after the estimated delivery timestamp / analyzed orders",
+            "Material late rate = orders delivered more than 24 hours after the estimate / analyzed orders"
           ],
           "tables_used": [
             "dashboard_summary"
@@ -650,21 +650,14 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM monthly ORDER BY month",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Monthly purchase cohorts used to inspect the timing and scale of reliability spikes.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "Purchase months with at least 500 analyzed orders"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "Monthly cohorts use purchase month and include months with at least 500 analyzed orders"
           ],
           "tables_used": [
             "monthly"
@@ -679,21 +672,14 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM ship_speed ORDER BY band_order",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Order-level late rates grouped by elapsed time from purchase to carrier handoff.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "One row per complete order"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "Purchase-to-carrier time = carrier handoff timestamp - purchase timestamp"
           ],
           "tables_used": [
             "ship_speed"
@@ -708,21 +694,14 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM review_status ORDER BY sort_order",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Review outcomes compared between late and on-time orders.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "Orders with one consistent review score"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "Low-review rate = review-eligible orders scored 1 or 2 / review-eligible orders"
           ],
           "tables_used": [
             "review_status"
@@ -737,22 +716,16 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM seller_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "High-volume sellers ranked by late orders above the network-rate expectation.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "Single-seller orders",
             "Sellers with at least 100 analyzed orders"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "Excess late orders = observed late orders - expected late orders at the network rate",
+            "High-volume seller = at least 100 complete single-seller orders"
           ],
           "tables_used": [
             "seller_opportunity"
@@ -767,22 +740,15 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM seller_detail ORDER BY late_rate DESC, orders DESC",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Auditable seller-level delivery metrics for complete single-seller orders.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "Single-seller orders",
             "Sellers with at least 100 analyzed orders"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "Seller metrics use complete single-seller orders for unambiguous attribution"
           ],
           "tables_used": [
             "seller_detail"
@@ -797,21 +763,15 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM route_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Seller-state to customer-state routes ranked by excess late volume.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "Single-seller orders",
             "Seller-to-customer state routes with at least 200 analyzed orders"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
+            "Excess late orders = observed late orders - expected late orders at the network rate",
             "High-volume route = at least 200 complete single-seller orders"
           ],
           "tables_used": [
@@ -827,21 +787,14 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM state_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Customer states ranked by excess late volume.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "Customer states with at least 200 analyzed orders"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "Excess late orders = observed late orders - expected late orders at the network rate"
           ],
           "tables_used": [
             "state_opportunity"
@@ -856,21 +809,14 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM category_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Product categories ranked by excess late volume.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "Product categories with at least 500 analyzed orders"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "Multi-category orders contribute once to each applicable category"
           ],
           "tables_used": [
             "category_opportunity"
@@ -885,21 +831,14 @@
         "query": {
           "engine": "SQLite",
           "sql": "SELECT * FROM state_detail ORDER BY late_rate DESC, orders DESC",
-          "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-          "executed_at": "2026-08-30T21:13:30Z",
+          "description": "Auditable customer-state delivery metrics.",
+          "executed_at": "2026-08-31T06:53:31Z",
           "language": "sql",
           "filters": [
             "Customer states with at least 200 analyzed orders"
           ],
           "metric_definitions": [
-            "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-            "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-            "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-            "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-            "Purchase-to-carrier time = time_to_ship_hours / 24",
-            "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-            "High-volume seller = at least 100 complete single-seller orders",
-            "High-volume route = at least 200 complete single-seller orders"
+            "State metrics describe customer destination states with at least 200 analyzed orders"
           ],
           "tables_used": [
             "state_detail"
@@ -980,14 +919,14 @@
       {
         "id": "action_caveats",
         "type": "markdown",
-        "body": "### Where delay risk becomes visible\nPurchase-to-carrier handoff is the only pre-delivery stage available in this source. Risk rises after four days and reaches 22.8% after seven days, versus 5.0% within two days. The largest seller exception was Seller 06A2C3; the largest route exception was SP to RJ. These are strong operational signals, not proof of fault.\n\n### Three actions\n1. Review Seller 06A2C3 and the next highest excess-volume sellers; trigger follow-up at four days without carrier handoff and escalation at seven.\n2. Audit SP to RJ, RJ deliveries, and the Health Beauty category together to isolate route, assortment, and seller overlap.\n3. Contact customers before a likely promise-date miss and apply service recovery to protect review scores.\n\n### Limits\nThis is descriptive, not causal. The anonymized source covers Brazilian orders from 2016-2018 and does not include carrier scans, warehouse events, or last-mile checkpoints. Seller analysis excludes multi-seller orders to avoid assigning one delivery outcome to several sellers. Conflicting review scores are excluded from review comparisons.",
+        "body": "### What the evidence supports\nLate delivery was episodic: the rate rose to 14.0% in Nov 2017, 16.0% in Feb 2018, and 21.1% in Mar 2018. Monthly median handoff time stayed within 1.8-3.2 days and was 2.4 days in the worst month. At order level, handoff after seven days flagged a 22.8% late rate versus 5.0% within two days. That makes handoff age useful for escalation, but insufficient to explain the time-series spikes.\n\n### Three actions\n1. Apply seller-neutral handoff alerts at four days and escalation at seven, then rank the queue by excess late-order volume.\n2. Investigate the Nov 2017 and Feb-Mar 2018 spikes with promised-service windows, carrier scans, warehouse events, and seller deadlines before assigning root cause.\n3. Cross-audit the SP to RJ route, RJ deliveries, and the Health Beauty category, then contact customers before likely promise-date misses.\n\n### Limits\nThis is descriptive, not causal. The anonymized source covers Brazilian orders from 2016-2018 and lacks promised-service tiers, carrier scans, warehouse events, and last-mile checkpoints. The handoff bands are therefore operating thresholds, not discovered causes. Seller analysis excludes multi-seller orders for unambiguous attribution, and conflicting review scores are excluded from review comparisons.",
         "layout": "full"
       }
     ]
   },
   "snapshot": {
     "version": 1,
-    "generatedAt": "2026-08-30T21:13:30Z",
+    "generatedAt": "2026-08-31T06:53:31Z",
     "status": "ready",
     "datasets": {
       "summary": [
@@ -4914,21 +4853,15 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM dashboard_summary",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Order-level delivery and review totals after item-level normalization.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "One row per complete order"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "Late-delivery rate = orders delivered after the estimated delivery timestamp / analyzed orders",
+          "Material late rate = orders delivered more than 24 hours after the estimate / analyzed orders"
         ],
         "tables_used": [
           "dashboard_summary"
@@ -4943,21 +4876,14 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM monthly ORDER BY month",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Monthly purchase cohorts used to inspect the timing and scale of reliability spikes.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "Purchase months with at least 500 analyzed orders"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "Monthly cohorts use purchase month and include months with at least 500 analyzed orders"
         ],
         "tables_used": [
           "monthly"
@@ -4972,21 +4898,14 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM ship_speed ORDER BY band_order",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Order-level late rates grouped by elapsed time from purchase to carrier handoff.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "One row per complete order"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "Purchase-to-carrier time = carrier handoff timestamp - purchase timestamp"
         ],
         "tables_used": [
           "ship_speed"
@@ -5001,21 +4920,14 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM review_status ORDER BY sort_order",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Review outcomes compared between late and on-time orders.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "Orders with one consistent review score"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "Low-review rate = review-eligible orders scored 1 or 2 / review-eligible orders"
         ],
         "tables_used": [
           "review_status"
@@ -5030,22 +4942,16 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM seller_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "High-volume sellers ranked by late orders above the network-rate expectation.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "Single-seller orders",
           "Sellers with at least 100 analyzed orders"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "Excess late orders = observed late orders - expected late orders at the network rate",
+          "High-volume seller = at least 100 complete single-seller orders"
         ],
         "tables_used": [
           "seller_opportunity"
@@ -5060,22 +4966,15 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM seller_detail ORDER BY late_rate DESC, orders DESC",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Auditable seller-level delivery metrics for complete single-seller orders.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "Single-seller orders",
           "Sellers with at least 100 analyzed orders"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "Seller metrics use complete single-seller orders for unambiguous attribution"
         ],
         "tables_used": [
           "seller_detail"
@@ -5090,21 +4989,15 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM route_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Seller-state to customer-state routes ranked by excess late volume.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "Single-seller orders",
           "Seller-to-customer state routes with at least 200 analyzed orders"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
+          "Excess late orders = observed late orders - expected late orders at the network rate",
           "High-volume route = at least 200 complete single-seller orders"
         ],
         "tables_used": [
@@ -5120,21 +5013,14 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM state_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Customer states ranked by excess late volume.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "Customer states with at least 200 analyzed orders"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "Excess late orders = observed late orders - expected late orders at the network rate"
         ],
         "tables_used": [
           "state_opportunity"
@@ -5149,21 +5035,14 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM category_opportunity ORDER BY excess_late_orders DESC LIMIT 12",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Product categories ranked by excess late volume.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "Product categories with at least 500 analyzed orders"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "Multi-category orders contribute once to each applicable category"
         ],
         "tables_used": [
           "category_opportunity"
@@ -5178,21 +5057,14 @@
       "query": {
         "engine": "SQLite",
         "sql": "SELECT * FROM state_detail ORDER BY late_rate DESC, orders DESC",
-        "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
-        "executed_at": "2026-08-30T21:13:30Z",
+        "description": "Auditable customer-state delivery metrics.",
+        "executed_at": "2026-08-31T06:53:31Z",
         "language": "sql",
         "filters": [
           "Customer states with at least 200 analyzed orders"
         ],
         "metric_definitions": [
-          "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-          "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-          "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-          "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-          "Purchase-to-carrier time = time_to_ship_hours / 24",
-          "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-          "High-volume seller = at least 100 complete single-seller orders",
-          "High-volume route = at least 200 complete single-seller orders"
+          "State metrics describe customer destination states with at least 200 analyzed orders"
         ],
         "tables_used": [
           "state_detail"

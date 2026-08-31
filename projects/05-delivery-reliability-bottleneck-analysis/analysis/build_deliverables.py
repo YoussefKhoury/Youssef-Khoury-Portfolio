@@ -72,6 +72,11 @@ def main() -> None:
     top_route = route_rows[0]
     monthly_rows = results["monthly"]
     worst_month = max(monthly_rows, key=lambda row: row["late_rate"])
+    november_2017 = next(row for row in monthly_rows if row["month"] == "2017-11")
+    february_2018 = next(row for row in monthly_rows if row["month"] == "2018-02")
+    march_2018 = next(row for row in monthly_rows if row["month"] == "2018-03")
+    median_ship_days_min = min(row["median_ship_days"] for row in monthly_rows)
+    median_ship_days_max = max(row["median_ship_days"] for row in monthly_rows)
 
     review_status = [
         {
@@ -122,16 +127,39 @@ def main() -> None:
             dataset: query_rows(connection, sql) for dataset, sql in sql_by_dataset.items()
         }
 
-    common_definitions = [
-        "Late-delivery rate = orders with delivery_delay_hours > 0 / analyzed orders",
-        "Material late rate = orders with delivery_delay_hours > 24 / analyzed orders",
-        "Low-review rate = review-eligible orders with review_score <= 2 / review-eligible orders",
-        "Excess late orders = observed late orders - (orders x network late-delivery rate)",
-        "Purchase-to-carrier time = time_to_ship_hours / 24",
-        "Seller metrics use complete single-seller orders so one final delivery outcome is not assigned to multiple sellers",
-        "High-volume seller = at least 100 complete single-seller orders",
-        "High-volume route = at least 200 complete single-seller orders",
-    ]
+    definitions_by_dataset = {
+        "summary": [
+            "Late-delivery rate = orders delivered after the estimated delivery timestamp / analyzed orders",
+            "Material late rate = orders delivered more than 24 hours after the estimate / analyzed orders",
+        ],
+        "monthly": ["Monthly cohorts use purchase month and include months with at least 500 analyzed orders"],
+        "ship_speed": ["Purchase-to-carrier time = carrier handoff timestamp - purchase timestamp"],
+        "review_status": ["Low-review rate = review-eligible orders scored 1 or 2 / review-eligible orders"],
+        "seller_opportunity": [
+            "Excess late orders = observed late orders - expected late orders at the network rate",
+            "High-volume seller = at least 100 complete single-seller orders",
+        ],
+        "seller_detail": ["Seller metrics use complete single-seller orders for unambiguous attribution"],
+        "route_opportunity": [
+            "Excess late orders = observed late orders - expected late orders at the network rate",
+            "High-volume route = at least 200 complete single-seller orders",
+        ],
+        "state_opportunity": ["Excess late orders = observed late orders - expected late orders at the network rate"],
+        "category_opportunity": ["Multi-category orders contribute once to each applicable category"],
+        "state_detail": ["State metrics describe customer destination states with at least 200 analyzed orders"],
+    }
+    descriptions_by_dataset = {
+        "summary": "Order-level delivery and review totals after item-level normalization.",
+        "monthly": "Monthly purchase cohorts used to inspect the timing and scale of reliability spikes.",
+        "ship_speed": "Order-level late rates grouped by elapsed time from purchase to carrier handoff.",
+        "review_status": "Review outcomes compared between late and on-time orders.",
+        "seller_opportunity": "High-volume sellers ranked by late orders above the network-rate expectation.",
+        "seller_detail": "Auditable seller-level delivery metrics for complete single-seller orders.",
+        "route_opportunity": "Seller-state to customer-state routes ranked by excess late volume.",
+        "state_opportunity": "Customer states ranked by excess late volume.",
+        "category_opportunity": "Product categories ranked by excess late volume.",
+        "state_detail": "Auditable customer-state delivery metrics.",
+    }
     filters_by_dataset = {
         "summary": ["One row per complete order"],
         "monthly": ["Purchase months with at least 500 analyzed orders"],
@@ -155,11 +183,11 @@ def main() -> None:
             "query": {
                 "engine": "SQLite",
                 "sql": sql_by_dataset[dataset],
-                "description": "Reviewed dashboard extract produced from an order-grain normalization of the cleaned Olist item-level parquet.",
+                "description": descriptions_by_dataset[dataset],
                 "executed_at": generated_at,
                 "language": "sql",
                 "filters": filters_by_dataset[dataset],
-                "metric_definitions": common_definitions,
+                "metric_definitions": definitions_by_dataset[dataset],
                 "tables_used": [table],
             },
         }
@@ -221,7 +249,7 @@ def main() -> None:
         {
             "id": "monthly_late_rate",
             "title": "Monthly late-delivery rate",
-            "subtitle": f"{worst_month['month']} peaked at {pct(worst_month['late_rate'])}; the full-period network rate was {pct(summary['late_rate'])}.",
+            "subtitle": f"Reliability deteriorated in distinct spikes: {pct(november_2017['late_rate'])} in Nov 2017, {pct(february_2018['late_rate'])} in Feb 2018, and {pct(march_2018['late_rate'])} in Mar 2018.",
             "intent": "trend",
             "question": "When did delivery reliability deteriorate?",
             "rationale": "A monthly line exposes sustained movement and operational spikes across 20 complete-volume periods.",
@@ -234,6 +262,7 @@ def main() -> None:
                 "tooltip": [
                     {"field": "orders", "type": "quantitative", "format": "compact", "label": "Orders"},
                     {"field": "late_orders", "type": "quantitative", "format": "compact", "label": "Late orders"},
+                    {"field": "median_ship_days", "type": "quantitative", "format": "number", "label": "Median handoff days"},
                     {"field": "avg_review", "type": "quantitative", "format": "number", "label": "Average review"},
                 ],
             },
@@ -248,10 +277,10 @@ def main() -> None:
         {
             "id": "ship_speed_late_rate",
             "title": "Late-delivery rate by purchase-to-carrier time",
-            "subtitle": f"Orders handed to the carrier after seven days were {ship_risk_multiple:.1f}x as likely to arrive late as orders handed off within two days.",
+            "subtitle": f"Late rate rose from {pct(fast_ship['late_rate'])} within two days to {pct(slow_ship['late_rate'])} after seven; use this as an escalation flag, not a causal explanation.",
             "intent": "comparison",
-            "question": "Does slow carrier handoff identify higher delivery risk?",
-            "rationale": "Ordered bars make the monotonic risk gradient easy to compare without implying causality.",
+            "question": "Can carrier-handoff age serve as an early-warning flag?",
+            "rationale": "Ordered bars show the risk gradient while making clear that it does not explain the monthly spikes.",
             "type": "bar",
             "dataset": "ship_speed",
             "sourceId": sources["ship_speed"]["id"],
@@ -297,7 +326,7 @@ def main() -> None:
         {
             "id": "seller_opportunity",
             "title": "Excess late orders by high-volume seller",
-            "subtitle": f"{top_seller['seller']} recorded about {number(top_seller['excess_late_orders'], 0)} more late orders than expected at the network rate.",
+            "subtitle": f"High-volume sellers are ranked by excess late volume; the top exception contributed about {number(top_seller['excess_late_orders'], 0)} more late orders than the network rate predicts.",
             "intent": "comparison",
             "question": "Which high-volume sellers contribute the largest volume-adjusted delivery gap?",
             "rationale": "Excess late orders balances seller volume and reliability while excluding ambiguous multi-seller orders.",
@@ -439,23 +468,24 @@ def main() -> None:
     ]
 
     caveat_body = (
-        "### Where delay risk becomes visible\n"
-        f"Purchase-to-carrier handoff is the only pre-delivery stage available in this source. Risk rises after four days and reaches {pct(slow_ship['late_rate'])} after seven days, versus {pct(fast_ship['late_rate'])} within two days. "
-        f"The largest seller exception was {top_seller['seller']}; the largest route exception was {top_route['route']}. These are strong operational signals, not proof of fault.\n\n"
+        "### What the evidence supports\n"
+        f"Late delivery was episodic: the rate rose to {pct(november_2017['late_rate'])} in Nov 2017, {pct(february_2018['late_rate'])} in Feb 2018, and {pct(march_2018['late_rate'])} in Mar 2018. "
+        f"Monthly median handoff time stayed within {median_ship_days_min:.1f}-{median_ship_days_max:.1f} days and was {march_2018['median_ship_days']:.1f} days in the worst month. "
+        f"At order level, handoff after seven days flagged a {pct(slow_ship['late_rate'])} late rate versus {pct(fast_ship['late_rate'])} within two days. That makes handoff age useful for escalation, but insufficient to explain the time-series spikes.\n\n"
         "### Three actions\n"
-        f"1. Review {top_seller['seller']} and the next highest excess-volume sellers; trigger follow-up at four days without carrier handoff and escalation at seven.\n"
-        f"2. Audit {top_route['route']}, {top_state['customer_state']} deliveries, and the {top_category['product_category']} category together to isolate route, assortment, and seller overlap.\n"
-        "3. Contact customers before a likely promise-date miss and apply service recovery to protect review scores.\n\n"
+        "1. Apply seller-neutral handoff alerts at four days and escalation at seven, then rank the queue by excess late-order volume.\n"
+        "2. Investigate the Nov 2017 and Feb-Mar 2018 spikes with promised-service windows, carrier scans, warehouse events, and seller deadlines before assigning root cause.\n"
+        f"3. Cross-audit the {top_route['route']} route, {top_state['customer_state']} deliveries, and the {top_category['product_category']} category, then contact customers before likely promise-date misses.\n\n"
         "### Limits\n"
-        "This is descriptive, not causal. The anonymized source covers Brazilian orders from 2016-2018 and does not include carrier scans, warehouse events, or last-mile checkpoints. "
-        "Seller analysis excludes multi-seller orders to avoid assigning one delivery outcome to several sellers. Conflicting review scores are excluded from review comparisons."
+        "This is descriptive, not causal. The anonymized source covers Brazilian orders from 2016-2018 and lacks promised-service tiers, carrier scans, warehouse events, and last-mile checkpoints. "
+        "The handoff bands are therefore operating thresholds, not discovered causes. Seller analysis excludes multi-seller orders for unambiguous attribution, and conflicting review scores are excluded from review comparisons."
     )
 
     manifest = {
         "version": 1,
         "surface": "dashboard",
         "title": "Delivery Reliability & Bottleneck Analysis",
-        "description": "An operations dashboard identifying where late-delivery risk and customer impact are concentrated across sellers, routes, regions, and product categories.",
+        "description": "An operations dashboard separating observable delivery-risk signals from unresolved causes across time, sellers, routes, regions, and product categories.",
         "generatedAt": generated_at,
         "cards": cards,
         "charts": charts,
@@ -502,7 +532,7 @@ def main() -> None:
 
 ## Executive summary
 
-I analyzed {summary['source_rows_item_level']:,} item-level records from the public Olist marketplace dataset and normalized them to {summary['analyzed_orders']:,} unique orders. {pct(summary['late_rate'])} missed the estimated delivery timestamp; late orders were a median {summary['median_late_days']:.1f} days late. The strongest operational signal was purchase-to-carrier time: orders handed off after seven days had a {pct(slow_ship['late_rate'])} late rate versus {pct(fast_ship['late_rate'])} within two days.
+I analyzed {summary['source_rows_item_level']:,} item-level records from the public Olist marketplace dataset and normalized them to {summary['analyzed_orders']:,} unique orders. {pct(summary['late_rate'])} missed the estimated delivery timestamp; late orders were a median {summary['median_late_days']:.1f} days late. Carrier-handoff age was a useful early-warning flag: orders handed off after seven days had a {pct(slow_ship['late_rate'])} late rate versus {pct(fast_ship['late_rate'])} within two days. It did not explain the sharp monthly spikes, including {pct(march_2018['late_rate'])} late in Mar 2018 with a median handoff of {march_2018['median_ship_days']:.1f} days, so root cause remains unresolved.
 
 ## Business question
 
@@ -521,23 +551,23 @@ Where should operations focus first to reduce late deliveries and protect custom
 
 - {summary['late_orders']:,} of {summary['analyzed_orders']:,} orders were late ({pct(summary['late_rate'])}); {pct(summary['late_24h_rate'])} were more than 24 hours late.
 - Late orders averaged {summary['avg_review_late']:.2f}/5 versus {summary['avg_review_on_time']:.2f}/5 for on-time orders. Low reviews occurred on {pct(summary['low_review_rate_late'])} of late orders versus {pct(summary['low_review_rate_on_time'])} of on-time orders.
-- Purchase-to-carrier handoff beyond seven days was associated with {ship_risk_multiple:.1f}x the late-delivery rate of handoff within two days.
-- {top_seller['seller']} had the largest seller-level gap among sellers with at least 100 analyzed orders: roughly {number(top_seller['excess_late_orders'], 0)} excess late orders.
+- Late delivery spiked to {pct(november_2017['late_rate'])} in Nov 2017, {pct(february_2018['late_rate'])} in Feb 2018, and {pct(march_2018['late_rate'])} in Mar 2018 while monthly median handoff time stayed within {median_ship_days_min:.1f}-{median_ship_days_max:.1f} days.
+- Purchase-to-carrier handoff beyond seven days was associated with {ship_risk_multiple:.1f}x the late-delivery rate of handoff within two days, making it a practical warning threshold rather than a proven cause.
+- The highest-excess high-volume seller contributed roughly {number(top_seller['excess_late_orders'], 0)} more late orders than expected at the network rate ({top_seller['seller']} in the audit table).
 - {top_route['route']} was the largest volume-adjusted seller-to-customer state route gap at roughly {number(top_route['excess_late_orders'], 0)} excess late orders.
-- {worst_month['month']} was the worst high-volume month at {pct(worst_month['late_rate'])} late.
 - {top_state['customer_state']} had the largest volume-adjusted state opportunity: roughly {number(top_state['excess_late_orders'], 0)} excess late orders versus the network rate.
 - {top_category['product_category']} had the largest excess late-order volume among categories with at least 500 orders.
 
 ## Recommendations
 
-1. Review {top_seller['seller']} and the next highest excess-volume sellers; trigger follow-up at four days without carrier handoff and escalation at seven.
-2. Audit {top_route['route']}, {top_state['customer_state']} deliveries, and the {top_category['product_category']} category together to isolate route, assortment, and seller overlap.
-3. Contact customers before a likely promise-date miss and apply service recovery to protect review scores.
+1. Apply seller-neutral handoff alerts at four days and escalation at seven, then rank the queue by excess late-order volume.
+2. Investigate the Nov 2017 and Feb-Mar 2018 spikes with promised-service windows, carrier scans, warehouse events, and seller deadlines before assigning root cause.
+3. Cross-audit {top_route['route']}, {top_state['customer_state']} deliveries, and the {top_category['product_category']} category, then contact customers before likely promise-date misses.
 
 ## Limitations
 
 - The anonymized Brazilian data covers 2016-2018, so the findings demonstrate analytical method rather than current company performance.
-- The source lacks carrier scans, warehouse events, and last-mile checkpoints; it cannot prove which party caused a delay.
+- The source lacks promised-service tiers, carrier scans, warehouse events, and last-mile checkpoints; it cannot explain the monthly spikes or prove which party caused a delay.
 - Seller analysis excludes multi-seller orders, retaining {pct(summary['seller_analysis_coverage'])} of complete orders for unambiguous seller attribution.
 - Small positive delays can include deliveries later on the promised calendar date because the estimate is timestamp-based.
 - Multi-category orders contribute once to each applicable category.
@@ -557,13 +587,13 @@ Do not claim this as your work until you can reproduce the analysis, explain eve
 
 ## 60-second explanation
 
-I analyzed a public Brazilian e-commerce dataset to identify where delivery reliability was breaking down. The source had {summary['source_rows_item_level']:,} item-level rows, so I first normalized it to {summary['analyzed_orders']:,} unique orders to avoid double counting. I found an overall late rate of {pct(summary['late_rate'])}. Orders taking over seven days to reach the carrier had a {pct(slow_ship['late_rate'])} late rate versus {pct(fast_ship['late_rate'])} when handed off within two days. I then isolated single-seller orders and ranked sellers, routes, regions, and product categories by excess late orders relative to the network baseline. {top_seller['seller']} and {top_route['route']} were the largest seller and route exceptions. I recommended earlier handoff alerts, focused operational audits, and proactive customer recovery, while being explicit that the data identifies risk signals rather than proven causes.
+I analyzed a public Brazilian e-commerce dataset to identify where delivery risk concentrated. I normalized {summary['source_rows_item_level']:,} item-level rows to {summary['analyzed_orders']:,} unique orders and found an overall late rate of {pct(summary['late_rate'])}. Handoff after seven days flagged a {pct(slow_ship['late_rate'])} late rate versus {pct(fast_ship['late_rate'])} within two days, but that did not explain the monthly pattern: Mar 2018 reached {pct(march_2018['late_rate'])} late with a median handoff of only {march_2018['median_ship_days']:.1f} days. I therefore treated handoff age as an escalation signal, ranked sellers, routes, states, and categories by excess late volume, and recommended focused audits plus proactive customer recovery. The conclusion is deliberately limited: the data shows where to look and when to intervene, not who caused the delay.
 
 ## Questions you must be able to answer
 
 1. Why did you aggregate to order level? Multi-item orders otherwise inflate delivery counts.
 2. Why not rank only by late rate? Tiny regions can show unstable rates; excess late orders balances exposure and performance.
-3. Does slow handoff cause late delivery? Not proven. It is an operational risk signal in descriptive data.
+3. Does slow handoff cause late delivery? Not proven. It is an order-level warning flag and does not explain the monthly spikes.
 4. Why exclude some reviews? {results['quality']['inconsistent_order_counts']['review_score']:,} orders had conflicting scores; excluding them avoids arbitrary selection.
 5. Why exclude multi-seller orders from seller rankings? One final delivery outcome should not be assigned to several sellers; the retained single-seller population covers {pct(summary['seller_analysis_coverage'])} of complete orders.
 6. What would you request next? Carrier scans, warehouse events, promised-service tier, seller handoff deadlines, and last-mile timestamps.
@@ -575,10 +605,10 @@ I analyzed a public Brazilian e-commerce dataset to identify where delivery reli
 
 | Section | Question | Visual | Supported takeaway |
 |---|---|---|---|
-| Monthly reliability | When did reliability deteriorate? | Line | {worst_month['month']} was the worst high-volume month. |
-| Handoff timing | Where does observable delay risk begin? | Ordered bar | Risk rises after four days and jumps after seven. |
+| Monthly reliability | When did reliability deteriorate? | Line | Reliability deteriorated in distinct spikes; Mar 2018 was worst at {pct(march_2018['late_rate'])}. |
+| Handoff timing | Can handoff age support early intervention? | Ordered bar | Risk rises after four days, but the band is a warning threshold rather than a root-cause finding. |
 | Customer impact | How is lateness associated with reviews? | Two-category bar | Late orders are strongly associated with low reviews. |
-| Seller exceptions | Which sellers concentrate excess late orders? | Ranked horizontal bar | {top_seller['seller']} is the largest high-volume seller exception. |
+| Seller exceptions | Which sellers concentrate excess late orders? | Ranked horizontal bar | A small set of high-volume sellers creates the largest volume-adjusted gap; IDs stay in the audit detail. |
 | Route exceptions | Which state pairs concentrate underperformance? | Ranked horizontal bar | {top_route['route']} is the largest route exception. |
 | Regional opportunity | Which customer states create the largest gap? | Ranked horizontal bar | {top_state['customer_state']} has the largest state-level excess volume. |
 | Category opportunity | Which product categories warrant audit? | Ranked horizontal bar | {top_category['product_category']} has the largest category-level excess volume. |
