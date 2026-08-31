@@ -821,6 +821,8 @@ h2 {
   stroke-dasharray: 320; stroke-dashoffset: 320; transition: stroke-dashoffset 1.1s var(--ease) .1s;
 }
 .reveal.visible .spark polyline { stroke-dashoffset: 0; }
+.spark.route circle { fill: var(--bg); stroke: currentColor; stroke-width: 2; }
+.spark.route circle.destination { fill: currentColor; }
 .spark.bars rect {
   fill: currentColor; opacity: .5; transform-origin: bottom; transform: scaleY(0);
   transition: transform .5s var(--ease); transition-delay: .1s;
