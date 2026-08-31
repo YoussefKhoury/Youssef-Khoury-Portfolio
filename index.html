@@ -371,7 +371,7 @@
               <span class="row-body">
                 <span class="idx mono">05</span>
                 <h3>Delivery Reliability &amp; Bottleneck Analysis</h3>
-                <span class="row-stat mono">8.0% late-delivery rate &middot; 4.6&times; higher risk after seven-day handoff</span>
+                <span class="row-stat mono">8.0% late-delivery rate &middot; 54.0% low-review rate on late orders</span>
                 <span class="tags mono"><b class="t">Python</b><span class="t">SQL</span><span class="t">Operations</span><span class="t">Data quality</span><span class="t">Public data</span></span>
               </span>
               <span class="go" aria-hidden="true"><b>Open</b><span class="chev">+</span></span>
@@ -379,7 +379,7 @@
             <div class="case" id="case-05" role="region" aria-label="Delivery Reliability and Bottleneck Analysis case detail">
               <div class="case-inner">
                 <p class="case-dek">94,480 marketplace orders analyzed across seller handoff, route, region, product category and customer-review outcomes.</p>
-                <p class="outcome"><span class="mono">Output</span> an interactive dashboard that identifies where late-order risk concentrates and turns the evidence into three operational actions.</p>
+                <p class="outcome"><span class="mono">Output</span> an interactive dashboard that separates early-warning signals from unresolved causes and turns the evidence into three operational actions.</p>
                 <div class="case-tabs mono" role="tablist" aria-label="Delivery Reliability and Bottleneck Analysis case sections">
                   <button type="button" role="tab" id="c5t1" aria-controls="c5p1" aria-selected="true" class="ct-tab on">Situation</button>
                   <button type="button" role="tab" id="c5t2" aria-controls="c5p2" aria-selected="false" tabindex="-1" class="ct-tab">Built</button>
@@ -388,7 +388,7 @@
                 <div class="ct-panels">
                   <div class="ct-panel on" role="tabpanel" id="c5p1" aria-labelledby="c5t1">108,449 public e-commerce item records with delivery outcomes, but no decision-ready view of which sellers, routes, regions or categories concentrated late-order risk.</div>
                   <div class="ct-panel" role="tabpanel" id="c5p2" aria-labelledby="c5t2">An order-level analytical model that prevents multi-item double counting, isolates single-seller orders for fair attribution, ranks excess late-order volume against the network baseline and preserves explicit data-quality checks.</div>
-                  <div class="ct-panel" role="tabpanel" id="c5p3" aria-labelledby="c5t3">7,543 orders arrived late. Handoff after seven days carried a 22.8% late rate versus 5.0% within two days. SP to RJ produced about 587 excess late orders, and low reviews reached 54.0% for late orders versus 9.1% on time.</div>
+                  <div class="ct-panel" role="tabpanel" id="c5p3" aria-labelledby="c5t3">7,543 orders arrived late. Handoff after seven days flagged a 22.8% late rate versus 5.0% within two days, but did not explain the monthly spikes; March 2018 reached 21.1% late with a 2.4-day median handoff. Low reviews reached 54.0% for late orders versus 9.1% on time.</div>
                 </div>
                 <p class="case-links mono">
                   <a href="delivery-reliability/" target="_blank" rel="noreferrer"><span class="ar">&#8599;</span>Interactive dashboard</a>
