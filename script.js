@@ -880,7 +880,7 @@
    }
 })();
 (function () {
-  var CV_TRACK_URL = "";
+  var CV_TRACK_URL = "https://script.google.com/macros/s/AKfycbwQYUMLIt9DCqaSwPhHbrNoZ1266JzwJkmcIQW2qPeiQbrxam38SnNcHTVdIzwYnw83JQ/exec";
   var seen = [];
   function loadSeen() {
     try { seen = JSON.parse(localStorage.getItem("cvVisitors") || "[]"); } catch (e) { seen = []; }
