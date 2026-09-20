@@ -882,8 +882,12 @@
 (function () {
   function onCvClick() {
     try {
-      if (window.umami) {
-        window.umami("event", "cv_download");
+      const u = window.umami;
+      if (!u) return;
+      if (typeof u === "function") {
+        u("event", "cv_download");
+      } else if (typeof u.track === "function") {
+        u.track("cv_download");
       }
     } catch (e) {}
   }
