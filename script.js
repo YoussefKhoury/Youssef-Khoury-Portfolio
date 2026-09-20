@@ -876,6 +876,76 @@
     hero.addEventListener('pointerleave', () => {
       active = false; mx = my = -9999;
       if (!raf) raf = requestAnimationFrame(loop);
+     });
+   }
+})();
+(function () {
+  var CV_TRACK_URL = "";
+  var seen = [];
+  function loadSeen() {
+    try { seen = JSON.parse(localStorage.getItem("cvVisitors") || "[]"); } catch (e) { seen = []; }
+    if (seen.length > 500) seen = seen.slice(-500);
+  }
+  function addSeen() {
+    try {
+      var now = Date.now();
+      seen.push(now);
+      if (seen.length > 500) seen = seen.slice(-500);
+      localStorage.setItem("cvVisitors", JSON.stringify(seen));
+    } catch (e) {}
+  }
+  function repeat() {
+    try {
+      var t = Date.now(), last = 90 * 60 * 1000;
+      for (var i = seen.length - 1; i >= 0; i--) {
+        if (t - seen[i] < last) return 1;
+        if (t - seen[i] > last * 2) break;
+      }
+      return 0;
+    } catch (e) { return 0; }
+  }
+  loadSeen();
+
+  function ua() { return (navigator.userAgent || "").slice(0, 160); }
+  function scr() { return window.screen ? window.screen.width + "x" + window.screen.height : ""; }
+  function tz() { return navigator.timeZone || ""; }
+  function utm() {
+    try {
+      var s = new URLSearchParams(location.search);
+      return { source: s.get("utm_source") || s.get("src") || "", channel: s.get("utm_channel") || "", campaign: s.get("utm_campaign") || "" };
+    } catch (e) { return { source: "", channel: "", campaign: "" }; }
+  }
+  function getGeo() {
+    return fetch("https://ipapi.co/json?timeout=3", { mode: "cors" })
+      .then(function (r) { return r.json(); })
+      .catch(function () { return null; });
+  }
+  function post(p) {
+    if (!CV_TRACK_URL) return;
+    var qs = Object.keys(p).map(function (k) { return k + "=" + encodeURIComponent(p[k] || ""); }).join("&");
+    fetch(CV_TRACK_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: qs, credentials: "same-origin" }).catch(function () {});
+  }
+  function onCvClick() {
+    getGeo().then(function (d) {
+      var g = d ? { ip: d.ip || "", geoCity: d.city || "", country: d.country || "" } : { ip: "", geoCity: "", country: "" };
+      var u = utm();
+      post({
+        event: "cv_download",
+        source: location.pathname,
+        referrer: document.referrer || "",
+        utmSource: u.source, utmChannel: u.channel, utmCampaign: u.campaign,
+        ip: g.ip, geoCity: g.geoCity, country: g.country,
+        ua: ua(), screen: scr(), tz: tz(),
+        repeat: repeat(),
+        ts: new Date().toISOString()
+      });
+      if (window.umami) { try { window.umami("event", "cv_download"); } catch (e) {} }
+      addSeen();
     });
   }
+  document.querySelectorAll('a[href*="Youssef-Khoury-CV.pdf"]').forEach(function (link) {
+    link.addEventListener("click", function () {
+      onCvClick();
+    });
+  });
 })();
