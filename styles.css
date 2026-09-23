@@ -1236,6 +1236,11 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   html { -webkit-text-size-adjust: 100%; scroll-padding-top: 98px; }
   #contact { padding-top: var(--dossier-breath); }
 
+  /* finger-sized case tabs: padding grows the tap area, the matching negative
+     margin keeps the row where it was and lands the active seam on the rule */
+  .ct-tab { padding: 11px 0; margin: -11px 0; }
+  .case-inner .outcome .mono { font-size: 11px; }
+
   /* let the heading use the full centred width and breathe a little smaller */
   h1 { font-size: clamp(27px, 8vw, 34px); max-width: none; }
 
@@ -1303,9 +1308,9 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
     /* same charcoal as the rest of the site; amber only on the accents */
     --kraft-hi: #121010; --kraft-lo: #0a0908;
     /* the first folder's tab needs its own height above the shared visual gap */
-    --folder-tab-h: 23px;
+    --folder-tab-h: 25px;
     --dossier-start-band: calc(var(--dossier-breath) + var(--folder-tab-h));
-    /* clear space an index tab (22.8px) drops into, plus room to breathe */
+    /* clear space an index tab (~25px) drops into, plus room to breathe */
     --tab-band: 44px;
   }
   .dossier-label {
@@ -1360,7 +1365,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
     padding: 4px 9px 5px;
     background: linear-gradient(180deg, #131010, #0a0808);
     border: 1px solid var(--line); border-bottom: 0; border-radius: 7px 7px 0 0;
-    font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint);
     transition: color .3s var(--ease), border-color .3s var(--ease);
   }
   .dossier-body > .section.collapsible:nth-child(1) .sec-head > :first-child { left: auto; right: 2%; }
