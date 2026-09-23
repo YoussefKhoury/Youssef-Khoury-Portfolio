@@ -401,12 +401,11 @@
     syncDrawer();
   };
 
-  /* the drawer front is only a control while something is drawn out of it */
+  /* on a phone the drawer front is always a control: at rest it draws the first
+     file out, and with files drawn out it files them all back in */
   const drawerFront = document.querySelector('.drawer-front');
   syncDrawer = () => {
-    if (drawerFront) {
-      drawerFront.disabled = !(mqMobile.matches && collSecs.some((s) => s.classList.contains('open')));
-    }
+    if (drawerFront) drawerFront.disabled = !mqMobile.matches;
   };
   syncDrawer();
   mqMobile.addEventListener('change', syncDrawer);
@@ -415,7 +414,10 @@
      bottom one first, and the front knocks closed behind the last of them */
   drawerFront?.addEventListener('click', () => {
     const open = collSecs.filter((s) => s.classList.contains('open')).reverse();
-    if (!open.length) return;
+    if (!open.length) {
+      if (collSecs[0]) setSection(collSecs[0], true);
+      return;
+    }
     const step = reduced ? 0 : 110;
 
     /* Stay put while they fold shut. Scroll anchoring (kept on so opening a
@@ -452,6 +454,20 @@
     // the phone-only metric row is part of the same tap target
     sec.querySelector('.sec-metrics')?.addEventListener('click', toggle);
   });
+
+  /* the first time the whole closed stack is on screen, the top folder lifts a
+     touch and settles, so the fronts read as something to open */
+  const peekHead = collSecs[0]?.querySelector('.sec-head');
+  if (drawerFront && peekHead && !reduced && 'IntersectionObserver' in window) {
+    const peekIO = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      peekIO.disconnect();
+      if (!mqMobile.matches || collSecs.some((s) => s.classList.contains('open'))) return;
+      peekHead.classList.add('peek');
+      peekHead.addEventListener('animationend', () => peekHead.classList.remove('peek'), { once: true });
+    }, { threshold: 1 });
+    peekIO.observe(drawerFront);
+  }
 
   // Any in-page link to a collapsed section (hero action, strip pill, menu item)
   // opens it, so the jump never lands the visitor on a closed heading.
