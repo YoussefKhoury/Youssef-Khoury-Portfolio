@@ -10,8 +10,14 @@
 <meta property="og:description" content="An AI mail agent that turns supplier and client emails into order, shipment and payment updates, with a person in charge of anything that goes out." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://youssefkhoury.me/beacon/" />
-<meta property="og:image" content="https://youssefkhoury.me/assets/og-v2.png" />
+<meta property="og:image" content="https://youssefkhoury.me/assets/og-beacon.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Beacon: an AI mail agent that turns the operations inbox into work, and knows when to ask." />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Beacon: an AI operations hub in production · Youssef Khoury" />
+<meta name="twitter:description" content="An AI mail agent that turns supplier and client emails into order, shipment and payment updates, with a person in charge of anything that goes out." />
+<meta name="twitter:image" content="https://youssefkhoury.me/assets/og-beacon.png" />
 <link rel="canonical" href="https://youssefkhoury.me/beacon/" />
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=3" />
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=3" />
@@ -194,13 +200,19 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .today-g li { font-size: 13px; color: var(--muted); padding: 6px 0; border-top: 1px solid var(--line); }
 .today-g li.new { color: var(--ink); animation: land .6s var(--ease); }
 .today-g li.new::after { content: " new"; font: 600 10px var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: .08em; }
-.meter { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
-.meter p { margin: 0 0 8px; font-size: 12.5px; color: var(--muted); }
+.auto { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.auto-h { display: flex; justify-content: space-between; gap: 8px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
+.auto-row { display: grid; grid-template-columns: 1fr 70px; gap: 3px 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+#auto .auto-row:first-child { border-top: 0; }
+.a-l { font-size: 13px; color: var(--ink); }
+.a-n { font: 11px var(--mono); color: var(--muted); text-align: right; white-space: nowrap; }
+.a-s { grid-column: 1 / -1; font: 11px/1.45 var(--mono); color: var(--faint); }
+.a-s.won, .a-s.ok { color: var(--ok); }
+.a-s.bad { color: var(--bad); }
+.auto-note { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); }
 .pips { display: flex; gap: 5px; }
 .pips i { flex: 1; height: 7px; border-radius: 4px; background: var(--line); transition: background .3s; }
 .pips i.on { background: var(--ok); }
-.meter .m-note { font: 11.5px var(--mono); color: var(--faint); margin-top: 7px; }
-.meter .m-note.won { color: var(--ok); }
 .demo-note { font: 12px/1.5 var(--mono); color: var(--faint); margin: 14px 2px 0; }
 
 /* modules */
@@ -297,7 +309,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   <section class="hero">
     <div class="shell">
       <p class="eyebrow"><span class="live"><i></i>In production</span><span>Built &amp; run at Alta Light &middot; since Sep 2026</span></p>
-      <h1>Beacon turns the operations inbox into work, <em>and asks before it acts.</em></h1>
+      <h1>Beacon turns the operations inbox into work, <em>and knows when to ask.</em></h1>
       <p class="dek">Alta Light supplies architectural lighting to projects in <b>Beirut, Dubai and Abidjan</b>. Every order runs through email: proformas, payment slips, ready-for-collection notices, forwarder updates and client requests. I built Beacon so that information <b>lands on one board by itself</b>, prices are one search away, and a person stays in charge of anything that leaves the company.</p>
       <div class="stats" role="list">
         <div class="stat" role="listitem"><b>15 min</b><span>Mail agent cycle: new inbox and sent mail is read, understood and filed</span></div>
@@ -330,8 +342,8 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   <section class="block" id="demo">
     <div class="shell">
       <p class="sec-head">02 <span>/ See it work</span></p>
-      <h2>Pick an email. Run the agent. Approve or correct it.</h2>
-      <p class="lead">This replays how the mail agent handles four typical emails. The steps, the structured output and the review buttons match the live system. Only the data is made up.</p>
+      <h2>Pick an email. Run the agent. See what it does alone and what it asks about.</h2>
+      <p class="lead">This replays how the mail agent handles four typical emails. Order updates are applied after a second check and can be undone in one click. Anything that could reach a client waits for my review. Only the data is made up.</p>
 
       <div class="demo" aria-label="Interactive demo of the mail agent">
         <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; Beacon &middot; mail agent</span><button type="button" id="reset">Reset</button></div>
@@ -350,10 +362,10 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
           <div class="pane">
             <div class="pane-h"><span>Today</span><span>my landing page</span></div>
             <div id="today"></div>
-            <div class="meter">
-              <p>Hub-only updates run on their own after <b>5 correct in a row</b>. A &ldquo;Wrong&rdquo; resets the count.</p>
-              <div class="pips" id="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="m-note" id="m-note"></div>
+            <div class="auto">
+              <div class="auto-h"><span>Autonomy</span><span>by action type</span></div>
+              <div id="auto"></div>
+              <p class="auto-note">Hub-only actions run on their own after 5 approvals in a row. A Fix it or Wrong resets the count, and I can pause any of them. Anything that can reach a client always asks.</p>
             </div>
           </div>
         </div>
@@ -370,13 +382,13 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       <div class="mods">
         <div class="mod"><span class="k">Landing page</span><h3>Today</h3><p>What's waiting on me, what needs chasing (with a follow-up ready to copy), what's ready to collect, which payments are due, and what the agent changed.</p></div>
         <div class="mod"><span class="k">From mail</span><h3>Requests</h3><p>Team and client asks pulled out of email, each with a proposed plan I mark Right, Fix it or Wrong.</p></div>
-        <div class="mod"><span class="k">From mail</span><h3>Projects</h3><p>Where each project stands, its open items and a short timeline, rewritten as new mail arrives. Newer news replaces older news.</p></div>
+        <div class="mod"><span class="k">From mail</span><h3>Projects</h3><p>Where each project stands, its open items and a short timeline, rewritten as new mail arrives.</p></div>
         <div class="mod"><span class="k">From mail</span><h3>Shipments</h3><p>Every supplier order on a five-stage board with order date, lead time, ready-by date and delivery.</p></div>
         <div class="mod"><span class="k">Pricing</span><h3>Price lookup</h3><p>One search across every supplier price list. Paste a list of codes and get a purchase draft by cheapest supplier.</p></div>
         <div class="mod"><span class="k">Pricing</span><h3>New prices</h3><p>Prices captured from finished quotes wait in a review queue. Nothing becomes searchable until someone approves it.</p></div>
         <div class="mod"><span class="k">Helper</span><h3>Quote extension</h3><p>A browser extension that fills costs into our quoting tool from exact catalogue matches only. Anything uncertain stays blank.</p></div>
         <div class="mod"><span class="k">Helper</span><h3>Xero invoice drafts</h3><p>Reads a quotation (Excel, CSV, PDF table or image), shows an editable review table, and creates the invoice in Xero as a draft, split by currency.</p></div>
-        <div class="mod"><span class="k">Nightly</span><h3>Daily check</h3><p>Re-reads recent threads in full and corrects order cards. Every change is logged with its source email and can be undone.</p></div>
+        <div class="mod"><span class="k">Nightly</span><h3>Daily check</h3><p>Re-reads recent threads in full and corrects order cards. Every change is logged with its reason, can be undone, and it won&rsquo;t redo a change I undid.</p></div>
       </div>
     </div>
   </section>
@@ -389,8 +401,8 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       <div class="flow">
         <div class="node"><span class="k">1 &middot; Source</span><h3>Outlook mailbox</h3><p>Inbox and sent mail through Microsoft Graph. Read and draft permissions only, no send.</p></div>
         <div class="node"><span class="k">2 &middot; Agent</span><h3>Python mail agent</h3><p>Runs every 15 minutes. Reads attachments, loads open projects, known orders and past lessons.</p></div>
-        <div class="node"><span class="k">3 &middot; Model</span><h3>Language model</h3><p>Returns one strict JSON object per email: type, project, supplier, stage, dates, lead time, reply draft.</p></div>
-        <div class="node"><span class="k">4 &middot; Hub</span><h3>Cloud API + database</h3><p>Validates the result, updates cards and requests, and writes an audit entry with the source email.</p></div>
+        <div class="node"><span class="k">3 &middot; Model</span><h3>Language model</h3><p>Returns one strict JSON object per email: type, project, supplier, stage, dates, lead time, reply draft. A second model call re-checks each order-card update before it&rsquo;s written.</p></div>
+        <div class="node"><span class="k">4 &middot; Hub</span><h3>Cloud API + database</h3><p>Validates the result, updates cards and requests, and logs each card change with the email it came from.</p></div>
       </div>
       <div class="outs">
         <div class="out"><h4>Team web app</h4><p>Today, requests, projects, shipments, prices, stock.</p></div>
@@ -398,14 +410,14 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         <div class="out"><h4>Quote extension</h4><p>Exact-match costs into the quoting tool.</p></div>
         <div class="out"><h4>Xero</h4><p>Sales invoices created as drafts only.</p></div>
       </div>
-      <div class="loop"><b>Feedback loop:</b> every Right, Fix it, Wrong or undo is saved as a lesson. The agent reads those lessons first on its next run, so a mistake I correct once doesn't come back.</div>
+      <div class="loop"><b>Feedback loop:</b> every Fix it, Wrong or undo is saved as a lesson, and the agent reads its latest lessons before each run. Every Right counts toward earning autonomy.</div>
       <div class="stack" aria-label="Stack">
         <span>Python</span><span>Microsoft Graph API</span><span>OpenAI API &middot; JSON output</span><span>Cloudflare Workers</span><span>D1 (SQLite)</span><span>Workers KV</span><span>JavaScript</span><span>Xero API</span><span>OAuth / MSAL</span><span>Task Scheduler</span>
       </div>
       <ul class="eng">
         <li><b>Nothing missed, nothing counted twice.</b> Each run re-scans a 6-hour overlap and skips messages it has already processed.</li>
         <li><b>Sent mail reads differently.</b> What we send is our own confirmed action. What a supplier sends is a claim until it says otherwise.</li>
-        <li><b>Attachments count as evidence.</b> Proformas, packing lists and POs are read, and the order reference is taken from the file when the body doesn't have it.</li>
+        <li><b>Attachments count as evidence.</b> PDFs, spreadsheets and photos are read (scanned PDFs and photos go to the model directly), and order references are picked up from file names too.</li>
         <li><b>Failures don't block the queue.</b> Busy or rate-limited calls retry with backoff. An email that fails 3 times is set aside for a person.</li>
         <li><b>Built to run on free tiers.</b> The 240k-code catalogue is split into sorted chunks with a binary-search index, so each lookup stays within the free plan's limits.</li>
         <li><b>Tested before it ships.</b> Automated test suites cover the hub's API, permissions and screens, and the invoice builder.</li>
@@ -422,9 +434,9 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         <div class="rule"><h3>It can't send email</h3><p>No send permission. Replies, follow-ups, purchase lists and invoices are drafts until a person confirms.</p></div>
         <div class="rule"><h3>It never invents a number</h3><p>Missing prices, dates and lead times stay blank. A guess is worse than a gap.</p></div>
         <div class="rule"><h3>Exact codes only</h3><p>A near-match product code is shown for review. It is never filled in automatically.</p></div>
-        <div class="rule"><h3>Money stays private</h3><p>Invoices, proformas and costs are kept out of shared project files and shown to admins only.</p></div>
-        <div class="rule"><h3>Every change is traceable</h3><p>Each card change is logged with the email it came from, and can be undone from the card or from Today.</p></div>
-        <div class="rule"><h3>Autonomy is earned</h3><p>An action type runs on its own only after five correct calls in a row, and I can pause it at any time.</p></div>
+        <div class="rule"><h3>Money stays private</h3><p>Documents with prices (invoices, proformas, quotes, POs) are recognised by name and kept out of the project files the whole team sees. Costs and payments are admin-only.</p></div>
+        <div class="rule"><h3>Checked twice, traceable always</h3><p>Order-card updates are re-checked by a second model call, logged with where they came from, and undone in one click from the card or from Today.</p></div>
+        <div class="rule"><h3>Autonomy is earned</h3><p>A request plan that only touches the hub runs on its own after five approvals in a row. One Fix it or Wrong resets the count, I can pause any action type, and replies to clients always wait for me.</p></div>
       </div>
     </div>
   </section>
@@ -473,7 +485,13 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 <script>
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var STEP = reduced ? 0 : 420;
   var STAGES = ['ordered', 'production', 'ready', 'transit', 'delivered'];
+  var AUTO_AFTER = 5;
+  var READY_ITEM = 'LM-2291 · Lumeria: no forwarder booked yet';
+  var QUOTE_ITEM = 'Marina Tower: send lobby pricing to Studio Mira, due Thu';
+  var HEADS = { apply: 'What it changed', review: 'What it proposes', ignore: 'Result' };
+  var REPLY = "Hello Lea, hope you're well,\n\nThank you for the request. We're preparing the lobby pricing and will come back to you as soon as it's ready.\n\nThank you.";
 
   var BASE_CARDS = [
     { ref: 'TR-7710', sup: 'Trackline', proj: 'Marina Tower', stage: 'ordered' },
@@ -484,189 +502,191 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   ];
   var BASE_TODAY = {
     'Waiting on you': ['Approve finish samples for NB-5530 (Clinique Lagune)'],
-    'Needs chasing': ['Trackline TR-7710: no production date after 6 days'],
+    'Needs chasing': ['Trackline TR-7710: no reply in 3 days'],
     'Ready to collect': [],
     'Payments due': ['Nordbeam balance before dispatch (admins only)']
   };
+  // Request plans by action type. Plans that only touch the hub can earn autonomy; replies never do.
+  var BASE_AUTO = [
+    { key: 'price-answer', label: 'Prepare prices and stock', hubOnly: true, streak: 5 },
+    { key: 'update-project', label: 'Update a project', hubOnly: true, streak: 3 },
+    { key: 'draft-reply', label: 'Draft a reply', hubOnly: false, streak: 4 }
+  ];
 
+  // mode: 'apply' = order-card update, applied after a second check and undoable;
+  // 'review' = request plan that waits for Right / Fix it / Wrong; 'ignore' = not work.
   var MAILS = [
     {
-      id: 'm1', dir: 'in', from: 'Giulia Ferri · Lumeria', addr: 'giulia@lumeria.example', to: 'operations@',
+      id: 'm1', mode: 'apply', dir: 'in', from: 'Giulia Ferri · Lumeria', addr: 'giulia@lumeria.example', to: 'operations@',
       time: '09:12', subject: 'RE: Order LM-2291 / Villa Cedar: goods ready',
       body: 'Hello Youssef,\n\nThe 24 pcs of Arco 3000K downlights for order LM-2291 are finished and packed. They are ready for collection at our Milan warehouse from Monday 28 September.\n\nPacking list attached.\n\nKind regards,\nGiulia',
       att: ['Packing list LM-2291.pdf'],
       trace: [
-        '<b>Inbound</b> from a known supplier domain (Lumeria)',
+        '<b>Inbound</b> from a known supplier (Lumeria)',
         'Read attachment: <b>Packing list LM-2291.pdf</b>',
         'Matched order <b>LM-2291</b> to project <b>Villa Cedar</b>',
-        'Stage: goods finished and packed, so <b>production &rarr; ready</b>',
-        'Order terms are ex-works, so <b>our forwarder has to collect</b>'
+        'Finished and packed, so <b>production &rarr; ready</b>. No forwarder named, so that field stays blank',
+        'G:<b>Second check:</b> a separate model call confirms the email proves this order and the stage isn&rsquo;t ahead of it. Passed'
       ],
       json: {
-        is_relevant: true, classification: 'shipment', project_name: 'Villa Cedar', supplier: 'Lumeria',
-        shipment: { ref: 'LM-2291', stage: 'ready', quantity_pieces: '24 pcs', ready_by: '2026-09-28', forwarder: 'Portline (EXW collection)', note: '24 pcs packed, ready ex-works Milan' },
+        classification: 'shipment', project_name: 'Villa Cedar', supplier: 'Lumeria',
+        shipment: { ref: 'LM-2291', stage: 'ready', ready_by: '2026-09-28', forwarder: '', note: '24 pcs packed, ready for collection in Milan' },
         timeline_event: 'Lumeria packed 24 pcs, ready for collection 28 Sep',
-        reasoning_summary: 'Supplier confirms the goods are finished and packed, so the order moves to ready. Terms are ex-works, so our forwarder collects.'
+        reasoning_summary: 'The supplier confirms the goods are finished and packed, so the order moves to ready. No forwarder is named, so none is filled in.'
       },
       changes: [
-        { ic: '&rarr;', html: '<b>Move LM-2291</b> on the shipments board<small>Ready by Mon 28 Sep &middot; Villa Cedar</small>', move: ['production', 'ready'] },
-        { ic: '&#9675;', html: '<b>Add to Today</b> &middot; Ready to collect<small>LM-2291 &middot; Lumeria: book pickup with Portline</small>' },
-        { ic: '&#8226;', html: '<b>Project timeline</b> &middot; Villa Cedar<small>Lumeria packed 24 pcs, ready for collection 28 Sep</small>' },
-        { ic: '&#9998;', draft: { to: 'Rana &middot; Portline (forwarder)', body: "Hello Rana, hope you're well,\n\nLumeria order LM-2291 (24 pcs, Villa Cedar) is ready for collection at their Milan warehouse from Monday 28 September. The packing list is attached.\n\nCould you arrange the pickup and confirm the collection date?\n\nThank you." } }
+        { ic: '&rarr;', html: '<b>Moved LM-2291</b> on the shipments board<small>Ready by Mon 28 Sep &middot; Villa Cedar</small>', move: ['production', 'ready'] },
+        { ic: '&#9675;', html: '<b>Today</b> &middot; Ready to collect<small>' + READY_ITEM + '</small>' },
+        { ic: '&#8226;', html: '<b>Project timeline</b> &middot; Villa Cedar<small>Lumeria packed 24 pcs, ready for collection 28 Sep</small>' }
       ],
-      apply: function (s) { moveCard(s, 'LM-2291', 'ready', 'ready by 28 Sep'); addToday(s, 'Ready to collect', 'LM-2291 · Lumeria: book pickup with Portline'); },
-      counts: true,
-      lesson: 'Lumeria orders are ex-works: when goods are ready, always propose a Portline pickup.'
+      apply: function (s) { setCard(s, 'LM-2291', { stage: 'ready', note: 'ready by 28 Sep' }); addToday(s, 'Ready to collect', READY_ITEM); },
+      revert: function (s) { setCard(s, 'LM-2291', { stage: 'production', note: '' }); dropToday(s, READY_ITEM); },
+      lesson: 'On project "Villa Cedar", changing "Lumeria" stage from production to ready based on the email "RE: Order LM-2291 / Villa Cedar: goods ready" was WRONG and was undone by me. Do not repeat this.'
     },
     {
-      id: 'm2', dir: 'out', from: 'You → Kristall Works', addr: 'orders@kristallworks.example', to: 'Petr Novak',
-      time: '10:40', subject: 'PO KW-0412 · Clinique Lagune · payment slip',
-      body: "Hello Petr, hope you're well,\n\nPlease find attached our PO KW-0412 for 36 pcs of Lyra pendants and the payment slip for the 50% advance.\n\nKindly confirm and start production.\n\nThank you.",
-      att: ['PO KW-0412.pdf', 'Payment slip.pdf'],
+      id: 'm2', mode: 'apply', dir: 'out', from: 'You → Kristall Works', addr: 'orders@kristallworks.example', to: 'Petr Novak',
+      time: '10:40', subject: 'Clinique Lagune: purchase order and advance',
+      body: "Hello Petr, hope you're well,\n\nPlease find attached our purchase order for 36 pcs of Lyra pendants. The 50% advance was transferred today.\n\nKindly confirm and start production.\n\nThank you.\n\n> On 21 Sep, Petr Novak wrote:\n> Lead time is 5–6 weeks from payment.",
+      att: ['PO-0412.pdf'],
       trace: [
-        '<b>Sent by us</b>, so it is treated as our own confirmed action',
-        'Read attachments: <b>PO KW-0412.pdf</b>, <b>Payment slip.pdf</b>',
-        'Earlier in the thread the supplier quoted <b>5&ndash;6 weeks after payment</b>',
-        'New supplier order for <b>Clinique Lagune</b>, stage <b>ordered</b>',
-        'Payment slip carries amounts, so it is <b>kept out of shared project files</b>'
+        '<b>Sent by us</b>, so it counts as our own confirmed action',
+        'Read attachment: <b>PO-0412.pdf</b>',
+        'No order number in the body, so it comes from the file name: <b>PO-0412</b>',
+        'Lead time from the quoted thread: <b>5&ndash;6 weeks from payment</b>. No ready date given, so none is guessed',
+        'G:<b>Second check:</b> a separate model call confirms a real order was placed with this supplier. Passed',
+        'G:<b>PO-0412.pdf</b> carries prices, so it stays out of the files the whole team sees'
       ],
       json: {
-        is_relevant: true, classification: 'shipment', project_name: 'Clinique Lagune', supplier: 'Kristall Works',
-        shipment: { ref: 'PO KW-0412', stage: 'ordered', quantity_pieces: '36 pcs', ordered_on: '2026-09-24', lead_time: '5-6 weeks after payment', ready_by: '', is_paid: true, note: '50% advance sent, production to start on confirmation' },
-        timeline_event: 'Sent PO and 50% advance to Kristall Works',
-        reasoning_summary: 'We sent the PO and the advance ourselves, so the order is placed. Lead time comes from the supplier\'s earlier email in this thread.'
+        classification: 'shipment', project_name: 'Clinique Lagune', supplier: 'Kristall Works',
+        shipment: { ref: 'PO-0412', stage: 'ordered', ordered_on: '2026-09-24', lead_time: '5-6 weeks from payment', ready_by: '', note: '36 pcs, 50% advance paid' },
+        timeline_event: 'Sent PO-0412 and the 50% advance to Kristall Works',
+        reasoning_summary: 'We sent the PO and paid the advance ourselves, so the order is placed. The supplier has not given a ready date, so it stays blank.'
       },
       changes: [
-        { ic: '+', html: '<b>New order card KW-0412</b> &middot; ordered 24 Sep<small>Kristall Works &middot; Clinique Lagune &middot; ready ~5 Nov (estimated from lead time)</small>', move: [null, 'ordered'] },
-        { ic: '$', html: '<b>Payments</b> &middot; advance marked as sent<small>Visible to admins only</small>' },
-        { ic: '&#9675;', html: '<b>Add to Today</b> &middot; Needs chasing<small>No confirmation from Kristall Works by Mon 28 Sep: follow up</small>' },
-        { ic: '&#10003;', g: true, html: '<b>Guardrail</b> &middot; payment slip not added to project documents<small>Price-bearing files stay out of shared folders</small>' }
+        { ic: '+', html: '<b>New order card PO-0412</b> &middot; ordered 24 Sep<small>Kristall Works &middot; Clinique Lagune &middot; lead time 5&ndash;6 weeks from payment &middot; ready date blank until the supplier gives one</small>', move: [null, 'ordered'] },
+        { ic: '&#8226;', html: '<b>Project timeline</b> &middot; Clinique Lagune<small>Sent PO-0412 and the 50% advance to Kristall Works</small>' },
+        { ic: '&#10003;', g: true, html: '<b>Guardrail</b> &middot; PO-0412.pdf kept out of shared project files<small>Documents with prices stay out of the files the whole team sees</small>' }
       ],
-      apply: function (s) { addCard(s, { ref: 'KW-0412', sup: 'Kristall Works', proj: 'Clinique Lagune', stage: 'ordered', note: 'ready ~5 Nov (est.)' }); addToday(s, 'Needs chasing', 'Kristall Works KW-0412: confirm order by Mon 28 Sep'); },
-      counts: true,
-      lesson: 'For Kristall Works, count lead time from the payment date, not the PO date.'
+      apply: function (s) { addCard(s, { ref: 'PO-0412', sup: 'Kristall Works', proj: 'Clinique Lagune', stage: 'ordered', note: 'advance paid · 5–6 wks from payment' }); },
+      revert: function (s) { dropCard(s, 'PO-0412'); },
+      lesson: 'On project "Clinique Lagune", adding a "Kristall Works" supplier order based on the email "Clinique Lagune: purchase order and advance" was WRONG and was undone by me. Do not repeat this.'
     },
     {
-      id: 'm3', dir: 'in', from: 'Lea Haddad · Studio Mira', addr: 'lea@studiomira.example', to: 'operations@',
+      id: 'm3', mode: 'review', action: 'draft-reply', dir: 'in', from: 'Lea Haddad · Studio Mira', addr: 'lea@studiomira.example', to: 'operations@',
       time: '11:05', subject: 'Marina Tower lobby: pricing request',
       body: 'Hi Youssef,\n\nCould you price the following for the lobby?\n18 x TL-SPOT-30-930-BK\n18 x TL-ADPT-3PH\n2 x DRV-150W-DALI\n\nWe need it by Thursday if possible.\n\nThanks,\nLea',
       att: [],
       trace: [
         '<b>Inbound</b> from a known specifier on <b>Marina Tower</b>',
         'Found <b>3 product codes</b> and quantities in the body',
-        'Exact-code lookup across <b>every supplier price list</b>',
-        '<b>1 code has no exact match</b>, so it is left for a person',
-        'Drafted a reply in my voice: <b>no prices, no promises</b>'
+        'A client wants prices, so it becomes a <b>request</b> with a plan and a draft reply',
+        'G:The draft has <b>no prices and no promises</b>. Prices come from the price lists, never from the model',
+        'G:A reply can reach a client, so the plan <b>waits for my review</b>'
       ],
       json: {
-        is_relevant: true, classification: 'quote_request', project_name: 'Marina Tower lobby', client_name: 'Studio Mira',
-        quote_request: { summary: 'Pricing for 18 track spots, 18 adapters and 2 DALI drivers, needed by Thursday', codes: ['TL-SPOT-30-930-BK', 'TL-ADPT-3PH', 'DRV-150W-DALI'] },
+        classification: 'quote_request', project_name: 'Marina Tower lobby', client_name: 'Studio Mira',
+        quote_request: {
+          summary: 'Pricing for 18 track spots, 18 adapters and 2 DALI drivers, needed by Thursday',
+          codes: ['TL-SPOT-30-930-BK', 'TL-ADPT-3PH', 'DRV-150W-DALI'],
+          proposed_reply: REPLY
+        },
         timeline_event: 'Studio Mira asked for lobby pricing, due Thu 1 Oct',
-        reasoning_summary: 'A specifier is asking for a quotation on an active project. Two codes match exactly; the driver code needs confirming.'
+        reasoning_summary: 'A specifier is asking for a quotation on an active project, with codes and a deadline.'
       },
       changes: [
-        { ic: '?', html: '<b>New request</b> &middot; Quote for Marina Tower lobby<small>Due Thu 1 Oct &middot; assigned to me</small>' },
-        { ic: '#', lookup: [
+        { ic: '?', html: '<b>Request created</b> &middot; Marina Tower lobby pricing<small>Client asked for Thursday &middot; added to Today under Waiting on you</small>' },
+        { ic: '&#9656;', html: '<b>Proposed plan</b> &middot; Draft a reply<small>Price 3 item(s) for Marina Tower lobby, then reply to Lea</small>' },
+        { ic: '#', title: '<b>Check 3 codes</b> &middot; one click in the hub, exact matches only', lookup: [
           ['TL-SPOT-30-930-BK', 'Exact match &middot; Trackline 2026 list', true],
           ['TL-ADPT-3PH', 'Exact match &middot; Trackline 2026 list', true],
-          ['DRV-150W-DALI', 'No exact match &middot; 2 near codes shown, not filled', false]
+          ['DRV-150W-DALI', 'No exact match &middot; left blank for me', false]
         ] },
-        { ic: '&#9998;', draft: { to: 'Lea &middot; Studio Mira', body: "Hello Lea, hope you're well,\n\nThank you for the request. We're preparing the lobby pricing and will send it by Thursday.\n\nFor the 150W DALI driver, could you confirm the exact code? The closest item in the current range is DRV-150W-DALI2.\n\nThank you." } }
+        { ic: '&#9998;', draft: { to: 'Lea &middot; Studio Mira', body: REPLY } }
       ],
-      apply: function (s) { addToday(s, 'Waiting on you', 'Quote: Marina Tower lobby, due Thu 1 Oct (1 code to confirm)'); },
-      counts: false,
-      lesson: 'Studio Mira often drops the driver suffix: suggest the current-range code, never fill it.'
+      apply: function (s) { addToday(s, 'Waiting on you', QUOTE_ITEM); },
+      lesson: 'Studio Mira often drops the driver suffix: ask them to confirm driver codes in the reply.'
     },
     {
-      id: 'm4', dir: 'in', from: 'LightWorld Weekly', addr: 'news@lightworld.example', to: 'operations@',
+      id: 'm4', mode: 'ignore', dir: 'in', from: 'LightWorld Weekly', addr: 'news@lightworld.example', to: 'operations@',
       time: '11:30', subject: '5 trends shaping architectural lighting in 2027',
       body: "This week: tunable white goes mainstream, why DALI-2 matters, and the trade shows you shouldn't miss.\n\nRead the full issue online.",
       att: [],
       trace: [
         'Sender is a <b>newsletter list</b>',
-        'No order reference, request, project or supplier update',
-        'Marked <b>not relevant</b>. Nothing created.'
+        'No order, request, project or supplier update in it',
+        'Classified as <b>ignore</b>. Nothing created'
       ],
-      json: { is_relevant: false, classification: 'ignore', reasoning_summary: 'Industry newsletter. No order, request or project in it.' },
-      changes: [ { ic: '&#8212;', g: true, html: '<b>Nothing to do</b><small>Filed as not relevant: no card, no task, no noise on Today</small>' } ],
-      apply: function () {},
-      counts: false,
-      lesson: 'Newsletters from this sender are never work items.'
+      json: { classification: 'ignore', reasoning_summary: 'Industry newsletter. No order, request or project in it.' },
+      changes: [ { ic: '&#8212;', g: true, html: '<b>Nothing to do</b><small>No card, no task, no noise on Today</small>' } ]
     }
   ];
 
-  var state;
+  var state, timers = [];
   function fresh() {
     var today = {};
     Object.keys(BASE_TODAY).forEach(function (k) { today[k] = BASE_TODAY[k].map(function (t) { return { t: t, isNew: false }; }); });
     return {
       cards: BASE_CARDS.map(function (c) { return Object.assign({}, c); }),
       today: today,
-      status: {}, outcome: {}, snap: {}, streak: 3, selected: 'm1', hot: null
+      auto: BASE_AUTO.map(function (a) { return Object.assign({ note: '', tone: '' }, a); }),
+      status: {}, shown: {}, selected: 'm1', hot: null, landed: null
     };
   }
 
   function el(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function mail(id) { return MAILS.filter(function (x) { return x.id === id; })[0]; }
+  function later(fn) { timers.push(setTimeout(fn, STEP)); }
 
-  function moveCard(s, ref, stage, note) {
-    s.cards.forEach(function (c) { if (c.ref === ref) { c.stage = stage; if (note) c.note = note; } });
-    s.hot = ref;
-  }
-  function addCard(s, card) { s.cards.push(card); s.hot = card.ref; }
-  function addToday(s, group, text) {
-    Object.keys(s.today).forEach(function (k) { s.today[k].forEach(function (i) { i.isNew = false; }); });
-    s.today[group].unshift({ t: text, isNew: true });
-  }
+  function setCard(s, ref, patch) { s.cards.forEach(function (c) { if (c.ref === ref) Object.assign(c, patch); }); s.hot = ref; }
+  function addCard(s, card) { s.cards.push(Object.assign({}, card)); s.hot = card.ref; }
+  function dropCard(s, ref) { s.cards = s.cards.filter(function (c) { return c.ref !== ref; }); s.hot = null; }
+  function calm(s) { Object.keys(s.today).forEach(function (k) { s.today[k].forEach(function (i) { i.isNew = false; }); }); }
+  function addToday(s, group, text) { calm(s); s.today[group].unshift({ t: text, isNew: true }); }
+  function dropToday(s, text) { Object.keys(s.today).forEach(function (k) { s.today[k] = s.today[k].filter(function (i) { return i.t !== text; }); }); }
 
   function jsonHtml(o) {
-    var txt = JSON.stringify(o, null, 2);
-    return esc(txt)
+    return esc(JSON.stringify(o, null, 2))
       .replace(/(&quot;[a-z_]+&quot;)(:)/g, '<span class="j-k">$1</span>$2')
       .replace(/: (&quot;.*?&quot;)/g, ': <span class="j-s">$1</span>')
+      .replace(/^(\s+)(&quot;.*?&quot;)(,?)$/gm, '$1<span class="j-s">$2</span>$3')
       .replace(/: (true|false)/g, ': <span class="j-b">$1</span>');
   }
 
+  var CHIPS = {
+    running: ['st-run', 'reading…'], applied: ['st-ok', 'applied'], undone: ['st-bad', 'undone'],
+    proposed: ['st-prop', 'needs review'], right: ['st-ok', 'approved'], fix: ['st-prop', 'corrected'],
+    wrong: ['st-bad', 'rejected'], ignored: ['', 'not relevant']
+  };
   function statusChip(id) {
-    var st = state.status[id];
-    if (!st) return '<span class="chip">new</span>';
-    if (st === 'running') return '<span class="chip st-run">reading…</span>';
-    if (st === 'proposed') return '<span class="chip st-prop">needs review</span>';
-    if (st === 'right') return '<span class="chip st-ok">applied</span>';
-    if (st === 'fix') return '<span class="chip st-prop">corrected</span>';
-    if (st === 'wrong') return '<span class="chip st-bad">rejected</span>';
-    if (st === 'undone') return '<span class="chip st-bad">undone</span>';
-    return '';
+    var c = CHIPS[state.status[id]] || ['', 'new'];
+    return '<span class="chip' + (c[0] ? ' ' + c[0] : '') + '">' + c[1] + '</span>';
   }
 
   function renderInbox() {
-    var html = MAILS.map(function (m) {
+    el('mails').innerHTML = MAILS.map(function (m) {
       return '<button type="button" class="mail" data-id="' + m.id + '" aria-current="' + (state.selected === m.id) + '">' +
         '<span class="m-top"><span class="m-from">' + esc(m.from) + '</span><span>' + m.time + '</span></span>' +
         '<span class="m-sub">' + esc(m.subject) + '</span>' +
         '<span class="chips">' + (m.dir === 'out' ? '<span class="chip dir-out">sent</span>' : '<span class="chip">inbox</span>') + statusChip(m.id) + '</span>' +
         '</button>';
     }).join('');
-    el('mails').innerHTML = html;
     var pending = MAILS.filter(function (m) { return !state.status[m.id]; }).length;
     el('inbox-count').textContent = pending ? pending + ' new' : 'all handled';
   }
 
   function renderChanges(m) {
     return m.changes.map(function (c) {
-      var inner = '';
+      var inner;
       if (c.draft) {
         inner = '<span class="draft-tag">Draft reply &middot; to ' + c.draft.to + ' &middot; not sent</span><div class="draft">' + esc(c.draft.body) + '</div>';
       } else if (c.lookup) {
-        inner = '<b>Price lookup</b> &middot; exact codes only<table class="lk">' + c.lookup.map(function (r) {
+        inner = c.title + '<table class="lk">' + c.lookup.map(function (r) {
           return '<tr><td>' + r[0] + '</td><td class="' + (r[2] ? 'y' : 'n') + '">' + r[1] + '</td></tr>';
         }).join('') + '</table>';
       } else {
         inner = c.html;
-        if (c.move) {
-          inner += '<span class="stage-move">' + (c.move[0] ? '<span>' + c.move[0] + '</span> &rarr; ' : '<span>new</span> &rarr; ') + '<span class="to">' + c.move[1] + '</span></span>';
-        }
+        if (c.move) inner += '<span class="stage-move"><span>' + (c.move[0] || 'new') + '</span> &rarr; <span class="to">' + c.move[1] + '</span></span>';
       }
       return '<div class="chg"><span class="ic' + (c.g ? ' g' : '') + '" aria-hidden="true">' + c.ic + '</span><div class="t">' + inner + '</div></div>';
     }).join('');
@@ -674,16 +694,17 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 
   function outcomeHtml(m) {
     var st = state.status[m.id];
-    if (st === 'right') return '<div class="outcome ok"><b>Applied.</b> Logged with this email as the source.' + (m.id === 'm4' ? '' : '<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo</button>') + '</div>';
-    if (st === 'fix') return '<div class="outcome fix"><b>Corrected, then applied.</b> The correction is saved as a lesson:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
-    if (st === 'wrong') return '<div class="outcome bad"><b>Nothing applied.</b> Saved as a lesson the agent reads before its next run:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
-    if (st === 'undone') return '<div class="outcome bad"><b>Undone.</b> The card is back where it was, and the undo is saved as a lesson so the daily check won\'t redo it.</div>';
+    if (st === 'applied') return '<div class="outcome ok"><b>Applied by the agent.</b> Order-card updates don&rsquo;t wait for review: they pass a second check, are logged with this email as the source, and one click undoes them.<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo this change</button></div>';
+    if (st === 'undone') return '<div class="outcome bad"><b>Undone.</b> The card is back where it was, and the daily check won&rsquo;t redo it. The undo is saved as a lesson:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'right') return '<div class="outcome ok"><b>Plan approved.</b> The draft goes into the Outlook thread when I press the button, and I send it myself. Replies never run on their own, however many I approve.</div>';
+    if (st === 'fix') return '<div class="outcome fix"><b>Corrected.</b> My note on what it should have done is saved as a lesson, and the approval streak goes back to 0:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'wrong') return '<div class="outcome bad"><b>Rejected.</b> My note is saved as a lesson the agent reads before its next run, and the approval streak goes back to 0:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'ignored') return '<div class="outcome ok"><b>Ignored.</b> No card, no task, no noise on Today.</div>';
     return '';
   }
 
   function renderDetail() {
-    var m = MAILS.filter(function (x) { return x.id === state.selected; })[0];
-    var st = state.status[m.id];
+    var m = mail(state.selected), st = state.status[m.id];
     var h = '<article class="email">' +
       '<dl class="e-meta"><dt>' + (m.dir === 'out' ? 'To' : 'From') + '</dt><dd>' + esc(m.dir === 'out' ? m.to + ' <' + m.addr + '>' : m.from.split(' · ')[0] + ' <' + m.addr + '>') + '</dd>' +
       '<dt>Folder</dt><dd>' + (m.dir === 'out' ? 'Sent items' : 'Inbox') + ' &middot; today ' + m.time + '</dd></dl>' +
@@ -691,27 +712,34 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       (m.att.length ? '<div class="att">' + m.att.map(function (a) { return '<span>&#128206; ' + esc(a) + '</span>'; }).join('') + '</div>' : '') +
       '</article>';
     if (!st) {
-      h += '<div class="run-row"><button type="button" class="btn primary" id="run">Run the agent &rarr;</button><span class="hint">reads, classifies, proposes</span></div>';
+      h += '<div class="run-row"><button type="button" class="btn primary" id="run">Run the agent &rarr;</button><span class="hint">reads the email, then acts or asks</span></div>';
     } else {
-      h += '<ol class="trace" id="trace">' + m.trace.map(function (t) { return '<li' + (/kept out|no prices/.test(t) ? ' class="guard"' : '') + '>' + t + '</li>'; }).join('') + '</ol>';
-      h += '<div class="proposal" id="proposal">' +
-        '<details class="json"><summary>Structured output</summary><pre>' + jsonHtml(m.json) + '</pre></details>' +
-        '<p class="p-h" style="margin-top:16px">Proposed changes</p><div class="changes">' + renderChanges(m) + '</div>';
-      if (st === 'proposed') {
-        h += '<div class="review"><p>Nothing changes until I review it.</p><div class="rv-btns">' +
-          '<button type="button" class="rv right" data-rv="right">&#10003; Right</button>' +
-          '<button type="button" class="rv fix" data-rv="fix">&#9998; Fix it</button>' +
-          '<button type="button" class="rv wrong" data-rv="wrong">&#10005; Wrong</button></div></div>';
+      var shown = st === 'running' ? state.shown[m.id] : m.trace.length;
+      h += '<ol class="trace" id="trace">' + m.trace.map(function (t, i) {
+        var guard = t.indexOf('G:') === 0;
+        return '<li class="' + (guard ? 'guard' : '') + (i < shown ? ' in' : '') + '">' + (guard ? t.slice(2) : t) + '</li>';
+      }).join('') + '</ol>';
+      if (st !== 'running') {
+        h += '<div class="proposal" id="proposal">' +
+          '<details class="json"><summary>Structured output</summary><pre>' + jsonHtml(m.json) + '</pre></details>' +
+          '<p class="p-h" style="margin-top:16px">' + HEADS[m.mode] + '</p><div class="changes">' + renderChanges(m) + '</div>';
+        if (st === 'proposed') {
+          h += '<div class="review"><p>A reply can reach a client, so this waits for me. Is the plan right?</p><div class="rv-btns">' +
+            '<button type="button" class="rv right" data-rv="right">&#10003; Right</button>' +
+            '<button type="button" class="rv fix" data-rv="fix">&#9998; Fix it</button>' +
+            '<button type="button" class="rv wrong" data-rv="wrong">&#10005; Wrong</button></div></div>';
+        }
+        h += outcomeHtml(m);
+        var next = MAILS.filter(function (x) { return !state.status[x.id]; })[0];
+        if (st !== 'proposed' && next) h += '<button type="button" class="linkbtn" data-go="' + next.id + '">Next email &rarr;</button>';
+        h += '</div>';
       }
-      h += outcomeHtml(m);
-      var next = MAILS.filter(function (x) { return !state.status[x.id]; })[0];
-      if (st !== 'proposed' && st !== 'running' && next) h += '<button type="button" class="linkbtn" data-go="' + next.id + '">Next email &rarr;</button>';
-      h += '</div>';
     }
     el('detail').innerHTML = h;
-    if (st && st !== 'running') {
-      [].forEach.call(document.querySelectorAll('#trace li'), function (li) { li.classList.add('in'); });
-      el('proposal').classList.add('in');
+    var p = el('proposal');
+    if (p) {
+      if (state.landed === m.id) { void p.offsetWidth; state.landed = null; }
+      p.classList.add('in');
     }
   }
 
@@ -731,57 +759,85 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         return '<li' + (i.isNew ? ' class="new"' : '') + '>' + esc(i.t) + '</li>';
       }).join('') : '<li>Nothing right now</li>') + '</ul></div>';
     }).join('');
-    [].forEach.call(el('pips').children, function (p, i) { p.classList.toggle('on', i < state.streak); });
-    var n = el('m-note');
-    n.textContent = state.streak >= 5 ? 'Earned: hub-only updates now run on their own (pausable).' : state.streak + ' of 5 correct in a row';
-    n.classList.toggle('won', state.streak >= 5);
   }
 
-  function renderAll() { renderInbox(); renderDetail(); renderBoard(); renderToday(); }
+  function renderAuto() {
+    el('auto').innerHTML = state.auto.map(function (a) {
+      var right, status, tone = a.tone;
+      if (a.hubOnly) {
+        var on = Math.min(a.streak, AUTO_AFTER), pips = '';
+        for (var i = 0; i < AUTO_AFTER; i++) pips += '<i' + (i < on ? ' class="on"' : '') + '></i>';
+        right = '<span class="pips" aria-hidden="true">' + pips + '</span>';
+        if (a.streak >= AUTO_AFTER) { status = 'runs on its own &middot; I can pause it'; tone = 'won'; }
+        else status = a.streak + ' of ' + AUTO_AFTER + ' approvals in a row';
+      } else {
+        right = '<span class="a-n">' + a.streak + ' in a row</span>';
+        status = a.note || 'always asks: it can reach a client';
+      }
+      return '<div class="auto-row"><span class="a-l">' + a.label + '</span>' + right + '<span class="a-s' + (tone ? ' ' + tone : '') + '">' + status + '</span></div>';
+    }).join('');
+  }
+
+  function renderAll() { renderInbox(); renderDetail(); renderBoard(); renderToday(); renderAuto(); }
 
   function run(id) {
-    var m = MAILS.filter(function (x) { return x.id === id; })[0];
+    var m = mail(id);
     state.status[id] = 'running';
+    state.shown[id] = 0;
     renderInbox(); renderDetail();
-    var lis = document.querySelectorAll('#trace li');
-    var step = reduced ? 0 : 420;
-    [].forEach.call(lis, function (li, i) { setTimeout(function () { li.classList.add('in'); }, step * (i + 1)); });
-    setTimeout(function () {
+    function tick() {
       if (state.status[id] !== 'running') return;
-      state.status[id] = 'proposed';
-      renderInbox(); renderDetail();
-    }, step * (m.trace.length + 1));
+      if (state.shown[id] < m.trace.length) {
+        state.shown[id] += 1;
+        var li = state.selected === id && document.querySelectorAll('#trace li')[state.shown[id] - 1];
+        if (li) li.classList.add('in');
+        later(tick);
+      } else finish(id);
+    }
+    later(tick);
+  }
+
+  function finish(id) {
+    var m = mail(id);
+    if (m.mode === 'apply') { m.apply(state); state.status[id] = 'applied'; }
+    else if (m.mode === 'review') { m.apply(state); state.status[id] = 'proposed'; }
+    else state.status[id] = 'ignored';
+    renderInbox(); renderBoard(); renderToday();
+    if (state.selected === id) { state.landed = id; renderDetail(); }
   }
 
   function review(kind) {
-    var m = MAILS.filter(function (x) { return x.id === state.selected; })[0];
-    state.snap[m.id] = { cards: clone(state.cards), today: clone(state.today), streak: state.streak };
+    var m = mail(state.selected);
+    if (state.status[m.id] !== 'proposed') return;
     state.status[m.id] = kind;
-    if (kind === 'right' || kind === 'fix') { m.apply(state); }
-    if (m.counts) {
-      if (kind === 'right') state.streak = Math.min(5, state.streak + 1);
-      if (kind === 'wrong') state.streak = 0;
-    }
+    state.auto.forEach(function (a) {
+      if (a.key !== m.action) return;
+      if (kind === 'right') { a.streak += 1; a.note = '+1 approval &middot; still always asks'; a.tone = 'ok'; }
+      else { a.streak = 0; a.note = 'reset to 0 by a ' + (kind === 'fix' ? 'Fix it' : 'Wrong') + ' &middot; always asks'; a.tone = 'bad'; }
+    });
+    state.hot = null;
     renderAll();
   }
 
   function undo(id) {
-    var snap = state.snap[id];
-    if (!snap) return;
-    state.cards = snap.cards; state.today = snap.today; state.streak = 0; state.hot = null;
+    var m = mail(id);
+    if (state.status[id] !== 'applied') return;
+    m.revert(state);
     state.status[id] = 'undone';
     renderAll();
   }
 
+  function select(id) { state.selected = id; state.hot = null; renderInbox(); renderDetail(); renderBoard(); }
+
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('button');
+    var t = e.target.closest && e.target.closest('button');
     if (!t) return;
-    if (t.classList.contains('mail')) { state.selected = t.getAttribute('data-id'); state.hot = null; renderInbox(); renderDetail(); renderBoard(); return; }
+    if (t.classList.contains('mail')) { select(t.getAttribute('data-id')); return; }
     if (t.id === 'run') { run(state.selected); return; }
     if (t.hasAttribute('data-rv')) { review(t.getAttribute('data-rv')); return; }
     if (t.hasAttribute('data-undo')) { undo(t.getAttribute('data-undo')); return; }
-    if (t.hasAttribute('data-go')) { state.selected = t.getAttribute('data-go'); state.hot = null; renderInbox(); renderDetail(); renderBoard(); el('detail').scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' }); return; }
-    if (t.id === 'reset') { state = fresh(); renderAll(); }
+    if (t.hasAttribute('data-go')) { select(t.getAttribute('data-go')); el('detail').scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' }); return; }
+    if (t.id === 'reset') { timers.forEach(clearTimeout); timers = []; state = fresh(); renderAll(); }
   });
 
   state = fresh();
