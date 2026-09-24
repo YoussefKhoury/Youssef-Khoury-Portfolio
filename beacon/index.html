@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#100E0C" />
+<meta name="author" content="Youssef Khoury" />
+<meta name="description" content="Beacon: the operations hub I built and run at Alta Light. An AI mail agent turns supplier and client emails into order, shipment, request and payment updates every 15 minutes, and a person approves anything that leaves the company." />
+<meta property="og:title" content="Beacon: an AI operations hub in production · Youssef Khoury" />
+<meta property="og:description" content="An AI mail agent that turns supplier and client emails into order, shipment and payment updates, with a person in charge of anything that goes out." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://youssefkhoury.me/beacon/" />
+<meta property="og:image" content="https://youssefkhoury.me/assets/og-v2.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://youssefkhoury.me/beacon/" />
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=3" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=3" />
+<title>Beacon · Youssef Khoury</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" />
+<script defer src="https://cloud.umami.is/script.js" data-website-id="98d1a2bc-2c8e-4650-aa3e-07665e87773f"></script>
+<style>
+:root {
+  --bg: #100E0C; --surface: #191512; --surface-2: #14100D; --surface-3: #1F1A16;
+  --line: #322A24; --line-2: #463B32;
+  --ink: #ECE3D6; --muted: #ADA192; --faint: #9C9080;
+  --accent: #E8B15A; --accent-2: #C97F4B; --accent-soft: rgba(232,177,90,.12);
+  --ok: #8FCB8B; --ok-soft: rgba(143,203,139,.12);
+  --warn: #E7A35A; --bad: #E58A7B; --bad-soft: rgba(229,138,123,.12);
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --display: "Chivo", "Inter", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --shell: min(100% - 32px, 1120px);
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --r: 12px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: clip; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
+a { color: inherit; }
+.mono { font-family: var(--mono); }
+.shell { width: var(--shell); margin: 0 auto; }
+.skip-link { position: fixed; z-index: 99; top: 10px; left: 10px; padding: 8px 12px; background: var(--accent); color: #1a1204; border-radius: 6px; font: 12px var(--mono); transform: translateY(-160%); }
+.skip-link:focus { transform: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* top bar */
+.topbar { position: sticky; top: 0; z-index: 20; background: rgba(16,14,12,.86); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.topbar .shell { display: flex; align-items: center; justify-content: space-between; height: 52px; gap: 12px; }
+.back { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font: 500 12px var(--mono); letter-spacing: .06em; color: var(--ink); }
+.back b { color: var(--accent); font-weight: 600; }
+.back:hover span.arr { transform: translateX(-3px); }
+.back span.arr { transition: transform .2s var(--ease); color: var(--accent); }
+.tb-tag { font: 11px var(--mono); letter-spacing: .12em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+
+/* hero */
+.hero { padding: 64px 0 40px; border-bottom: 1px solid var(--line); position: relative; }
+.hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 70% at 85% 0%, rgba(232,177,90,.10), transparent 70%); pointer-events: none; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font: 500 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 20px; flex-wrap: wrap; }
+.live { display: inline-flex; align-items: center; gap: 7px; padding: 3px 10px 3px 8px; border: 1px solid rgba(143,203,139,.4); border-radius: 99px; color: var(--ok); }
+.live i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 rgba(143,203,139,.6); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(143,203,139,.55); } 70% { box-shadow: 0 0 0 8px rgba(143,203,139,0); } 100% { box-shadow: 0 0 0 0 rgba(143,203,139,0); } }
+h1 { font: 800 clamp(34px, 6.2vw, 66px)/1.02 var(--display); letter-spacing: -.025em; margin: 0 0 22px; max-width: 16ch; }
+h1 em { font-style: normal; color: var(--accent); }
+.dek { font-size: clamp(16px, 1.9vw, 19px); line-height: 1.6; color: var(--muted); max-width: 64ch; margin: 0 0 32px; }
+.dek b { color: var(--ink); font-weight: 500; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--surface-2); }
+.stat { padding: 18px 18px 16px; border-right: 1px solid var(--line); }
+.stat:last-child { border-right: 0; }
+.stat b { display: block; font: 800 clamp(26px, 3.4vw, 36px)/1 var(--display); color: var(--accent); letter-spacing: -.02em; margin-bottom: 8px; }
+.stat span { font-size: 13px; color: var(--muted); line-height: 1.45; display: block; }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 500 12.5px var(--mono); letter-spacing: .04em; text-decoration: none; cursor: pointer; transition: border-color .2s, background .2s, transform .2s var(--ease); }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: #1a1204; border-color: var(--accent); font-weight: 600; }
+.btn.primary:hover { background: #F4C56D; }
+.privacy { font: 12px/1.5 var(--mono); color: var(--faint); margin: 18px 0 0; max-width: 70ch; }
+
+/* sections */
+section.block { padding: 72px 0; border-bottom: 1px solid var(--line); }
+.sec-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 10px; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.sec-head span { color: var(--faint); }
+h2 { font: 700 clamp(26px, 3.6vw, 40px)/1.12 var(--display); letter-spacing: -.02em; margin: 0 0 16px; max-width: 24ch; }
+.lead { color: var(--muted); max-width: 66ch; margin: 0 0 32px; font-size: 16px; }
+
+.probs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.prob { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 22px; }
+.prob .k { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.prob h3 { font: 700 19px/1.25 var(--display); margin: 8px 0 8px; }
+.prob p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+/* demo */
+.demo { border: 1px solid var(--line-2); border-radius: 14px; background: var(--surface-2); overflow: hidden; box-shadow: 0 30px 80px -40px rgba(0,0,0,.8); }
+.win-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface); font: 11px var(--mono); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
+.win-bar .dots { color: var(--line-2); letter-spacing: 2px; }
+.win-bar button { background: none; border: 1px solid var(--line-2); color: var(--muted); font: 11px var(--mono); letter-spacing: .08em; padding: 4px 10px; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
+.win-bar button:hover { color: var(--ink); border-color: var(--accent); }
+.demo-grid { display: grid; grid-template-columns: 300px 1fr; min-height: 560px; }
+.inbox { border-right: 1px solid var(--line); background: var(--surface-2); }
+.inbox-h { padding: 12px 16px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
+.mail { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line); padding: 14px 16px; color: var(--ink); cursor: pointer; font: inherit; position: relative; transition: background .2s; }
+.mail:hover { background: var(--surface); }
+.mail[aria-current="true"] { background: var(--surface-3); }
+.mail[aria-current="true"]::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+.mail .m-top { display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; color: var(--muted); margin-bottom: 3px; }
+.mail .m-from { font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mail .m-sub { font-size: 13.5px; line-height: 1.35; display: block; margin-bottom: 7px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line-2); color: var(--faint); }
+.chip.dir-out { color: var(--accent-2); border-color: rgba(201,127,75,.45); }
+.chip.st-run { color: var(--accent); border-color: rgba(232,177,90,.5); }
+.chip.st-prop { color: var(--accent); border-color: rgba(232,177,90,.5); background: var(--accent-soft); }
+.chip.st-ok { color: var(--ok); border-color: rgba(143,203,139,.45); background: var(--ok-soft); }
+.chip.st-bad { color: var(--bad); border-color: rgba(229,138,123,.45); background: var(--bad-soft); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.detail { padding: 22px 24px 26px; min-width: 0; }
+.email { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 16px 18px; }
+.email .e-meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.email .e-meta dt { font: 500 11px/1.9 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.email .e-meta dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.email h3 { font: 700 17px/1.3 var(--display); margin: 0 0 10px; }
+.email .e-body { white-space: pre-line; font-size: 14.5px; line-height: 1.6; color: var(--ink); margin: 0; }
+.att { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.att span { font: 12px var(--mono); padding: 4px 9px; border: 1px dashed var(--line-2); border-radius: 6px; color: var(--muted); }
+.run-row { display: flex; align-items: center; gap: 14px; margin: 16px 0 0; flex-wrap: wrap; }
+.run-row .hint { font: 12px var(--mono); color: var(--faint); }
+
+.trace { list-style: none; margin: 18px 0 0; padding: 0; border-left: 1px solid var(--line-2); }
+.trace li { position: relative; padding: 4px 0 8px 22px; font-size: 14px; color: var(--muted); opacity: 0; transform: translateY(4px); transition: opacity .3s, transform .3s var(--ease); }
+.trace li.in { opacity: 1; transform: none; }
+.trace li::before { content: ""; position: absolute; left: -5px; top: 11px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+.trace li b { color: var(--ink); font-weight: 600; }
+.trace li.guard::before { border-color: var(--ok); }
+
+details.json { margin: 12px 0 0; border: 1px solid var(--line); border-radius: 8px; background: #0C0A09; }
+details.json summary { cursor: pointer; padding: 9px 12px; font: 500 11.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); list-style: none; }
+details.json summary::-webkit-details-marker { display: none; }
+details.json summary::before { content: "+ "; color: var(--accent); }
+details.json[open] summary::before { content: "− "; }
+details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); color: var(--muted); overflow-x: auto; white-space: pre; }
+.j-k { color: #D9C3A0; } .j-s { color: var(--ok); } .j-b { color: var(--accent); }
+
+.proposal { margin: 18px 0 0; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s var(--ease); }
+.proposal.in { opacity: 1; transform: none; }
+.p-h { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; }
+.changes { display: grid; gap: 8px; }
+.chg { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; border: 1px solid var(--line); background: var(--surface); border-radius: 9px; padding: 11px 12px; font-size: 14px; }
+.chg .ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font: 600 12px var(--mono); }
+.chg .ic.g { background: var(--ok-soft); color: var(--ok); }
+.chg .t b { font-weight: 600; }
+.chg .t small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.stage-move { display: inline-flex; align-items: center; gap: 6px; font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; margin-top: 6px; flex-wrap: wrap; }
+.stage-move span { padding: 2px 7px; border-radius: 5px; border: 1px solid var(--line-2); color: var(--muted); }
+.stage-move span.to { border-color: var(--accent); color: var(--accent); }
+.draft { margin-top: 8px; border-left: 2px solid var(--accent-2); padding: 8px 12px; background: var(--surface-2); border-radius: 0 6px 6px 0; white-space: pre-line; font-size: 13.5px; color: var(--ink); }
+.draft-tag { font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
+.lk { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12.5px; }
+.lk td { padding: 6px 8px; border-top: 1px solid var(--line); vertical-align: top; }
+.lk td:first-child { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+.lk .y { color: var(--ok); } .lk .n { color: var(--warn); }
+
+.review { margin-top: 16px; border: 1px solid var(--line-2); border-radius: 10px; padding: 14px; background: var(--surface-3); }
+.review p { margin: 0 0 10px; font-size: 13.5px; color: var(--muted); }
+.rv-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.rv { flex: 1 1 110px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 600 12.5px var(--mono); letter-spacing: .04em; cursor: pointer; transition: border-color .2s, background .2s; }
+.rv.right:hover { border-color: var(--ok); background: var(--ok-soft); }
+.rv.fix:hover { border-color: var(--accent); background: var(--accent-soft); }
+.rv.wrong:hover { border-color: var(--bad); background: var(--bad-soft); }
+.outcome { margin-top: 12px; padding: 12px 14px; border-radius: 9px; font-size: 14px; border: 1px solid; }
+.outcome.ok { border-color: rgba(143,203,139,.4); background: var(--ok-soft); }
+.outcome.fix { border-color: rgba(232,177,90,.45); background: var(--accent-soft); }
+.outcome.bad { border-color: rgba(229,138,123,.4); background: var(--bad-soft); }
+.outcome b { font-weight: 600; }
+.outcome .lesson { display: block; margin-top: 6px; font: 12.5px/1.5 var(--mono); color: var(--muted); }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font: 500 12.5px var(--mono); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-top: 8px; }
+
+/* board + today */
+.after { display: grid; grid-template-columns: 1.6fr 1fr; border-top: 1px solid var(--line); }
+.pane { padding: 18px 20px 22px; min-width: 0; }
+.pane + .pane { border-left: 1px solid var(--line); }
+.pane-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; }
+.board { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.col { background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 8px; min-height: 150px; }
+.col h4 { margin: 0 0 8px; font: 600 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
+.card { border: 1px solid var(--line-2); background: var(--surface-2); border-radius: 7px; padding: 7px 8px; margin-bottom: 6px; font-size: 12px; line-height: 1.35; }
+.card b { display: block; font: 600 11.5px var(--mono); color: var(--ink); }
+.card span { color: var(--muted); font-size: 11.5px; }
+.card.hot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); animation: land .6s var(--ease); }
+@keyframes land { from { transform: translateY(-8px) scale(.97); opacity: .3; } to { transform: none; opacity: 1; } }
+.today-g { margin-bottom: 12px; }
+.today-g h5 { margin: 0 0 6px; font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.today-g ul { margin: 0; padding: 0; list-style: none; }
+.today-g li { font-size: 13px; color: var(--muted); padding: 6px 0; border-top: 1px solid var(--line); }
+.today-g li.new { color: var(--ink); animation: land .6s var(--ease); }
+.today-g li.new::after { content: " new"; font: 600 10px var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: .08em; }
+.meter { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.meter p { margin: 0 0 8px; font-size: 12.5px; color: var(--muted); }
+.pips { display: flex; gap: 5px; }
+.pips i { flex: 1; height: 7px; border-radius: 4px; background: var(--line); transition: background .3s; }
+.pips i.on { background: var(--ok); }
+.meter .m-note { font: 11.5px var(--mono); color: var(--faint); margin-top: 7px; }
+.meter .m-note.won { color: var(--ok); }
+.demo-note { font: 12px/1.5 var(--mono); color: var(--faint); margin: 14px 2px 0; }
+
+/* modules */
+.mods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mod { border: 1px solid var(--line); border-radius: var(--r); padding: 18px 18px 16px; background: var(--surface); }
+.mod .k { font: 500 10.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.mod h3 { font: 700 17px/1.25 var(--display); margin: 6px 0 6px; }
+.mod p { margin: 0; color: var(--muted); font-size: 14px; }
+
+/* flow */
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; align-items: stretch; margin-bottom: 14px; }
+.node { position: relative; border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); padding: 14px 14px 12px; margin-right: 26px; }
+.node:last-child { margin-right: 0; }
+.node:not(:last-child)::after { content: "→"; position: absolute; right: -21px; top: 50%; transform: translateY(-50%); color: var(--accent); font: 16px var(--mono); }
+.node .k { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.node h3 { font: 700 15.5px/1.25 var(--display); margin: 5px 0 4px; }
+.node p { margin: 0; font-size: 13px; color: var(--muted); }
+.outs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.out { border: 1px dashed var(--line-2); border-radius: 10px; padding: 12px 14px; }
+.out h4 { margin: 0 0 3px; font: 700 14px var(--display); }
+.out p { margin: 0; font-size: 12.5px; color: var(--muted); }
+.loop { margin: 14px 0 0; border: 1px solid rgba(143,203,139,.35); background: var(--ok-soft); border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+.loop b { color: var(--ok); font-weight: 600; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; }
+.stack span { font: 500 12px var(--mono); padding: 5px 10px; border: 1px solid var(--line-2); border-radius: 99px; color: var(--ink); }
+.eng { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 28px; margin: 28px 0 0; padding: 0; list-style: none; }
+.eng li { position: relative; padding-left: 18px; color: var(--muted); font-size: 14.5px; }
+.eng li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+.eng li b { color: var(--ink); font-weight: 600; }
+
+/* rules */
+.rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; counter-reset: r; }
+.rule { border: 1px solid var(--line); border-radius: var(--r); padding: 18px; background: var(--surface); counter-increment: r; }
+.rule::before { content: "0" counter(r); font: 600 11px var(--mono); color: var(--ok); letter-spacing: .1em; }
+.rule h3 { font: 700 17px/1.25 var(--display); margin: 6px 0 6px; }
+.rule p { margin: 0; color: var(--muted); font-size: 14px; }
+
+/* role + next */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.list { margin: 0; padding: 0; list-style: none; }
+.list li { padding: 12px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+.list li b { color: var(--ink); font-weight: 600; }
+.cta { padding: 72px 0 80px; }
+.cta h2 { max-width: 22ch; }
+.cta p { color: var(--muted); max-width: 60ch; }
+footer { border-top: 1px solid var(--line); padding: 22px 0 30px; font: 11.5px var(--mono); color: var(--faint); letter-spacing: .06em; }
+footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 980px) {
+  .demo-grid { grid-template-columns: 1fr; }
+  .inbox { border-right: 0; border-bottom: 1px solid var(--line); }
+  .after { grid-template-columns: 1fr; }
+  .pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
+  .mods, .rules { grid-template-columns: repeat(2, 1fr); }
+  .flow { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .node { margin-right: 0; }
+  .node:not(:last-child)::after { display: none; }
+  .outs { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 720px) {
+  .hero { padding: 40px 0 32px; }
+  section.block { padding: 52px 0; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stat:nth-child(2) { border-right: 0; }
+  .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .probs, .mods, .rules, .two, .eng { grid-template-columns: 1fr; }
+  .two { gap: 28px; }
+  .detail { padding: 16px 14px 20px; }
+  .pane { padding: 16px 14px 18px; }
+  .board { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+  .col { flex: 0 0 62%; scroll-snap-align: start; min-height: 120px; }
+  .flow, .outs { grid-template-columns: 1fr; }
+  .tb-tag .long { display: none; }
+  .inbox { max-height: none; }
+  .mail { padding: 12px 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#demo">Skip to the demo</a>
+
+<header class="topbar">
+  <div class="shell">
+    <a class="back" href="../#work"><span class="arr">&larr;</span><span>YOUSSEF <b>KHOURY</b></span></a>
+    <span class="tb-tag">Case study<span class="long"> &middot; live system</span></span>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="shell">
+      <p class="eyebrow"><span class="live"><i></i>In production</span><span>Built &amp; run at Alta Light &middot; since Sep 2026</span></p>
+      <h1>Beacon turns the operations inbox into work, <em>and asks before it acts.</em></h1>
+      <p class="dek">Alta Light supplies architectural lighting to projects in <b>Beirut, Dubai and Abidjan</b>. Every order runs through email: proformas, payment slips, ready-for-collection notices, forwarder updates and client requests. I built Beacon so that information <b>lands on one board by itself</b>, prices are one search away, and a person stays in charge of anything that leaves the company.</p>
+      <div class="stats" role="list">
+        <div class="stat" role="listitem"><b>15 min</b><span>Mail agent cycle: new inbox and sent mail is read, understood and filed</span></div>
+        <div class="stat" role="listitem"><b>~240k</b><span>Supplier product codes the team can search from one box</span></div>
+        <div class="stat" role="listitem"><b>5 stages</b><span>Every supplier order tracked: ordered, production, ready, transit, delivered</span></div>
+        <div class="stat" role="listitem"><b>0</b><span>Emails sent by the agent. It has no permission to send; replies wait as drafts</span></div>
+      </div>
+      <div class="hero-actions">
+        <a class="btn primary" href="#demo">Try the demo &darr;</a>
+        <a class="btn" href="#how">How it's built</a>
+        <a class="btn" href="#rules">Rules it can't break</a>
+      </div>
+      <p class="privacy">The live system runs on company mail and supplier prices, so it stays private. Every name, code and date on this page is made up.</p>
+    </div>
+  </section>
+
+  <section class="block" id="problem">
+    <div class="shell">
+      <p class="sec-head">01 <span>/ The problem</span></p>
+      <h2>40+ live orders, 20+ suppliers, and the truth scattered across inboxes.</h2>
+      <p class="lead">Nothing was broken, it was just slow. Every question about an order meant searching threads, opening spreadsheets or asking whoever last spoke to the supplier.</p>
+      <div class="probs">
+        <div class="prob"><span class="k">Status</span><h3>Lived in email threads</h3><p>Whether an order was paid, in production or ready to collect was written somewhere in a thread with the supplier, the forwarder or the client.</p></div>
+        <div class="prob"><span class="k">Pricing</span><h3>Lived in spreadsheets</h3><p>Dozens of supplier price lists in Excel, one of them around 240,000 lines. Pricing a list of codes meant opening files one at a time.</p></div>
+        <div class="prob"><span class="k">Follow-up</span><h3>Lived in people's heads</h3><p>Who owes us a reply, which order needs chasing, which payment is due. Easy to drop when 40 orders are moving at once.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="demo">
+    <div class="shell">
+      <p class="sec-head">02 <span>/ See it work</span></p>
+      <h2>Pick an email. Run the agent. Approve or correct it.</h2>
+      <p class="lead">This replays how the mail agent handles four typical emails. The steps, the structured output and the review buttons match the live system. Only the data is made up.</p>
+
+      <div class="demo" aria-label="Interactive demo of the mail agent">
+        <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; Beacon &middot; mail agent</span><button type="button" id="reset">Reset</button></div>
+        <div class="demo-grid">
+          <nav class="inbox" aria-label="Sample emails">
+            <div class="inbox-h"><span>operations inbox</span><span id="inbox-count">4 new</span></div>
+            <div id="mails"></div>
+          </nav>
+          <div class="detail" id="detail" aria-live="polite"></div>
+        </div>
+        <div class="after">
+          <div class="pane">
+            <div class="pane-h"><span>Shipments board</span><span>supplier orders by stage</span></div>
+            <div class="board" id="board"></div>
+          </div>
+          <div class="pane">
+            <div class="pane-h"><span>Today</span><span>my landing page</span></div>
+            <div id="today"></div>
+            <div class="meter">
+              <p>Hub-only updates run on their own after <b>5 correct in a row</b>. A &ldquo;Wrong&rdquo; resets the count.</p>
+              <div class="pips" id="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="m-note" id="m-note"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="demo-note">Made-up suppliers, projects, codes and people. In the live system the same flow runs every 15 minutes on the real operations mailbox.</p>
+    </div>
+  </section>
+
+  <section class="block" id="inside">
+    <div class="shell">
+      <p class="sec-head">03 <span>/ What's inside</span></p>
+      <h2>One hub for the team, with admin-only areas for money.</h2>
+      <p class="lead">Beacon is a private web app for the team plus a few helpers around it. Costs, payments and the agent's controls are visible to admins only.</p>
+      <div class="mods">
+        <div class="mod"><span class="k">Landing page</span><h3>Today</h3><p>What's waiting on me, what needs chasing (with a follow-up ready to copy), what's ready to collect, which payments are due, and what the agent changed.</p></div>
+        <div class="mod"><span class="k">From mail</span><h3>Requests</h3><p>Team and client asks pulled out of email, each with a proposed plan I mark Right, Fix it or Wrong.</p></div>
+        <div class="mod"><span class="k">From mail</span><h3>Projects</h3><p>Where each project stands, its open items and a short timeline, rewritten as new mail arrives. Newer news replaces older news.</p></div>
+        <div class="mod"><span class="k">From mail</span><h3>Shipments</h3><p>Every supplier order on a five-stage board with order date, lead time, ready-by date and delivery.</p></div>
+        <div class="mod"><span class="k">Pricing</span><h3>Price lookup</h3><p>One search across every supplier price list. Paste a list of codes and get a purchase draft by cheapest supplier.</p></div>
+        <div class="mod"><span class="k">Pricing</span><h3>New prices</h3><p>Prices captured from finished quotes wait in a review queue. Nothing becomes searchable until someone approves it.</p></div>
+        <div class="mod"><span class="k">Helper</span><h3>Quote extension</h3><p>A browser extension that fills costs into our quoting tool from exact catalogue matches only. Anything uncertain stays blank.</p></div>
+        <div class="mod"><span class="k">Helper</span><h3>Xero invoice drafts</h3><p>Reads a quotation (Excel, CSV, PDF table or image), shows an editable review table, and creates the invoice in Xero as a draft, split by currency.</p></div>
+        <div class="mod"><span class="k">Nightly</span><h3>Daily check</h3><p>Re-reads recent threads in full and corrects order cards. Every change is logged with its source email and can be undone.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="shell">
+      <p class="sec-head">04 <span>/ How it's built</span></p>
+      <h2>Plain parts, wired so a mistake is cheap to spot and undo.</h2>
+      <p class="lead">A scheduled Python agent reads the mailbox, a language model turns each email into strict JSON, and a small cloud API applies it to the hub, where every change is logged.</p>
+      <div class="flow">
+        <div class="node"><span class="k">1 &middot; Source</span><h3>Outlook mailbox</h3><p>Inbox and sent mail through Microsoft Graph. Read and draft permissions only, no send.</p></div>
+        <div class="node"><span class="k">2 &middot; Agent</span><h3>Python mail agent</h3><p>Runs every 15 minutes. Reads attachments, loads open projects, known orders and past lessons.</p></div>
+        <div class="node"><span class="k">3 &middot; Model</span><h3>Language model</h3><p>Returns one strict JSON object per email: type, project, supplier, stage, dates, lead time, reply draft.</p></div>
+        <div class="node"><span class="k">4 &middot; Hub</span><h3>Cloud API + database</h3><p>Validates the result, updates cards and requests, and writes an audit entry with the source email.</p></div>
+      </div>
+      <div class="outs">
+        <div class="out"><h4>Team web app</h4><p>Today, requests, projects, shipments, prices, stock.</p></div>
+        <div class="out"><h4>Outlook drafts</h4><p>Replies created in the thread on a button press, never sent.</p></div>
+        <div class="out"><h4>Quote extension</h4><p>Exact-match costs into the quoting tool.</p></div>
+        <div class="out"><h4>Xero</h4><p>Sales invoices created as drafts only.</p></div>
+      </div>
+      <div class="loop"><b>Feedback loop:</b> every Right, Fix it, Wrong or undo is saved as a lesson. The agent reads those lessons first on its next run, so a mistake I correct once doesn't come back.</div>
+      <div class="stack" aria-label="Stack">
+        <span>Python</span><span>Microsoft Graph API</span><span>OpenAI API &middot; JSON output</span><span>Cloudflare Workers</span><span>D1 (SQLite)</span><span>Workers KV</span><span>JavaScript</span><span>Xero API</span><span>OAuth / MSAL</span><span>Task Scheduler</span>
+      </div>
+      <ul class="eng">
+        <li><b>Nothing missed, nothing counted twice.</b> Each run re-scans a 6-hour overlap and skips messages it has already processed.</li>
+        <li><b>Sent mail reads differently.</b> What we send is our own confirmed action. What a supplier sends is a claim until it says otherwise.</li>
+        <li><b>Attachments count as evidence.</b> Proformas, packing lists and POs are read, and the order reference is taken from the file when the body doesn't have it.</li>
+        <li><b>Failures don't block the queue.</b> Busy or rate-limited calls retry with backoff. An email that fails 3 times is set aside for a person.</li>
+        <li><b>Built to run on free tiers.</b> The 240k-code catalogue is split into sorted chunks with a binary-search index, so each lookup stays within the free plan's limits.</li>
+        <li><b>Tested before it ships.</b> Automated test suites cover the hub's API, permissions and screens, and the invoice builder.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="rules">
+    <div class="shell">
+      <p class="sec-head">05 <span>/ Rules it can't break</span></p>
+      <h2>Useful only if the team can trust it, so the limits come first.</h2>
+      <p class="lead">Most of the design work went into what the agent is not allowed to do.</p>
+      <div class="rules">
+        <div class="rule"><h3>It can't send email</h3><p>No send permission. Replies, follow-ups, purchase lists and invoices are drafts until a person confirms.</p></div>
+        <div class="rule"><h3>It never invents a number</h3><p>Missing prices, dates and lead times stay blank. A guess is worse than a gap.</p></div>
+        <div class="rule"><h3>Exact codes only</h3><p>A near-match product code is shown for review. It is never filled in automatically.</p></div>
+        <div class="rule"><h3>Money stays private</h3><p>Invoices, proformas and costs are kept out of shared project files and shown to admins only.</p></div>
+        <div class="rule"><h3>Every change is traceable</h3><p>Each card change is logged with the email it came from, and can be undone from the card or from Today.</p></div>
+        <div class="rule"><h3>Autonomy is earned</h3><p>An action type runs on its own only after five correct calls in a row, and I can pause it at any time.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="role">
+    <div class="shell two">
+      <div>
+        <p class="sec-head">06 <span>/ My part</span></p>
+        <h2>I own it end to end.</h2>
+        <ul class="list">
+          <li><b>Mapped the real workflow:</b> how orders, quotes, payments and pickups actually move through email, and turned that into stage definitions and rules.</li>
+          <li><b>Designed the data model:</b> projects, supplier orders, requests, price lists, stock, quote snapshots and an audit log.</li>
+          <li><b>Tested on real threads:</b> logged every wrong call, found the pattern behind it and turned it into a rule the agent follows.</li>
+          <li><b>Rolled it out to the team:</b> shared pages for everyone, admin-only areas for costs, payments and agent controls.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="sec-head">07 <span>/ What I'm measuring next</span></p>
+        <h2>Proving it with numbers, not impressions.</h2>
+        <ul class="list">
+          <li><b>Agent accuracy:</b> share of proposals marked Right, by action type, week over week.</li>
+          <li><b>Speed to status:</b> time from a supplier email arriving to the order card being correct.</li>
+          <li><b>Early warnings:</b> late orders flagged for chasing before the client's due date, not after.</li>
+          <li><b>Quote turnaround:</b> time from a pricing request to a sent quotation.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="shell">
+      <p class="sec-head">Next</p>
+      <h2>Happy to walk you through how it works.</h2>
+      <p>I build things like this because I run the operations they serve. If your team has the same scattered-inbox problem, I'd like to hear about it.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="mailto:youssefkhoury01@gmail.com?subject=Beacon">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/in/youssefkhoury/" target="_blank" rel="noreferrer">LinkedIn &#8599;</a>
+        <a class="btn" href="../#work">All work</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="shell"><span>&copy; 2026 Youssef Khoury</span><span>Demo data is fictional</span></div></footer>
+
+<script>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var STAGES = ['ordered', 'production', 'ready', 'transit', 'delivered'];
+
+  var BASE_CARDS = [
+    { ref: 'TR-7710', sup: 'Trackline', proj: 'Marina Tower', stage: 'ordered' },
+    { ref: 'LM-2291', sup: 'Lumeria', proj: 'Villa Cedar', stage: 'production' },
+    { ref: 'NB-5530', sup: 'Nordbeam', proj: 'Clinique Lagune', stage: 'production' },
+    { ref: 'KW-0388', sup: 'Kristall Works', proj: 'Villa Cedar', stage: 'transit' },
+    { ref: 'LM-2204', sup: 'Lumeria', proj: 'Marina Tower', stage: 'delivered' }
+  ];
+  var BASE_TODAY = {
+    'Waiting on you': ['Approve finish samples for NB-5530 (Clinique Lagune)'],
+    'Needs chasing': ['Trackline TR-7710: no production date after 6 days'],
+    'Ready to collect': [],
+    'Payments due': ['Nordbeam balance before dispatch (admins only)']
+  };
+
+  var MAILS = [
+    {
+      id: 'm1', dir: 'in', from: 'Giulia Ferri · Lumeria', addr: 'giulia@lumeria.example', to: 'operations@',
+      time: '09:12', subject: 'RE: Order LM-2291 / Villa Cedar: goods ready',
+      body: 'Hello Youssef,\n\nThe 24 pcs of Arco 3000K downlights for order LM-2291 are finished and packed. They are ready for collection at our Milan warehouse from Monday 28 September.\n\nPacking list attached.\n\nKind regards,\nGiulia',
+      att: ['Packing list LM-2291.pdf'],
+      trace: [
+        '<b>Inbound</b> from a known supplier domain (Lumeria)',
+        'Read attachment: <b>Packing list LM-2291.pdf</b>',
+        'Matched order <b>LM-2291</b> to project <b>Villa Cedar</b>',
+        'Stage: goods finished and packed, so <b>production &rarr; ready</b>',
+        'Order terms are ex-works, so <b>our forwarder has to collect</b>'
+      ],
+      json: {
+        is_relevant: true, classification: 'shipment', project_name: 'Villa Cedar', supplier: 'Lumeria',
+        shipment: { ref: 'LM-2291', stage: 'ready', quantity_pieces: '24 pcs', ready_by: '2026-09-28', forwarder: 'Portline (EXW collection)', note: '24 pcs packed, ready ex-works Milan' },
+        timeline_event: 'Lumeria packed 24 pcs, ready for collection 28 Sep',
+        reasoning_summary: 'Supplier confirms the goods are finished and packed, so the order moves to ready. Terms are ex-works, so our forwarder collects.'
+      },
+      changes: [
+        { ic: '&rarr;', html: '<b>Move LM-2291</b> on the shipments board<small>Ready by Mon 28 Sep &middot; Villa Cedar</small>', move: ['production', 'ready'] },
+        { ic: '&#9675;', html: '<b>Add to Today</b> &middot; Ready to collect<small>LM-2291 &middot; Lumeria: book pickup with Portline</small>' },
+        { ic: '&#8226;', html: '<b>Project timeline</b> &middot; Villa Cedar<small>Lumeria packed 24 pcs, ready for collection 28 Sep</small>' },
+        { ic: '&#9998;', draft: { to: 'Rana &middot; Portline (forwarder)', body: "Hello Rana, hope you're well,\n\nLumeria order LM-2291 (24 pcs, Villa Cedar) is ready for collection at their Milan warehouse from Monday 28 September. The packing list is attached.\n\nCould you arrange the pickup and confirm the collection date?\n\nThank you." } }
+      ],
+      apply: function (s) { moveCard(s, 'LM-2291', 'ready', 'ready by 28 Sep'); addToday(s, 'Ready to collect', 'LM-2291 · Lumeria: book pickup with Portline'); },
+      counts: true,
+      lesson: 'Lumeria orders are ex-works: when goods are ready, always propose a Portline pickup.'
+    },
+    {
+      id: 'm2', dir: 'out', from: 'You → Kristall Works', addr: 'orders@kristallworks.example', to: 'Petr Novak',
+      time: '10:40', subject: 'PO KW-0412 · Clinique Lagune · payment slip',
+      body: "Hello Petr, hope you're well,\n\nPlease find attached our PO KW-0412 for 36 pcs of Lyra pendants and the payment slip for the 50% advance.\n\nKindly confirm and start production.\n\nThank you.",
+      att: ['PO KW-0412.pdf', 'Payment slip.pdf'],
+      trace: [
+        '<b>Sent by us</b>, so it is treated as our own confirmed action',
+        'Read attachments: <b>PO KW-0412.pdf</b>, <b>Payment slip.pdf</b>',
+        'Earlier in the thread the supplier quoted <b>5&ndash;6 weeks after payment</b>',
+        'New supplier order for <b>Clinique Lagune</b>, stage <b>ordered</b>',
+        'Payment slip carries amounts, so it is <b>kept out of shared project files</b>'
+      ],
+      json: {
+        is_relevant: true, classification: 'shipment', project_name: 'Clinique Lagune', supplier: 'Kristall Works',
+        shipment: { ref: 'PO KW-0412', stage: 'ordered', quantity_pieces: '36 pcs', ordered_on: '2026-09-24', lead_time: '5-6 weeks after payment', ready_by: '', is_paid: true, note: '50% advance sent, production to start on confirmation' },
+        timeline_event: 'Sent PO and 50% advance to Kristall Works',
+        reasoning_summary: 'We sent the PO and the advance ourselves, so the order is placed. Lead time comes from the supplier\'s earlier email in this thread.'
+      },
+      changes: [
+        { ic: '+', html: '<b>New order card KW-0412</b> &middot; ordered 24 Sep<small>Kristall Works &middot; Clinique Lagune &middot; ready ~5 Nov (estimated from lead time)</small>', move: [null, 'ordered'] },
+        { ic: '$', html: '<b>Payments</b> &middot; advance marked as sent<small>Visible to admins only</small>' },
+        { ic: '&#9675;', html: '<b>Add to Today</b> &middot; Needs chasing<small>No confirmation from Kristall Works by Mon 28 Sep: follow up</small>' },
+        { ic: '&#10003;', g: true, html: '<b>Guardrail</b> &middot; payment slip not added to project documents<small>Price-bearing files stay out of shared folders</small>' }
+      ],
+      apply: function (s) { addCard(s, { ref: 'KW-0412', sup: 'Kristall Works', proj: 'Clinique Lagune', stage: 'ordered', note: 'ready ~5 Nov (est.)' }); addToday(s, 'Needs chasing', 'Kristall Works KW-0412: confirm order by Mon 28 Sep'); },
+      counts: true,
+      lesson: 'For Kristall Works, count lead time from the payment date, not the PO date.'
+    },
+    {
+      id: 'm3', dir: 'in', from: 'Lea Haddad · Studio Mira', addr: 'lea@studiomira.example', to: 'operations@',
+      time: '11:05', subject: 'Marina Tower lobby: pricing request',
+      body: 'Hi Youssef,\n\nCould you price the following for the lobby?\n18 x TL-SPOT-30-930-BK\n18 x TL-ADPT-3PH\n2 x DRV-150W-DALI\n\nWe need it by Thursday if possible.\n\nThanks,\nLea',
+      att: [],
+      trace: [
+        '<b>Inbound</b> from a known specifier on <b>Marina Tower</b>',
+        'Found <b>3 product codes</b> and quantities in the body',
+        'Exact-code lookup across <b>every supplier price list</b>',
+        '<b>1 code has no exact match</b>, so it is left for a person',
+        'Drafted a reply in my voice: <b>no prices, no promises</b>'
+      ],
+      json: {
+        is_relevant: true, classification: 'quote_request', project_name: 'Marina Tower lobby', client_name: 'Studio Mira',
+        quote_request: { summary: 'Pricing for 18 track spots, 18 adapters and 2 DALI drivers, needed by Thursday', codes: ['TL-SPOT-30-930-BK', 'TL-ADPT-3PH', 'DRV-150W-DALI'] },
+        timeline_event: 'Studio Mira asked for lobby pricing, due Thu 1 Oct',
+        reasoning_summary: 'A specifier is asking for a quotation on an active project. Two codes match exactly; the driver code needs confirming.'
+      },
+      changes: [
+        { ic: '?', html: '<b>New request</b> &middot; Quote for Marina Tower lobby<small>Due Thu 1 Oct &middot; assigned to me</small>' },
+        { ic: '#', lookup: [
+          ['TL-SPOT-30-930-BK', 'Exact match &middot; Trackline 2026 list', true],
+          ['TL-ADPT-3PH', 'Exact match &middot; Trackline 2026 list', true],
+          ['DRV-150W-DALI', 'No exact match &middot; 2 near codes shown, not filled', false]
+        ] },
+        { ic: '&#9998;', draft: { to: 'Lea &middot; Studio Mira', body: "Hello Lea, hope you're well,\n\nThank you for the request. We're preparing the lobby pricing and will send it by Thursday.\n\nFor the 150W DALI driver, could you confirm the exact code? The closest item in the current range is DRV-150W-DALI2.\n\nThank you." } }
+      ],
+      apply: function (s) { addToday(s, 'Waiting on you', 'Quote: Marina Tower lobby, due Thu 1 Oct (1 code to confirm)'); },
+      counts: false,
+      lesson: 'Studio Mira often drops the driver suffix: suggest the current-range code, never fill it.'
+    },
+    {
+      id: 'm4', dir: 'in', from: 'LightWorld Weekly', addr: 'news@lightworld.example', to: 'operations@',
+      time: '11:30', subject: '5 trends shaping architectural lighting in 2027',
+      body: "This week: tunable white goes mainstream, why DALI-2 matters, and the trade shows you shouldn't miss.\n\nRead the full issue online.",
+      att: [],
+      trace: [
+        'Sender is a <b>newsletter list</b>',
+        'No order reference, request, project or supplier update',
+        'Marked <b>not relevant</b>. Nothing created.'
+      ],
+      json: { is_relevant: false, classification: 'ignore', reasoning_summary: 'Industry newsletter. No order, request or project in it.' },
+      changes: [ { ic: '&#8212;', g: true, html: '<b>Nothing to do</b><small>Filed as not relevant: no card, no task, no noise on Today</small>' } ],
+      apply: function () {},
+      counts: false,
+      lesson: 'Newsletters from this sender are never work items.'
+    }
+  ];
+
+  var state;
+  function fresh() {
+    var today = {};
+    Object.keys(BASE_TODAY).forEach(function (k) { today[k] = BASE_TODAY[k].map(function (t) { return { t: t, isNew: false }; }); });
+    return {
+      cards: BASE_CARDS.map(function (c) { return Object.assign({}, c); }),
+      today: today,
+      status: {}, outcome: {}, snap: {}, streak: 3, selected: 'm1', hot: null
+    };
+  }
+
+  function el(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  function moveCard(s, ref, stage, note) {
+    s.cards.forEach(function (c) { if (c.ref === ref) { c.stage = stage; if (note) c.note = note; } });
+    s.hot = ref;
+  }
+  function addCard(s, card) { s.cards.push(card); s.hot = card.ref; }
+  function addToday(s, group, text) {
+    Object.keys(s.today).forEach(function (k) { s.today[k].forEach(function (i) { i.isNew = false; }); });
+    s.today[group].unshift({ t: text, isNew: true });
+  }
+
+  function jsonHtml(o) {
+    var txt = JSON.stringify(o, null, 2);
+    return esc(txt)
+      .replace(/(&quot;[a-z_]+&quot;)(:)/g, '<span class="j-k">$1</span>$2')
+      .replace(/: (&quot;.*?&quot;)/g, ': <span class="j-s">$1</span>')
+      .replace(/: (true|false)/g, ': <span class="j-b">$1</span>');
+  }
+
+  function statusChip(id) {
+    var st = state.status[id];
+    if (!st) return '<span class="chip">new</span>';
+    if (st === 'running') return '<span class="chip st-run">reading…</span>';
+    if (st === 'proposed') return '<span class="chip st-prop">needs review</span>';
+    if (st === 'right') return '<span class="chip st-ok">applied</span>';
+    if (st === 'fix') return '<span class="chip st-prop">corrected</span>';
+    if (st === 'wrong') return '<span class="chip st-bad">rejected</span>';
+    if (st === 'undone') return '<span class="chip st-bad">undone</span>';
+    return '';
+  }
+
+  function renderInbox() {
+    var html = MAILS.map(function (m) {
+      return '<button type="button" class="mail" data-id="' + m.id + '" aria-current="' + (state.selected === m.id) + '">' +
+        '<span class="m-top"><span class="m-from">' + esc(m.from) + '</span><span>' + m.time + '</span></span>' +
+        '<span class="m-sub">' + esc(m.subject) + '</span>' +
+        '<span class="chips">' + (m.dir === 'out' ? '<span class="chip dir-out">sent</span>' : '<span class="chip">inbox</span>') + statusChip(m.id) + '</span>' +
+        '</button>';
+    }).join('');
+    el('mails').innerHTML = html;
+    var pending = MAILS.filter(function (m) { return !state.status[m.id]; }).length;
+    el('inbox-count').textContent = pending ? pending + ' new' : 'all handled';
+  }
+
+  function renderChanges(m) {
+    return m.changes.map(function (c) {
+      var inner = '';
+      if (c.draft) {
+        inner = '<span class="draft-tag">Draft reply &middot; to ' + c.draft.to + ' &middot; not sent</span><div class="draft">' + esc(c.draft.body) + '</div>';
+      } else if (c.lookup) {
+        inner = '<b>Price lookup</b> &middot; exact codes only<table class="lk">' + c.lookup.map(function (r) {
+          return '<tr><td>' + r[0] + '</td><td class="' + (r[2] ? 'y' : 'n') + '">' + r[1] + '</td></tr>';
+        }).join('') + '</table>';
+      } else {
+        inner = c.html;
+        if (c.move) {
+          inner += '<span class="stage-move">' + (c.move[0] ? '<span>' + c.move[0] + '</span> &rarr; ' : '<span>new</span> &rarr; ') + '<span class="to">' + c.move[1] + '</span></span>';
+        }
+      }
+      return '<div class="chg"><span class="ic' + (c.g ? ' g' : '') + '" aria-hidden="true">' + c.ic + '</span><div class="t">' + inner + '</div></div>';
+    }).join('');
+  }
+
+  function outcomeHtml(m) {
+    var st = state.status[m.id];
+    if (st === 'right') return '<div class="outcome ok"><b>Applied.</b> Logged with this email as the source.' + (m.id === 'm4' ? '' : '<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo</button>') + '</div>';
+    if (st === 'fix') return '<div class="outcome fix"><b>Corrected, then applied.</b> The correction is saved as a lesson:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'wrong') return '<div class="outcome bad"><b>Nothing applied.</b> Saved as a lesson the agent reads before its next run:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'undone') return '<div class="outcome bad"><b>Undone.</b> The card is back where it was, and the undo is saved as a lesson so the daily check won\'t redo it.</div>';
+    return '';
+  }
+
+  function renderDetail() {
+    var m = MAILS.filter(function (x) { return x.id === state.selected; })[0];
+    var st = state.status[m.id];
+    var h = '<article class="email">' +
+      '<dl class="e-meta"><dt>' + (m.dir === 'out' ? 'To' : 'From') + '</dt><dd>' + esc(m.dir === 'out' ? m.to + ' <' + m.addr + '>' : m.from.split(' · ')[0] + ' <' + m.addr + '>') + '</dd>' +
+      '<dt>Folder</dt><dd>' + (m.dir === 'out' ? 'Sent items' : 'Inbox') + ' &middot; today ' + m.time + '</dd></dl>' +
+      '<h3>' + esc(m.subject) + '</h3><p class="e-body">' + esc(m.body) + '</p>' +
+      (m.att.length ? '<div class="att">' + m.att.map(function (a) { return '<span>&#128206; ' + esc(a) + '</span>'; }).join('') + '</div>' : '') +
+      '</article>';
+    if (!st) {
+      h += '<div class="run-row"><button type="button" class="btn primary" id="run">Run the agent &rarr;</button><span class="hint">reads, classifies, proposes</span></div>';
+    } else {
+      h += '<ol class="trace" id="trace">' + m.trace.map(function (t) { return '<li' + (/kept out|no prices/.test(t) ? ' class="guard"' : '') + '>' + t + '</li>'; }).join('') + '</ol>';
+      h += '<div class="proposal" id="proposal">' +
+        '<details class="json"><summary>Structured output</summary><pre>' + jsonHtml(m.json) + '</pre></details>' +
+        '<p class="p-h" style="margin-top:16px">Proposed changes</p><div class="changes">' + renderChanges(m) + '</div>';
+      if (st === 'proposed') {
+        h += '<div class="review"><p>Nothing changes until I review it.</p><div class="rv-btns">' +
+          '<button type="button" class="rv right" data-rv="right">&#10003; Right</button>' +
+          '<button type="button" class="rv fix" data-rv="fix">&#9998; Fix it</button>' +
+          '<button type="button" class="rv wrong" data-rv="wrong">&#10005; Wrong</button></div></div>';
+      }
+      h += outcomeHtml(m);
+      var next = MAILS.filter(function (x) { return !state.status[x.id]; })[0];
+      if (st !== 'proposed' && st !== 'running' && next) h += '<button type="button" class="linkbtn" data-go="' + next.id + '">Next email &rarr;</button>';
+      h += '</div>';
+    }
+    el('detail').innerHTML = h;
+    if (st && st !== 'running') {
+      [].forEach.call(document.querySelectorAll('#trace li'), function (li) { li.classList.add('in'); });
+      el('proposal').classList.add('in');
+    }
+  }
+
+  function renderBoard() {
+    el('board').innerHTML = STAGES.map(function (sg) {
+      var cards = state.cards.filter(function (c) { return c.stage === sg; });
+      return '<div class="col"><h4><span>' + sg + '</span><span>' + cards.length + '</span></h4>' + cards.map(function (c) {
+        return '<div class="card' + (state.hot === c.ref ? ' hot' : '') + '"><b>' + c.ref + '</b><span>' + esc(c.sup) + ' &middot; ' + esc(c.proj) + (c.note ? '<br>' + esc(c.note) : '') + '</span></div>';
+      }).join('') + '</div>';
+    }).join('');
+  }
+
+  function renderToday() {
+    el('today').innerHTML = Object.keys(state.today).map(function (g) {
+      var items = state.today[g];
+      return '<div class="today-g"><h5>' + g + ' &middot; ' + items.length + '</h5><ul>' + (items.length ? items.map(function (i) {
+        return '<li' + (i.isNew ? ' class="new"' : '') + '>' + esc(i.t) + '</li>';
+      }).join('') : '<li>Nothing right now</li>') + '</ul></div>';
+    }).join('');
+    [].forEach.call(el('pips').children, function (p, i) { p.classList.toggle('on', i < state.streak); });
+    var n = el('m-note');
+    n.textContent = state.streak >= 5 ? 'Earned: hub-only updates now run on their own (pausable).' : state.streak + ' of 5 correct in a row';
+    n.classList.toggle('won', state.streak >= 5);
+  }
+
+  function renderAll() { renderInbox(); renderDetail(); renderBoard(); renderToday(); }
+
+  function run(id) {
+    var m = MAILS.filter(function (x) { return x.id === id; })[0];
+    state.status[id] = 'running';
+    renderInbox(); renderDetail();
+    var lis = document.querySelectorAll('#trace li');
+    var step = reduced ? 0 : 420;
+    [].forEach.call(lis, function (li, i) { setTimeout(function () { li.classList.add('in'); }, step * (i + 1)); });
+    setTimeout(function () {
+      if (state.status[id] !== 'running') return;
+      state.status[id] = 'proposed';
+      renderInbox(); renderDetail();
+    }, step * (m.trace.length + 1));
+  }
+
+  function review(kind) {
+    var m = MAILS.filter(function (x) { return x.id === state.selected; })[0];
+    state.snap[m.id] = { cards: clone(state.cards), today: clone(state.today), streak: state.streak };
+    state.status[m.id] = kind;
+    if (kind === 'right' || kind === 'fix') { m.apply(state); }
+    if (m.counts) {
+      if (kind === 'right') state.streak = Math.min(5, state.streak + 1);
+      if (kind === 'wrong') state.streak = 0;
+    }
+    renderAll();
+  }
+
+  function undo(id) {
+    var snap = state.snap[id];
+    if (!snap) return;
+    state.cards = snap.cards; state.today = snap.today; state.streak = 0; state.hot = null;
+    state.status[id] = 'undone';
+    renderAll();
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('button');
+    if (!t) return;
+    if (t.classList.contains('mail')) { state.selected = t.getAttribute('data-id'); state.hot = null; renderInbox(); renderDetail(); renderBoard(); return; }
+    if (t.id === 'run') { run(state.selected); return; }
+    if (t.hasAttribute('data-rv')) { review(t.getAttribute('data-rv')); return; }
+    if (t.hasAttribute('data-undo')) { undo(t.getAttribute('data-undo')); return; }
+    if (t.hasAttribute('data-go')) { state.selected = t.getAttribute('data-go'); state.hot = null; renderInbox(); renderDetail(); renderBoard(); el('detail').scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' }); return; }
+    if (t.id === 'reset') { state = fresh(); renderAll(); }
+  });
+
+  state = fresh();
+  renderAll();
+})();
+</script>
+</body>
+</html>

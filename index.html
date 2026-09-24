@@ -22,7 +22,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&family=Roboto+Flex:wdth,wght@60..150,100..900&display=swap" />
-    <link rel="stylesheet" href="styles.css?v=20260924m2" />
+    <link rel="stylesheet" href="styles.css?v=20260924b1" />
     <script src="script.js?v=20260924v6" defer></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="98d1a2bc-2c8e-4650-aa3e-07665e87773f"></script>
     <script type="application/ld+json">
@@ -199,24 +199,58 @@
         <div class="marquee rev">
           <ul class="mq-track" aria-hidden="true">
             <li>Requirements</li><li>Process mapping</li><li>UAT</li><li>RAID logs</li>
-            <li>Business Central</li><li>Xero</li><li>Dashboards</li><li>AI-assisted workflows</li>
+            <li>Business Central</li><li>Xero</li><li>Dashboards</li><li>AI agents &amp; automation</li>
           </ul>
           <ul class="mq-track" aria-hidden="true">
             <li>Requirements</li><li>Process mapping</li><li>UAT</li><li>RAID logs</li>
-            <li>Business Central</li><li>Xero</li><li>Dashboards</li><li>AI-assisted workflows</li>
+            <li>Business Central</li><li>Xero</li><li>Dashboards</li><li>AI agents &amp; automation</li>
           </ul>
         </div>
-        <p class="sr-only">Power BI, SQL Server, DAX, Power Query, Excel, star schema and data modeling, KPI governance, requirements, process mapping, UAT, RAID logs, Business Central, Xero, dashboards, and AI-assisted workflows.</p>
+        <p class="sr-only">Power BI, SQL Server, DAX, Power Query, Excel, star schema and data modeling, KPI governance, requirements, process mapping, UAT, RAID logs, Business Central, Xero, dashboards, and AI agents and automation.</p>
       </section>
 
       <section class="section" id="work">
         <div class="shell">
           <div class="work-rail" aria-hidden="true"><span></span></div>
           <div class="sec-head mono reveal"><h2 class="sk">Selected work</h2><span>2026</span></div>
-          <p class="work-intro reveal">Five self-directed analytics projects spanning public and synthetic operations data.
-            Each includes a working artifact, transparent methodology and a decision-focused case story.</p>
+          <p class="work-intro reveal">One system in production at work, plus five self-directed analytics projects on public
+            and synthetic operations data. Each includes a working artifact, transparent methodology and a decision-focused case story.</p>
 
           <div class="cases">
+          <div class="case-item live reveal">
+            <button class="row" type="button" aria-expanded="false" aria-controls="case-00">
+              <span class="node" aria-hidden="true"></span>
+              <span class="spark route" aria-hidden="true">
+                <svg viewBox="0 0 128 60"><polyline points="8,46 40,46 64,20 88,20 120,14"></polyline><circle cx="8" cy="46" r="5"></circle><circle cx="40" cy="46" r="5"></circle><circle cx="64" cy="20" r="5"></circle><circle cx="88" cy="20" r="5"></circle><circle class="destination" cx="120" cy="14" r="5"></circle></svg>
+              </span>
+              <span class="row-body">
+                <span class="idx mono">00</span>
+                <h3>Beacon: AI Operations Hub</h3>
+                <span class="row-stat mono">Built &amp; run at Alta Light &middot; supplier emails become order updates every 15 min</span>
+                <span class="tags mono"><b class="t">AI agent</b><span class="t">Python</span><span class="t">MS Graph</span><span class="t">OpenAI API</span><span class="t">Cloudflare</span></span>
+              </span>
+              <span class="go" aria-hidden="true"><b>Open</b><span class="chev">+</span></span>
+            </button>
+            <div class="case" id="case-00" role="region" aria-label="Beacon AI operations hub — case detail">
+              <div class="case-inner">
+                <p class="case-dek">An AI mail agent, a team web app and a 240k-code price search, running on real operations mail since September 2026.</p>
+                <p class="outcome"><span class="mono">Output</span> order status, requests and follow-ups on one board, with a person approving anything that leaves the company.</p>
+                <div class="case-tabs mono" role="tablist" aria-label="Beacon — case sections">
+                  <button type="button" role="tab" id="c0t1" aria-controls="c0p1" aria-selected="true" class="ct-tab on">Situation</button>
+                  <button type="button" role="tab" id="c0t2" aria-controls="c0p2" aria-selected="false" tabindex="-1" class="ct-tab">Built</button>
+                  <button type="button" role="tab" id="c0t3" aria-controls="c0p3" aria-selected="false" tabindex="-1" class="ct-tab">Guardrails</button>
+                </div>
+                <div class="ct-panels">
+                  <div class="ct-panel on" role="tabpanel" id="c0p1" aria-labelledby="c0t1">40+ live orders and 20+ suppliers, with status buried in email threads, prices in dozens of spreadsheets and follow-ups in people's heads.</div>
+                  <div class="ct-panel" role="tabpanel" id="c0p2" aria-labelledby="c0t2">A Python agent reads the operations inbox every 15 minutes through Microsoft Graph, a language model turns each email into structured updates, and a cloud API applies them to a team hub: Today, requests, projects, a five-stage shipments board, price lookup, a quoting extension and draft Xero invoices.</div>
+                  <div class="ct-panel" role="tabpanel" id="c0p3" aria-labelledby="c0t3">It has no permission to send email. It never invents prices or dates, fills exact product codes only, keeps costs admin-only, logs every change with its source email, and learns from each Right, Fix it or Wrong.</div>
+                </div>
+                <p class="case-links mono">
+                  <a href="beacon/"><span class="ar">&#8599;</span>Case study + interactive demo</a>
+                </p>
+              </div>
+            </div>
+          </div>
           <div class="case-item flagship reveal">
             <button class="row" type="button" aria-expanded="false" aria-controls="case-01">
               <span class="node" aria-hidden="true"></span>
@@ -493,7 +527,9 @@
                 the process, tracing recurring delays to three root causes and rebuilding supplier
                 follow-up; management adopted 3 of 5 recommendations. Run 40+ concurrent orders and
                 projects worth $1M+ across 20+ suppliers, and built the Excel dashboard used for weekly
-                operations reviews.</p>
+                operations reviews. Built and run <a href="beacon/">Beacon</a>, the team&rsquo;s AI operations
+                hub: an agent reads the operations inbox every 15 minutes and turns supplier and client emails
+                into order, shipment and request updates, with a person approving anything that goes out.</p>
             </div>
           </div>
 

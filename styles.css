@@ -655,6 +655,13 @@ h2 {
   text-transform: uppercase; color: var(--accent);
 }
 .case-item.flagship .row { padding-top: 60px; }
+.case-item.live::before {
+  content: "[ in production ]";
+  position: absolute; top: 18px; left: 54px; z-index: 2;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: #8FCB8B;
+}
+.case-item.live .row { padding-top: 60px; }
 .result {
   margin: 0 0 20px; font-size: 12px; line-height: 1.6;
   letter-spacing: 0.02em; color: var(--muted); max-width: 74ch;
@@ -842,6 +849,8 @@ h2 {
   }
   .cases .case-item.flagship .row { padding-top: 40px; }
   .cases .case-item.flagship::before { left: 34px; top: 12px; }
+  .cases .case-item.live .row { padding-top: 40px; }
+  .cases .case-item.live::before { left: 34px; top: 12px; }
   .cases .spark { width: 84px; height: 34px; }
   .cases .row-body {
     display: grid; align-items: baseline;
@@ -1567,6 +1576,8 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   .row .tags .t:nth-child(n+4) { display: none; }
   .case-item.flagship::before { left: 22px; top: 2px; }
   .case-item.flagship .row { padding-top: 26px; }
+  .case-item.live::before { left: 22px; top: 2px; }
+  .case-item.live .row { padding-top: 26px; }
   .case-inner { padding-left: 22px; padding-right: 2px; }
   .case dl > div { grid-template-columns: 1fr; gap: 4px; }
 
