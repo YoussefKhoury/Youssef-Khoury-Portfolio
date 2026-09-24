@@ -230,10 +230,6 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .node .k { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .node h3 { font: 700 15.5px/1.25 var(--display); margin: 5px 0 4px; }
 .node p { margin: 0; font-size: 13px; color: var(--muted); }
-.outs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.out { border: 1px dashed var(--line-2); border-radius: 10px; padding: 12px 14px; }
-.out h4 { margin: 0 0 3px; font: 700 14px var(--display); }
-.out p { margin: 0; font-size: 12.5px; color: var(--muted); }
 .loop { margin: 14px 0 0; border: 1px solid rgba(143,203,139,.35); background: var(--ok-soft); border-radius: 10px; padding: 12px 14px; font-size: 14px; }
 .loop b { color: var(--ok); font-weight: 600; }
 .stack { display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; }
@@ -242,6 +238,14 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .eng li { position: relative; padding-left: 18px; color: var(--muted); font-size: 14.5px; }
 .eng li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
 .eng li b { color: var(--ink); font-weight: 600; }
+details.more { margin: 26px 0 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+details.more summary { cursor: pointer; padding: 14px 20px; font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); list-style: none; }
+details.more summary::-webkit-details-marker { display: none; }
+details.more summary::before { content: "+ "; color: var(--accent); }
+details.more[open] summary::before { content: "− "; }
+details.more summary:hover { color: var(--ink); }
+details.more .eng { margin: 0; padding: 4px 20px 20px; }
+h2 + .probs, h2 + .mods, h2 + .flow { margin-top: 30px; }
 
 /* rules */
 .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; counter-reset: r; }
@@ -270,7 +274,6 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   .flow { grid-template-columns: 1fr 1fr; gap: 12px; }
   .node { margin-right: 0; }
   .node:not(:last-child)::after { display: none; }
-  .outs { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 720px) {
   .hero { padding: 40px 0 32px; }
@@ -284,7 +287,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   .pane { padding: 16px 14px 18px; }
   .board { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
   .col { flex: 0 0 62%; scroll-snap-align: start; min-height: 120px; }
-  .flow, .outs { grid-template-columns: 1fr; }
+  .flow { grid-template-columns: 1fr; }
   .tb-tag .long { display: none; }
   .inbox { max-height: none; }
   .mail { padding: 12px 14px; }
@@ -310,19 +313,19 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <p class="eyebrow"><span class="live"><i></i>In production</span><span>Built &amp; run at Alta Light &middot; since Sep 2026</span></p>
       <h1>Beacon turns the operations inbox into work, <em>and knows when to ask.</em></h1>
-      <p class="dek">Alta Light supplies architectural lighting to projects in <b>Beirut, Dubai and Abidjan</b>. Every order runs through email: proformas, payment slips, ready-for-collection notices, forwarder updates and client requests. I built Beacon so that information <b>lands on one board by itself</b>, prices are one search away, and a person stays in charge of anything that leaves the company.</p>
+      <p class="dek">Alta Light supplies architectural lighting to projects in <b>Beirut, Dubai and Abidjan</b>, and every order runs on email. I built Beacon so order updates <b>land on one board by themselves</b>, prices are one search away, and a person approves anything that leaves the company.</p>
       <div class="stats" role="list">
-        <div class="stat" role="listitem"><b>15 min</b><span>Mail agent cycle: new inbox and sent mail is read, understood and filed</span></div>
-        <div class="stat" role="listitem"><b>~240k</b><span>Supplier product codes the team can search from one box</span></div>
-        <div class="stat" role="listitem"><b>5 stages</b><span>Every supplier order tracked: ordered, production, ready, transit, delivered</span></div>
-        <div class="stat" role="listitem"><b>0</b><span>Emails sent by the agent. It has no permission to send; replies wait as drafts</span></div>
+        <div class="stat" role="listitem"><b>15 min</b><span>Inbox and sent mail read, understood and filed</span></div>
+        <div class="stat" role="listitem"><b>~240k</b><span>Supplier product codes in one search</span></div>
+        <div class="stat" role="listitem"><b>5 stages</b><span>Every supplier order tracked, from ordered to delivered</span></div>
+        <div class="stat" role="listitem"><b>0</b><span>Emails sent by the agent. It can only draft</span></div>
       </div>
       <div class="hero-actions">
         <a class="btn primary" href="#demo">Try the demo &darr;</a>
         <a class="btn" href="#how">How it's built</a>
         <a class="btn" href="#rules">Rules it can't break</a>
       </div>
-      <p class="privacy">The live system runs on company mail and supplier prices, so it stays private. Every name, code and date on this page is made up.</p>
+      <p class="privacy">The live system runs on private company data, so the demo uses made-up names, codes and dates.</p>
     </div>
   </section>
 
@@ -330,11 +333,10 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <p class="sec-head">01 <span>/ The problem</span></p>
       <h2>40+ live orders, 20+ suppliers, and the truth scattered across inboxes.</h2>
-      <p class="lead">Nothing was broken, it was just slow. Every question about an order meant searching threads, opening spreadsheets or asking whoever last spoke to the supplier.</p>
       <div class="probs">
-        <div class="prob"><span class="k">Status</span><h3>Lived in email threads</h3><p>Whether an order was paid, in production or ready to collect was written somewhere in a thread with the supplier, the forwarder or the client.</p></div>
-        <div class="prob"><span class="k">Pricing</span><h3>Lived in spreadsheets</h3><p>Dozens of supplier price lists in Excel, one of them around 240,000 lines. Pricing a list of codes meant opening files one at a time.</p></div>
-        <div class="prob"><span class="k">Follow-up</span><h3>Lived in people's heads</h3><p>Who owes us a reply, which order needs chasing, which payment is due. Easy to drop when 40 orders are moving at once.</p></div>
+        <div class="prob"><span class="k">Status</span><h3>Lived in email threads</h3><p>Paid, in production or ready to collect? The answer was buried in a thread with the supplier, forwarder or client.</p></div>
+        <div class="prob"><span class="k">Pricing</span><h3>Lived in spreadsheets</h3><p>Dozens of supplier price lists, one of them 240,000 lines, opened one file at a time.</p></div>
+        <div class="prob"><span class="k">Follow-up</span><h3>Lived in people's heads</h3><p>Who owes a reply, which order needs chasing, which payment is due. Easy to drop with 40 orders moving at once.</p></div>
       </div>
     </div>
   </section>
@@ -342,8 +344,8 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   <section class="block" id="demo">
     <div class="shell">
       <p class="sec-head">02 <span>/ See it work</span></p>
-      <h2>Pick an email. Run the agent. See what it does alone and what it asks about.</h2>
-      <p class="lead">This replays how the mail agent handles four typical emails. Order updates are applied after a second check and can be undone in one click. Anything that could reach a client waits for my review. Only the data is made up.</p>
+      <h2>Pick an email. See what the agent does alone, and what it asks about.</h2>
+      <p class="lead">Four typical emails, replayed with made-up data. Order updates apply after a second check and can be undone in one click; anything that could reach a client waits for my review.</p>
 
       <div class="demo" aria-label="Interactive demo of the mail agent">
         <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; Beacon &middot; mail agent</span><button type="button" id="reset">Reset</button></div>
@@ -365,12 +367,12 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
             <div class="auto">
               <div class="auto-h"><span>Autonomy</span><span>by action type</span></div>
               <div id="auto"></div>
-              <p class="auto-note">Hub-only actions run on their own after 5 approvals in a row. A Fix it or Wrong resets the count, and I can pause any of them. Anything that can reach a client always asks.</p>
+              <p class="auto-note">Hub-only actions run alone after 5 approvals in a row; a Fix it or Wrong resets the count. Anything that can reach a client always asks.</p>
             </div>
           </div>
         </div>
       </div>
-      <p class="demo-note">Made-up suppliers, projects, codes and people. In the live system the same flow runs every 15 minutes on the real operations mailbox.</p>
+      <p class="demo-note">In the live system this flow runs every 15 minutes on the real operations mailbox.</p>
     </div>
   </section>
 
@@ -378,17 +380,16 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <p class="sec-head">03 <span>/ What's inside</span></p>
       <h2>One hub for the team, with admin-only areas for money.</h2>
-      <p class="lead">Beacon is a private web app for the team plus a few helpers around it. Costs, payments and the agent's controls are visible to admins only.</p>
       <div class="mods">
-        <div class="mod"><span class="k">Landing page</span><h3>Today</h3><p>What's waiting on me, what needs chasing (with a follow-up ready to copy), what's ready to collect, which payments are due, and what the agent changed.</p></div>
-        <div class="mod"><span class="k">From mail</span><h3>Requests</h3><p>Team and client asks pulled out of email, each with a proposed plan I mark Right, Fix it or Wrong.</p></div>
-        <div class="mod"><span class="k">From mail</span><h3>Projects</h3><p>Where each project stands, its open items and a short timeline, rewritten as new mail arrives.</p></div>
-        <div class="mod"><span class="k">From mail</span><h3>Shipments</h3><p>Every supplier order on a five-stage board with order date, lead time, ready-by date and delivery.</p></div>
-        <div class="mod"><span class="k">Pricing</span><h3>Price lookup</h3><p>One search across every supplier price list. Paste a list of codes and get a purchase draft by cheapest supplier.</p></div>
-        <div class="mod"><span class="k">Pricing</span><h3>New prices</h3><p>Prices captured from finished quotes wait in a review queue. Nothing becomes searchable until someone approves it.</p></div>
-        <div class="mod"><span class="k">Helper</span><h3>Quote extension</h3><p>A browser extension that fills costs into our quoting tool from exact catalogue matches only. Anything uncertain stays blank.</p></div>
-        <div class="mod"><span class="k">Helper</span><h3>Xero invoice drafts</h3><p>Reads a quotation (Excel, CSV, PDF table or image), shows an editable review table, and creates the invoice in Xero as a draft, split by currency.</p></div>
-        <div class="mod"><span class="k">Nightly</span><h3>Daily check</h3><p>Re-reads recent threads in full and corrects order cards. Every change is logged with its reason, can be undone, and it won&rsquo;t redo a change I undid.</p></div>
+        <div class="mod"><span class="k">Landing page</span><h3>Today</h3><p>What's waiting on me, what to chase, what's ready to collect and which payments are due.</p></div>
+        <div class="mod"><span class="k">From mail</span><h3>Requests</h3><p>Asks pulled from email, each with a plan I mark Right, Fix it or Wrong.</p></div>
+        <div class="mod"><span class="k">From mail</span><h3>Projects</h3><p>Status, open items and a timeline, rewritten as mail arrives.</p></div>
+        <div class="mod"><span class="k">From mail</span><h3>Shipments</h3><p>Every supplier order on a five-stage board, with lead times and dates.</p></div>
+        <div class="mod"><span class="k">Pricing</span><h3>Price lookup</h3><p>One search across every price list, with a purchase draft by cheapest supplier.</p></div>
+        <div class="mod"><span class="k">Pricing</span><h3>New prices</h3><p>Prices from finished quotes wait for approval before anyone can search them.</p></div>
+        <div class="mod"><span class="k">Helper</span><h3>Quote extension</h3><p>Fills costs into our quoting tool from exact matches only.</p></div>
+        <div class="mod"><span class="k">Helper</span><h3>Xero invoice drafts</h3><p>Turns a quotation (Excel, PDF or image) into a draft invoice in Xero.</p></div>
+        <div class="mod"><span class="k">Nightly</span><h3>Daily check</h3><p>Re-reads recent threads and corrects order cards. Every fix is logged and can be undone.</p></div>
       </div>
     </div>
   </section>
@@ -397,31 +398,27 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <p class="sec-head">04 <span>/ How it's built</span></p>
       <h2>Plain parts, wired so a mistake is cheap to spot and undo.</h2>
-      <p class="lead">A scheduled Python agent reads the mailbox, a language model turns each email into strict JSON, and a small cloud API applies it to the hub, where every change is logged.</p>
       <div class="flow">
-        <div class="node"><span class="k">1 &middot; Source</span><h3>Outlook mailbox</h3><p>Inbox and sent mail through Microsoft Graph. Read and draft permissions only, no send.</p></div>
-        <div class="node"><span class="k">2 &middot; Agent</span><h3>Python mail agent</h3><p>Runs every 15 minutes. Reads attachments, loads open projects, known orders and past lessons.</p></div>
-        <div class="node"><span class="k">3 &middot; Model</span><h3>Language model</h3><p>Returns one strict JSON object per email: type, project, supplier, stage, dates, lead time, reply draft. A second model call re-checks each order-card update before it&rsquo;s written.</p></div>
-        <div class="node"><span class="k">4 &middot; Hub</span><h3>Cloud API + database</h3><p>Validates the result, updates cards and requests, and logs each card change with the email it came from.</p></div>
+        <div class="node"><span class="k">1 &middot; Source</span><h3>Outlook mailbox</h3><p>Microsoft Graph, with read and draft access only. No send.</p></div>
+        <div class="node"><span class="k">2 &middot; Agent</span><h3>Python mail agent</h3><p>Runs every 15 minutes with attachments, open orders and past lessons.</p></div>
+        <div class="node"><span class="k">3 &middot; Model</span><h3>Language model</h3><p>One strict JSON object per email. A second call re-checks every order update.</p></div>
+        <div class="node"><span class="k">4 &middot; Hub</span><h3>Cloud API + database</h3><p>Validates, applies and logs each change with its source email.</p></div>
       </div>
-      <div class="outs">
-        <div class="out"><h4>Team web app</h4><p>Today, requests, projects, shipments, prices, stock.</p></div>
-        <div class="out"><h4>Outlook drafts</h4><p>Replies created in the thread on a button press, never sent.</p></div>
-        <div class="out"><h4>Quote extension</h4><p>Exact-match costs into the quoting tool.</p></div>
-        <div class="out"><h4>Xero</h4><p>Sales invoices created as drafts only.</p></div>
-      </div>
-      <div class="loop"><b>Feedback loop:</b> every Fix it, Wrong or undo is saved as a lesson, and the agent reads its latest lessons before each run. Every Right counts toward earning autonomy.</div>
+      <div class="loop"><b>Feedback loop:</b> every Fix it, Wrong or undo becomes a lesson the agent reads before its next run. Every Right counts toward autonomy.</div>
       <div class="stack" aria-label="Stack">
         <span>Python</span><span>Microsoft Graph API</span><span>OpenAI API &middot; JSON output</span><span>Cloudflare Workers</span><span>D1 (SQLite)</span><span>Workers KV</span><span>JavaScript</span><span>Xero API</span><span>OAuth / MSAL</span><span>Task Scheduler</span>
       </div>
-      <ul class="eng">
-        <li><b>Nothing missed, nothing counted twice.</b> Each run re-scans a 6-hour overlap and skips messages it has already processed.</li>
-        <li><b>Sent mail reads differently.</b> What we send is our own confirmed action. What a supplier sends is a claim until it says otherwise.</li>
-        <li><b>Attachments count as evidence.</b> PDFs, spreadsheets and photos are read (scanned PDFs and photos go to the model directly), and order references are picked up from file names too.</li>
-        <li><b>Failures don't block the queue.</b> Busy or rate-limited calls retry with backoff. An email that fails 3 times is set aside for a person.</li>
-        <li><b>Built to run on free tiers.</b> The 240k-code catalogue is split into sorted chunks with a binary-search index, so each lookup stays within the free plan's limits.</li>
-        <li><b>Tested before it ships.</b> Automated test suites cover the hub's API, permissions and screens, and the invoice builder.</li>
-      </ul>
+      <details class="more">
+        <summary>Engineering notes</summary>
+        <ul class="eng">
+          <li><b>Nothing missed, nothing doubled.</b> Each run re-scans a 6-hour overlap and skips mail it has already processed.</li>
+          <li><b>Sent mail reads differently.</b> What we send is a confirmed action; what a supplier sends is a claim.</li>
+          <li><b>Attachments are evidence.</b> PDFs, spreadsheets and photos are read, and order references are picked up from file names.</li>
+          <li><b>Failures don't block the queue.</b> Calls retry with backoff; an email that fails 3 times is set aside for a person.</li>
+          <li><b>Runs on free tiers.</b> The 240k-code catalogue is split into sorted chunks with a binary-search index.</li>
+          <li><b>Tested before it ships.</b> Automated suites cover the hub's API, permissions, screens and the invoice builder.</li>
+        </ul>
+      </details>
     </div>
   </section>
 
@@ -431,12 +428,12 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       <h2>Useful only if the team can trust it, so the limits come first.</h2>
       <p class="lead">Most of the design work went into what the agent is not allowed to do.</p>
       <div class="rules">
-        <div class="rule"><h3>It can't send email</h3><p>No send permission. Replies, follow-ups, purchase lists and invoices are drafts until a person confirms.</p></div>
+        <div class="rule"><h3>It can't send email</h3><p>No send permission. Replies and invoices stay drafts until a person confirms.</p></div>
         <div class="rule"><h3>It never invents a number</h3><p>Missing prices, dates and lead times stay blank. A guess is worse than a gap.</p></div>
-        <div class="rule"><h3>Exact codes only</h3><p>A near-match product code is shown for review. It is never filled in automatically.</p></div>
-        <div class="rule"><h3>Money stays private</h3><p>Documents with prices (invoices, proformas, quotes, POs) are recognised by name and kept out of the project files the whole team sees. Costs and payments are admin-only.</p></div>
-        <div class="rule"><h3>Checked twice, traceable always</h3><p>Order-card updates are re-checked by a second model call, logged with where they came from, and undone in one click from the card or from Today.</p></div>
-        <div class="rule"><h3>Autonomy is earned</h3><p>A request plan that only touches the hub runs on its own after five approvals in a row. One Fix it or Wrong resets the count, I can pause any action type, and replies to clients always wait for me.</p></div>
+        <div class="rule"><h3>Exact codes only</h3><p>Near matches are shown for review, never filled in.</p></div>
+        <div class="rule"><h3>Money stays private</h3><p>Priced documents are recognised by name and kept out of shared project files. Costs are admin-only.</p></div>
+        <div class="rule"><h3>Checked twice, traceable always</h3><p>A second AI call re-checks every order update. Each change is logged and can be undone in one click.</p></div>
+        <div class="rule"><h3>Autonomy is earned</h3><p>Hub-only actions run alone after five approvals in a row. Replies to clients always wait for me.</p></div>
       </div>
     </div>
   </section>
@@ -447,20 +444,20 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         <p class="sec-head">06 <span>/ My part</span></p>
         <h2>I own it end to end.</h2>
         <ul class="list">
-          <li><b>Mapped the real workflow:</b> how orders, quotes, payments and pickups actually move through email, and turned that into stage definitions and rules.</li>
-          <li><b>Designed the data model:</b> projects, supplier orders, requests, price lists, stock, quote snapshots and an audit log.</li>
-          <li><b>Tested on real threads:</b> logged every wrong call, found the pattern behind it and turned it into a rule the agent follows.</li>
-          <li><b>Rolled it out to the team:</b> shared pages for everyone, admin-only areas for costs, payments and agent controls.</li>
+          <li><b>Process:</b> mapped how orders, payments and pickups really move through email, then turned it into stages and rules.</li>
+          <li><b>Data:</b> designed the model for projects, orders, requests, prices, stock and an audit log.</li>
+          <li><b>Testing:</b> ran it on real threads and turned the pattern behind each wrong call into a rule.</li>
+          <li><b>Rollout:</b> shared pages for the team, admin-only areas for costs, payments and agent controls.</li>
         </ul>
       </div>
       <div>
-        <p class="sec-head">07 <span>/ What I'm measuring next</span></p>
+        <p class="sec-head">07 <span>/ How I measure it</span></p>
         <h2>Proving it with numbers, not impressions.</h2>
         <ul class="list">
-          <li><b>Agent accuracy:</b> share of proposals marked Right, by action type, week over week.</li>
-          <li><b>Speed to status:</b> time from a supplier email arriving to the order card being correct.</li>
-          <li><b>Early warnings:</b> late orders flagged for chasing before the client's due date, not after.</li>
-          <li><b>Quote turnaround:</b> time from a pricing request to a sent quotation.</li>
+          <li><b>Accuracy:</b> plans right first time, by action type.</li>
+          <li><b>Trust:</b> agent changes kept versus undone.</li>
+          <li><b>Speed:</b> time from a supplier email to a correct order card.</li>
+          <li><b>Turnaround:</b> time from a request to done.</li>
         </ul>
       </div>
     </div>
@@ -470,7 +467,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <p class="sec-head">Next</p>
       <h2>Happy to walk you through how it works.</h2>
-      <p>I build things like this because I run the operations they serve. If your team has the same scattered-inbox problem, I'd like to hear about it.</p>
+      <p>I build tools like this for the operations I run every day. If your team has the same inbox problem, let's talk.</p>
       <div class="hero-actions">
         <a class="btn primary" href="mailto:youssefkhoury01@gmail.com?subject=Beacon">Email me</a>
         <a class="btn" href="https://www.linkedin.com/in/youssefkhoury/" target="_blank" rel="noreferrer">LinkedIn &#8599;</a>
