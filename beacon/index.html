@@ -117,17 +117,17 @@ h2 em { font-style: normal; color: var(--accent); }
 .tiles { display: grid; gap: 12px; }
 .t3 { grid-template-columns: repeat(3, 1fr); }
 .t4 { grid-template-columns: repeat(4, 1fr); }
-.tile { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 22px; position: relative; overflow: hidden; transition: border-color .3s, transform .3s var(--ease); }
+.tile { text-align: center; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 22px; position: relative; overflow: hidden; transition: border-color .3s, transform .3s var(--ease); }
 .tile:hover { border-color: var(--line-2); transform: translateY(-3px); }
 .tile::after { content: ""; position: absolute; inset: 0; background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(232,177,90,.08), transparent 45%); opacity: 0; transition: opacity .3s; pointer-events: none; }
 .tile:hover::after { opacity: 1; }
-.badge { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 16px; }
+.badge { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin: 0 auto 16px; }
 .badge.g { background: var(--ok-soft); color: var(--ok); }
 .badge.b { background: var(--bad-soft); color: var(--bad); }
 .tile h3 { font: 700 20px/1.2 var(--display); margin: 0 0 4px; letter-spacing: -.01em; }
 .tile p { margin: 0; color: var(--muted); font-size: 14px; }
 .tile.sm { padding: 18px; }
-.tile.sm .badge { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 12px; }
+.tile.sm .badge { width: 40px; height: 40px; border-radius: 10px; margin: 0 auto 12px; }
 .tile.sm h3 { font-size: 16.5px; }
 .tile.sm p { font-size: 13px; }
 
