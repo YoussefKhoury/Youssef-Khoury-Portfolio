@@ -249,7 +249,7 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .outcome b { font-weight: 600; }
 .outcome .lesson { display: block; margin-top: 6px; font: 12.5px/1.5 var(--mono); color: var(--muted); }
 .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font: 500 12.5px var(--mono); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-top: 8px; }
-.after { display: grid; grid-template-columns: 1.6fr 1fr; border-top: 1px solid var(--line); }
+.after { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
 .pane { padding: 18px 20px 22px; min-width: 0; }
 .pane + .pane { border-left: 1px solid var(--line); }
 .pane-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; }
@@ -419,29 +419,20 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <span class="kick rv">Try it</span>
       <h2 class="rv" style="--i:1">Pick an email. <em>Hit Run.</em></h2>
-      <p class="lead rv" style="--i:2">Made-up data. Order updates apply on their own; client replies wait for me.</p>
+      <p class="lead rv" style="--i:2">Three emails, three outcomes: it updates, it asks, or it ignores. Made-up data.</p>
       <div class="demo rv" style="--i:2" aria-label="Interactive demo of the mail agent">
         <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; Beacon &middot; mail agent</span><button type="button" id="reset">Reset</button></div>
         <div class="demo-grid">
           <nav class="inbox" aria-label="Sample emails">
-            <div class="inbox-h"><span>operations inbox</span><span id="inbox-count">4 new</span></div>
+            <div class="inbox-h"><span>operations inbox</span><span id="inbox-count">3 new</span></div>
             <div id="mails"></div>
           </nav>
           <div class="detail" id="detail" aria-live="polite"></div>
         </div>
         <div class="after">
           <div class="pane">
-            <div class="pane-h"><span>Shipments board</span><span>by stage</span></div>
+            <div class="pane-h"><span>Orders board</span><span>updates itself</span></div>
             <div class="board" id="board"></div>
-          </div>
-          <div class="pane">
-            <div class="pane-h"><span>Today</span><span>landing page</span></div>
-            <div id="today"></div>
-            <div class="auto">
-              <div class="auto-h"><span>Autonomy</span><span>by action</span></div>
-              <div id="auto"></div>
-              <p class="auto-note">5 approvals in a row &rarr; runs alone. Client replies always ask.</p>
-            </div>
           </div>
         </div>
       </div>
@@ -631,179 +622,62 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   }
 })();
 
-// Demo
+// Demo: three emails, three outcomes (applied, waits for me, ignored).
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var STEP = reduced ? 0 : 420;
   var STAGES = ['ordered', 'production', 'ready', 'transit', 'delivered'];
-  var AUTO_AFTER = 5;
-  var READY_ITEM = 'LM-2291 · Lumeria: no forwarder booked yet';
-  var QUOTE_ITEM = 'Marina Tower: send lobby pricing to Studio Mira, due Thu';
-  var HEADS = { apply: 'What it changed', review: 'What it proposes', ignore: 'Result' };
-  var REPLY = "Hello Lea, hope you're well,\n\nThank you for the request. We're preparing the lobby pricing and will come back to you as soon as it's ready.\n\nThank you.";
+  var HEADS = { apply: 'What it changed', review: 'What it prepared', ignore: 'Result' };
+  var REPLY = "Hello Lea,\n\nThanks for the request. We're preparing the lobby pricing and will send it before Thursday.\n\nBest regards";
 
   var BASE_CARDS = [
     { ref: 'TR-7710', sup: 'Trackline', proj: 'Marina Tower', stage: 'ordered' },
     { ref: 'LM-2291', sup: 'Lumeria', proj: 'Villa Cedar', stage: 'production' },
-    { ref: 'NB-5530', sup: 'Nordbeam', proj: 'Clinique Lagune', stage: 'production' },
-    { ref: 'KW-0388', sup: 'Kristall Works', proj: 'Villa Cedar', stage: 'transit' },
-    { ref: 'LM-2204', sup: 'Lumeria', proj: 'Marina Tower', stage: 'delivered' }
-  ];
-  var BASE_TODAY = {
-    'Waiting on you': ['Approve finish samples for NB-5530 (Clinique Lagune)'],
-    'Needs chasing': ['Trackline TR-7710: no reply in 3 days'],
-    'Ready to collect': [],
-    'Payments due': ['Nordbeam balance before dispatch (admins only)']
-  };
-  // Request plans by action type. Plans that only touch the hub can earn autonomy; replies never do.
-  var BASE_AUTO = [
-    { key: 'price-answer', label: 'Prepare prices and stock', hubOnly: true, streak: 5 },
-    { key: 'update-project', label: 'Update a project', hubOnly: true, streak: 3 },
-    { key: 'draft-reply', label: 'Draft a reply', hubOnly: false, streak: 4 }
+    { ref: 'KW-0388', sup: 'Kristall Works', proj: 'Villa Cedar', stage: 'transit' }
   ];
 
-  // mode: 'apply' = order-card update, applied after a second check and undoable;
-  // 'review' = request plan that waits for Right / Fix it / Wrong; 'ignore' = not work.
+  // mode: 'apply' = order update, applied after a second check and undoable;
+  // 'review' = waits for Approve / Reject; 'ignore' = not work.
   var MAILS = [
     {
-      id: 'm1', mode: 'apply', dir: 'in', from: 'Giulia Ferri · Lumeria', addr: 'giulia@lumeria.example', to: 'operations@',
-      time: '09:12', subject: 'RE: Order LM-2291 / Villa Cedar: goods ready',
-      body: 'Hello Youssef,\n\nThe 24 pcs of Arco 3000K downlights for order LM-2291 are finished and packed. They are ready for collection at our Milan warehouse from Monday 28 September.\n\nPacking list attached.\n\nKind regards,\nGiulia',
-      att: ['Packing list LM-2291.pdf'],
-      trace: [
-        '<b>Inbound</b> from a known supplier',
-        'Read <b>Packing list LM-2291.pdf</b>',
-        'Matched <b>LM-2291</b> &rarr; <b>Villa Cedar</b>',
-        '<b>production &rarr; ready</b> &middot; no forwarder named, left blank',
-        'G:<b>Second check</b> agrees. Passed'
-      ],
-      json: {
-        classification: 'shipment', project_name: 'Villa Cedar', supplier: 'Lumeria',
-        shipment: { ref: 'LM-2291', stage: 'ready', ready_by: '2026-09-28', forwarder: '', note: '24 pcs packed, ready for collection in Milan' },
-        timeline_event: 'Lumeria packed 24 pcs, ready for collection 28 Sep',
-        reasoning_summary: 'The supplier confirms the goods are finished and packed, so the order moves to ready. No forwarder is named, so none is filled in.'
-      },
-      changes: [
-        { ic: '&rarr;', html: '<b>Moved LM-2291</b><small>Ready by Mon 28 Sep &middot; Villa Cedar</small>', move: ['production', 'ready'] },
-        { ic: '&#9675;', html: '<b>Today</b> &middot; Ready to collect<small>' + READY_ITEM + '</small>' },
-        { ic: '&#8226;', html: '<b>Timeline</b> &middot; Villa Cedar<small>Lumeria packed 24 pcs, ready 28 Sep</small>' }
-      ],
-      apply: function (s) { setCard(s, 'LM-2291', { stage: 'ready', note: 'ready by 28 Sep' }); addToday(s, 'Ready to collect', READY_ITEM); },
-      revert: function (s) { setCard(s, 'LM-2291', { stage: 'production', note: '' }); dropToday(s, READY_ITEM); },
-      lesson: 'On project "Villa Cedar", changing "Lumeria" stage from production to ready based on the email "RE: Order LM-2291 / Villa Cedar: goods ready" was WRONG and was undone by me. Do not repeat this.'
+      id: 'm1', mode: 'apply', from: 'Giulia · Lumeria', addr: 'giulia@lumeria.example', time: '09:12',
+      tag: 'supplier', subject: 'Order LM-2291: goods ready',
+      body: 'Hello Youssef,\n\nOrder LM-2291 is packed and ready for collection from Monday 28 September.\n\nGiulia',
+      trace: ['Supplier update on <b>LM-2291</b>', 'Moves it to <b>ready</b>', 'G:Second check agrees'],
+      changes: [{ ic: '&rarr;', html: '<b>LM-2291 moved to ready</b><small>Ready from Mon 28 Sep</small>', move: ['production', 'ready'] }],
+      apply: function (s) { setCard(s, 'LM-2291', { stage: 'ready', note: 'from 28 Sep' }); },
+      revert: function (s) { setCard(s, 'LM-2291', { stage: 'production', note: '' }); }
     },
     {
-      id: 'm2', mode: 'apply', dir: 'out', from: 'You → Kristall Works', addr: 'orders@kristallworks.example', to: 'Petr Novak',
-      time: '10:40', subject: 'Clinique Lagune: purchase order and advance',
-      body: "Hello Petr, hope you're well,\n\nPlease find attached our purchase order for 36 pcs of Lyra pendants. The 50% advance was transferred today.\n\nKindly confirm and start production.\n\nThank you.\n\n> On 21 Sep, Petr Novak wrote:\n> Lead time is 5–6 weeks from payment.",
-      att: ['PO-0412.pdf'],
-      trace: [
-        '<b>Sent by us</b> = confirmed action',
-        'Order ref from the file name: <b>PO-0412</b>',
-        'Lead time <b>5&ndash;6 weeks</b> &middot; no ready date, none guessed',
-        'G:<b>Second check</b> agrees. Passed',
-        'G:<b>PO-0412.pdf</b> has prices &rarr; kept private'
-      ],
-      json: {
-        classification: 'shipment', project_name: 'Clinique Lagune', supplier: 'Kristall Works',
-        shipment: { ref: 'PO-0412', stage: 'ordered', ordered_on: '2026-09-24', lead_time: '5-6 weeks from payment', ready_by: '', note: '36 pcs, 50% advance paid' },
-        timeline_event: 'Sent PO-0412 and the 50% advance to Kristall Works',
-        reasoning_summary: 'We sent the PO and paid the advance ourselves, so the order is placed. The supplier has not given a ready date, so it stays blank.'
-      },
-      changes: [
-        { ic: '+', html: '<b>New card PO-0412</b> &middot; ordered 24 Sep<small>Kristall Works &middot; Clinique Lagune &middot; 5&ndash;6 weeks &middot; ready date blank</small>', move: [null, 'ordered'] },
-        { ic: '&#8226;', html: '<b>Timeline</b> &middot; Clinique Lagune<small>PO-0412 and 50% advance sent</small>' },
-        { ic: '&#10003;', g: true, html: '<b>Guardrail</b> &middot; priced PDF kept out of shared files' }
-      ],
-      apply: function (s) { addCard(s, { ref: 'PO-0412', sup: 'Kristall Works', proj: 'Clinique Lagune', stage: 'ordered', note: 'advance paid · 5–6 wks' }); },
-      revert: function (s) { dropCard(s, 'PO-0412'); },
-      lesson: 'On project "Clinique Lagune", adding a "Kristall Works" supplier order based on the email "Clinique Lagune: purchase order and advance" was WRONG and was undone by me. Do not repeat this.'
+      id: 'm2', mode: 'review', from: 'Lea · Studio Mira', addr: 'lea@studiomira.example', time: '11:05',
+      tag: 'client', subject: 'Marina Tower: pricing request',
+      body: 'Hi Youssef,\n\nCould you price 18 track spots and 2 drivers for the lobby? We need it by Thursday.\n\nLea',
+      trace: ['Client asking for a price', 'Drafts a reply', 'G:Could reach a client, so it waits for me'],
+      changes: [{ ic: '&#9998;', draft: { to: 'Lea', body: REPLY } }]
     },
     {
-      id: 'm3', mode: 'review', action: 'draft-reply', dir: 'in', from: 'Lea Haddad · Studio Mira', addr: 'lea@studiomira.example', to: 'operations@',
-      time: '11:05', subject: 'Marina Tower lobby: pricing request',
-      body: 'Hi Youssef,\n\nCould you price the following for the lobby?\n18 x TL-SPOT-30-930-BK\n18 x TL-ADPT-3PH\n2 x DRV-150W-DALI\n\nWe need it by Thursday if possible.\n\nThanks,\nLea',
-      att: [],
-      trace: [
-        '<b>Client</b> on <b>Marina Tower</b>',
-        'Found <b>3 codes</b> + quantities',
-        '&rarr; <b>request</b> + plan + draft reply',
-        'G:Draft has <b>no prices, no promises</b>',
-        'G:Can reach a client &rarr; <b>waits for me</b>'
-      ],
-      json: {
-        classification: 'quote_request', project_name: 'Marina Tower lobby', client_name: 'Studio Mira',
-        quote_request: {
-          summary: 'Pricing for 18 track spots, 18 adapters and 2 DALI drivers, needed by Thursday',
-          codes: ['TL-SPOT-30-930-BK', 'TL-ADPT-3PH', 'DRV-150W-DALI'],
-          proposed_reply: REPLY
-        },
-        timeline_event: 'Studio Mira asked for lobby pricing, due Thu 1 Oct',
-        reasoning_summary: 'A specifier is asking for a quotation on an active project, with codes and a deadline.'
-      },
-      changes: [
-        { ic: '?', html: '<b>Request</b> &middot; Marina Tower lobby pricing<small>Due Thursday &middot; added to Today</small>' },
-        { ic: '#', title: '<b>3 codes checked</b> &middot; exact matches only', lookup: [
-          ['TL-SPOT-30-930-BK', 'Exact match', true],
-          ['TL-ADPT-3PH', 'Exact match', true],
-          ['DRV-150W-DALI', 'No exact match &middot; left blank', false]
-        ] },
-        { ic: '&#9998;', draft: { to: 'Lea &middot; Studio Mira', body: REPLY } }
-      ],
-      apply: function (s) { addToday(s, 'Waiting on you', QUOTE_ITEM); },
-      lesson: 'Studio Mira often drops the driver suffix: ask them to confirm driver codes in the reply.'
-    },
-    {
-      id: 'm4', mode: 'ignore', dir: 'in', from: 'LightWorld Weekly', addr: 'news@lightworld.example', to: 'operations@',
-      time: '11:30', subject: '5 trends shaping architectural lighting in 2027',
-      body: "This week: tunable white goes mainstream, why DALI-2 matters, and the trade shows you shouldn't miss.\n\nRead the full issue online.",
-      att: [],
-      trace: [
-        '<b>Newsletter</b>',
-        'No order, request or project',
-        '&rarr; <b>ignore</b>'
-      ],
-      json: { classification: 'ignore', reasoning_summary: 'Industry newsletter. No order, request or project in it.' },
-      changes: [ { ic: '&#8212;', g: true, html: '<b>Nothing to do</b><small>No card, no task, no noise</small>' } ]
+      id: 'm3', mode: 'ignore', from: 'LightWorld Weekly', addr: 'news@lightworld.example', time: '11:30',
+      tag: 'newsletter', subject: '5 lighting trends for 2027',
+      body: 'This week: tunable white goes mainstream, and the trade shows to watch.',
+      trace: ['Newsletter, no order or request', '&rarr; <b>ignore</b>'],
+      changes: [{ ic: '&#8212;', g: true, html: '<b>Nothing to do</b><small>No card, no task, no noise</small>' }]
     }
   ];
 
   var state, timers = [];
   function fresh() {
-    var today = {};
-    Object.keys(BASE_TODAY).forEach(function (k) { today[k] = BASE_TODAY[k].map(function (t) { return { t: t, isNew: false }; }); });
-    return {
-      cards: BASE_CARDS.map(function (c) { return Object.assign({}, c); }),
-      today: today,
-      auto: BASE_AUTO.map(function (a) { return Object.assign({ note: '', tone: '' }, a); }),
-      status: {}, shown: {}, selected: 'm1', hot: null, landed: null
-    };
+    return { cards: BASE_CARDS.map(function (c) { return Object.assign({}, c); }), status: {}, shown: {}, selected: 'm1', hot: null, landed: null };
   }
 
   function el(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function mail(id) { return MAILS.filter(function (x) { return x.id === id; })[0]; }
   function later(fn) { timers.push(setTimeout(fn, STEP)); }
-
   function setCard(s, ref, patch) { s.cards.forEach(function (c) { if (c.ref === ref) Object.assign(c, patch); }); s.hot = ref; }
-  function addCard(s, card) { s.cards.push(Object.assign({}, card)); s.hot = card.ref; }
-  function dropCard(s, ref) { s.cards = s.cards.filter(function (c) { return c.ref !== ref; }); s.hot = null; }
-  function calm(s) { Object.keys(s.today).forEach(function (k) { s.today[k].forEach(function (i) { i.isNew = false; }); }); }
-  function addToday(s, group, text) { calm(s); s.today[group].unshift({ t: text, isNew: true }); }
-  function dropToday(s, text) { Object.keys(s.today).forEach(function (k) { s.today[k] = s.today[k].filter(function (i) { return i.t !== text; }); }); }
-
-  function jsonHtml(o) {
-    return esc(JSON.stringify(o, null, 2))
-      .replace(/(&quot;[a-z_]+&quot;)(:)/g, '<span class="j-k">$1</span>$2')
-      .replace(/: (&quot;.*?&quot;)/g, ': <span class="j-s">$1</span>')
-      .replace(/^(\s+)(&quot;.*?&quot;)(,?)$/gm, '$1<span class="j-s">$2</span>$3')
-      .replace(/: (true|false)/g, ': <span class="j-b">$1</span>');
-  }
 
   var CHIPS = {
     running: ['st-run', 'reading…'], applied: ['st-ok', 'applied'], undone: ['st-bad', 'undone'],
-    proposed: ['st-prop', 'needs review'], right: ['st-ok', 'approved'], fix: ['st-prop', 'corrected'],
-    wrong: ['st-bad', 'rejected'], ignored: ['', 'not relevant']
+    proposed: ['st-prop', 'needs you'], right: ['st-ok', 'approved'], wrong: ['st-bad', 'rejected'], ignored: ['', 'ignored']
   };
   function statusChip(id) {
     var c = CHIPS[state.status[id]] || ['', 'new'];
@@ -815,7 +689,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       return '<button type="button" class="mail" data-id="' + m.id + '" aria-current="' + (state.selected === m.id) + '">' +
         '<span class="m-top"><span class="m-from">' + esc(m.from) + '</span><span>' + m.time + '</span></span>' +
         '<span class="m-sub">' + esc(m.subject) + '</span>' +
-        '<span class="chips">' + (m.dir === 'out' ? '<span class="chip dir-out">sent</span>' : '<span class="chip">inbox</span>') + statusChip(m.id) + '</span>' +
+        '<span class="chips"><span class="chip">' + m.tag + '</span>' + statusChip(m.id) + '</span>' +
         '</button>';
     }).join('');
     var pending = MAILS.filter(function (m) { return !state.status[m.id]; }).length;
@@ -827,13 +701,9 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       var inner;
       if (c.draft) {
         inner = '<span class="draft-tag">Draft reply &middot; to ' + c.draft.to + ' &middot; not sent</span><div class="draft">' + esc(c.draft.body) + '</div>';
-      } else if (c.lookup) {
-        inner = c.title + '<table class="lk">' + c.lookup.map(function (r) {
-          return '<tr><td>' + r[0] + '</td><td class="' + (r[2] ? 'y' : 'n') + '">' + r[1] + '</td></tr>';
-        }).join('') + '</table>';
       } else {
         inner = c.html;
-        if (c.move) inner += '<span class="stage-move"><span>' + (c.move[0] || 'new') + '</span> &rarr; <span class="to">' + c.move[1] + '</span></span>';
+        if (c.move) inner += '<span class="stage-move"><span>' + c.move[0] + '</span> &rarr; <span class="to">' + c.move[1] + '</span></span>';
       }
       return '<div class="chg"><span class="ic' + (c.g ? ' g' : '') + '" aria-hidden="true">' + c.ic + '</span><div class="t">' + inner + '</div></div>';
     }).join('');
@@ -841,11 +711,10 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 
   function outcomeHtml(m) {
     var st = state.status[m.id];
-    if (st === 'applied') return '<div class="outcome ok"><b>Applied.</b> Second check passed, logged, one click to undo.<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo this change</button></div>';
-    if (st === 'undone') return '<div class="outcome bad"><b>Undone.</b> Saved as a lesson:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'applied') return '<div class="outcome ok"><b>Applied.</b> Logged, one click to undo.<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo this change</button></div>';
+    if (st === 'undone') return '<div class="outcome bad"><b>Undone.</b> Saved as a lesson so it won&rsquo;t repeat.</div>';
     if (st === 'right') return '<div class="outcome ok"><b>Approved.</b> The draft goes to Outlook. I send it myself.</div>';
-    if (st === 'fix') return '<div class="outcome fix"><b>Corrected.</b> Saved as a lesson, streak back to 0:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
-    if (st === 'wrong') return '<div class="outcome bad"><b>Rejected.</b> Saved as a lesson, streak back to 0:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'wrong') return '<div class="outcome bad"><b>Rejected.</b> Saved as a lesson so it won&rsquo;t repeat.</div>';
     if (st === 'ignored') return '<div class="outcome ok"><b>Ignored.</b> No noise.</div>';
     return '';
   }
@@ -853,11 +722,8 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   function renderDetail() {
     var m = mail(state.selected), st = state.status[m.id];
     var h = '<article class="email">' +
-      '<dl class="e-meta"><dt>' + (m.dir === 'out' ? 'To' : 'From') + '</dt><dd>' + esc(m.dir === 'out' ? m.to + ' <' + m.addr + '>' : m.from.split(' · ')[0] + ' <' + m.addr + '>') + '</dd>' +
-      '<dt>Folder</dt><dd>' + (m.dir === 'out' ? 'Sent items' : 'Inbox') + ' &middot; today ' + m.time + '</dd></dl>' +
-      '<h3>' + esc(m.subject) + '</h3><p class="e-body">' + esc(m.body) + '</p>' +
-      (m.att.length ? '<div class="att">' + m.att.map(function (a) { return '<span>&#128206; ' + esc(a) + '</span>'; }).join('') + '</div>' : '') +
-      '</article>';
+      '<dl class="e-meta"><dt>From</dt><dd>' + esc(m.from.split(' · ')[0] + ' <' + m.addr + '>') + '</dd></dl>' +
+      '<h3>' + esc(m.subject) + '</h3><p class="e-body">' + esc(m.body) + '</p></article>';
     if (!st) {
       h += '<div class="run-row"><button type="button" class="btn primary" id="run">Run the agent &rarr;</button></div>';
     } else {
@@ -867,14 +733,11 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         return '<li class="' + (guard ? 'guard' : '') + (i < shown ? ' in' : '') + '">' + (guard ? t.slice(2) : t) + '</li>';
       }).join('') + '</ol>';
       if (st !== 'running') {
-        h += '<div class="proposal" id="proposal">' +
-          '<details class="json"><summary>Structured output</summary><pre>' + jsonHtml(m.json) + '</pre></details>' +
-          '<p class="p-h" style="margin-top:16px">' + HEADS[m.mode] + '</p><div class="changes">' + renderChanges(m) + '</div>';
+        h += '<div class="proposal" id="proposal"><p class="p-h" style="margin-top:16px">' + HEADS[m.mode] + '</p><div class="changes">' + renderChanges(m) + '</div>';
         if (st === 'proposed') {
-          h += '<div class="review"><p>Can reach a client, so it waits for me.</p><div class="rv-btns">' +
-            '<button type="button" class="rvb right" data-rv="right">&#10003; Right</button>' +
-            '<button type="button" class="rvb fix" data-rv="fix">&#9998; Fix it</button>' +
-            '<button type="button" class="rvb wrong" data-rv="wrong">&#10005; Wrong</button></div></div>';
+          h += '<div class="review"><p>It could reach a client, so it waits for me.</p><div class="rv-btns">' +
+            '<button type="button" class="rvb right" data-rv="right">&#10003; Approve</button>' +
+            '<button type="button" class="rvb wrong" data-rv="wrong">&#10005; Reject</button></div></div>';
         }
         h += outcomeHtml(m);
         var next = MAILS.filter(function (x) { return !state.status[x.id]; })[0];
@@ -899,33 +762,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     }).join('');
   }
 
-  function renderToday() {
-    el('today').innerHTML = Object.keys(state.today).map(function (g) {
-      var items = state.today[g];
-      return '<div class="today-g"><h5>' + g + ' &middot; ' + items.length + '</h5><ul>' + (items.length ? items.map(function (i) {
-        return '<li' + (i.isNew ? ' class="new"' : '') + '>' + esc(i.t) + '</li>';
-      }).join('') : '<li>Nothing right now</li>') + '</ul></div>';
-    }).join('');
-  }
-
-  function renderAuto() {
-    el('auto').innerHTML = state.auto.map(function (a) {
-      var right, status, tone = a.tone;
-      if (a.hubOnly) {
-        var on = Math.min(a.streak, AUTO_AFTER), pips = '';
-        for (var i = 0; i < AUTO_AFTER; i++) pips += '<i' + (i < on ? ' class="on"' : '') + '></i>';
-        right = '<span class="pips" aria-hidden="true">' + pips + '</span>';
-        if (a.streak >= AUTO_AFTER) { status = 'runs on its own &middot; I can pause it'; tone = 'won'; }
-        else status = a.streak + ' of ' + AUTO_AFTER + ' in a row';
-      } else {
-        right = '<span class="a-n">' + a.streak + ' in a row</span>';
-        status = a.note || 'always asks: can reach a client';
-      }
-      return '<div class="auto-row"><span class="a-l">' + a.label + '</span>' + right + '<span class="a-s' + (tone ? ' ' + tone : '') + '">' + status + '</span></div>';
-    }).join('');
-  }
-
-  function renderAll() { renderInbox(); renderDetail(); renderBoard(); renderToday(); renderAuto(); }
+  function renderAll() { renderInbox(); renderDetail(); renderBoard(); }
 
   function run(id) {
     var m = mail(id);
@@ -947,9 +784,9 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   function finish(id) {
     var m = mail(id);
     if (m.mode === 'apply') { m.apply(state); state.status[id] = 'applied'; }
-    else if (m.mode === 'review') { m.apply(state); state.status[id] = 'proposed'; }
+    else if (m.mode === 'review') state.status[id] = 'proposed';
     else state.status[id] = 'ignored';
-    renderInbox(); renderBoard(); renderToday();
+    renderInbox(); renderBoard();
     if (state.selected === id) { state.landed = id; renderDetail(); }
   }
 
@@ -957,11 +794,6 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     var m = mail(state.selected);
     if (state.status[m.id] !== 'proposed') return;
     state.status[m.id] = kind;
-    state.auto.forEach(function (a) {
-      if (a.key !== m.action) return;
-      if (kind === 'right') { a.streak += 1; a.note = '+1 &middot; still always asks'; a.tone = 'ok'; }
-      else { a.streak = 0; a.note = 'reset to 0 &middot; always asks'; a.tone = 'bad'; }
-    });
     state.hot = null;
     renderAll();
   }
