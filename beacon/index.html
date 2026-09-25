@@ -226,6 +226,8 @@ details.more summary:hover { color: var(--ink); }
 .file i { font-style: normal; font: 700 10px var(--mono); background: var(--bad); color: #1a0f0c; border-radius: 4px; padding: 3px 5px; }
 .draft-box { margin-top: 10px; }
 .fin { margin: 12px 0 0; font-size: 14px; color: var(--ok); }
+.done-line.todo { margin: 10px 0 0; color: var(--accent); }
+.done-line .dot { width: 8px; height: 8px; margin: 0 4px; border-radius: 50%; background: var(--accent); flex: 0 0 8px; }
 .proposal { margin: 18px 0 0; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s var(--ease); }
 .proposal.in { opacity: 1; transform: none; }
 .p-h { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; }
@@ -346,7 +348,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <p class="eyebrow"><span class="live"><i></i>In production</span><span>Lighting distribution &middot; since Sep 2026</span></p>
       <h1 id="h1">Every email read. <em>Every order up to date.</em></h1>
-      <p class="sub"><b>Beacon</b> is the AI operations hub behind a lighting distributor&rsquo;s orders. Every 15 minutes it reads supplier and client emails, <b>updates orders, shipments and requests</b>, and <b>drafts quotations and POs</b>. It never sends email: client replies wait as drafts.</p>
+      <p class="sub"><b>Beacon</b> is the AI operations hub behind a lighting distributor&rsquo;s orders. Every 15 minutes it reads supplier and client emails, <b>updates orders, shipments and requests</b>, and <b>prices quotations and prepares Xero invoice drafts</b>. It never sends email: client replies wait as drafts.</p>
       <div class="hero-actions">
         <a class="btn primary" href="#demo">Try the demo &darr;</a>
         <a class="btn" href="#how">How it works</a>
@@ -635,35 +637,34 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       id: 'm1', mode: 'review', from: 'Lea · Studio Mira', addr: 'lea@studiomira.example', time: '09:12',
       tag: 'client', subject: 'Villa Cedar: quote please',
       body: 'Hi Youssef,\n\nCould you quote 18 track spots and 2 drivers for the Villa Cedar lobby?\n\nLea',
-      steps: ['Quote request from <b>Studio Mira</b>', 'Matched exact codes <b>TR-S12</b> and <b>DRV-60</b>', 'Priced from the approved price list', 'G:Goes to a client, so it waits for me'],
+      steps: ['Quote request logged for <b>Villa Cedar</b>', 'Priced in Quotient: exact codes <b>TR-S12</b>, <b>DRV-60</b>', 'Stock check: 6 spots on hand, <b>12 short</b>', 'G:Goes to a client, so it waits for me'],
       head: 'Quotation ready',
-      doc: { no: 'Q-1042', file: 'Q-1042_Villa-Cedar.pdf', rows: [['TR-S12 track spot', 18, 64], ['DRV-60 driver', 2, 38]] },
+      doc: { no: 'Q-1042', tag: 'Quotient', file: 'Q-1042_Villa-Cedar.pdf', rows: [['TR-S12 track spot', 18, 64], ['DRV-60 driver', 2, 38]] },
       draft: { to: 'Lea', body: 'Hello Lea,\n\nPlease find our quotation Q-1042 attached.\n\nBest regards' },
-      ask: 'Reply with the quote attached. Send it?',
-      okText: 'Draft goes to Outlook with the PDF attached. I send it myself.'
+      ask: 'Reply with the quote attached. Save it as a draft?',
+      okText: 'Draft saved in the Outlook thread with the PDF. I send it myself.'
     },
     {
       id: 'm2', mode: 'review', from: 'Lea · Studio Mira', addr: 'lea@studiomira.example', time: '14:40',
       tag: 'client', subject: 'Re: Villa Cedar: quote please',
-      body: 'Approved. Payment sent today, receipt attached.\n\nLea',
-      steps: ['Quote <b>Q-1042</b> approved', 'Payment of <b>USD 1,228</b> matched to it', 'Supplier for these codes: <b>Lumeria</b>', 'G:Goes to a supplier, so it waits for me'],
-      head: 'Purchase order ready',
-      logged: 'Payment logged, order <b>LM-2291</b> opened',
-      doc: { no: 'PO-0317', file: 'PO-0317_Lumeria.pdf', tag: 'Xero draft', rows: [['TR-S12 track spot', 18], ['DRV-60 driver', 2]] },
-      draft: { to: 'Giulia at Lumeria', body: 'Hello Giulia,\n\nPlease find PO-0317 attached. Kindly confirm the ready date.\n\nBest regards' },
-      ask: 'PO to the supplier. Send it?',
-      okText: 'PO goes to Xero and the email to Outlook. I send it myself.',
-      onRun: function (s) { s.cards.unshift({ ref: 'LM-2291', sup: 'Lumeria', proj: 'Villa Cedar', stage: 'ordered', note: 'paid' }); s.hot = 'LM-2291'; }
+      body: 'Approved. Payment sent today, slip attached.\n\nLea',
+      steps: ['Payment slip read: <b>USD 1,228</b> for Q-1042', 'Villa Cedar moved to <b>ongoing</b>', 'Order needed from <b>Lumeria</b>: 12 spots, 2 drivers', 'G:Invoices stay drafts until I confirm'],
+      head: 'Invoice ready',
+      logged: 'Payment logged against <b>Q-1042</b>',
+      doc: { no: 'Draft invoice', tag: 'Xero draft', rows: [['TR-S12 track spot', 18, 64], ['DRV-60 driver', 2, 38]] },
+      todo: 'To do: send PO to Lumeria for 12 &times; TR-S12, 2 &times; DRV-60',
+      ask: 'Create this invoice as a draft in Xero?',
+      okText: 'Draft invoice created in Xero. Beacon never approves or emails invoices.'
     },
     {
       id: 'm3', mode: 'apply', from: 'Giulia · Lumeria', addr: 'giulia@lumeria.example', time: '+2 days',
       tag: 'supplier', subject: 'Re: PO-0317',
-      body: 'PO-0317 confirmed. Production started, ready on 12 October.\n\nGiulia',
-      steps: ['Matched <b>PO-0317</b> to order <b>LM-2291</b>', 'Moves it to <b>production</b>, ready 12 Oct', 'G:Second check agrees'],
+      body: 'Thanks for PO-0317. Confirmed, pro forma PI-5520 attached. Ready on 12 October.\n\nGiulia',
+      steps: ['Matched my <b>PO-0317</b> to their <b>PI-5520</b>', 'Order <b>LM-2291</b> added to Villa Cedar', 'Moves it to <b>production</b>, ready 12 Oct', 'G:Second check agrees'],
       head: 'Order updated',
       move: ['ordered', 'production'],
-      apply: function (s) { setCard(s, 'LM-2291', { stage: 'production', note: 'ready 12 Oct' }); },
-      revert: function (s) { setCard(s, 'LM-2291', { stage: 'ordered', note: 'paid' }); }
+      apply: function (s) { s.cards.unshift({ ref: 'LM-2291', sup: 'Lumeria', proj: 'Villa Cedar', stage: 'production', note: 'ready 12 Oct' }); s.hot = 'LM-2291'; },
+      revert: function (s) { s.cards = s.cards.filter(function (c) { return c.ref !== 'LM-2291'; }); s.hot = null; }
     }
   ];
 
@@ -711,7 +712,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     if (total) rows += '<tr class="tot"><td>Total</td><td></td><td>USD ' + money(total) + '</td></tr>';
     return '<div class="doc"><div class="doc-h"><b>' + d.no + '</b>' + (d.tag ? '<span class="chip">' + d.tag + '</span>' : '') + '</div>' +
       '<table class="doc-t">' + rows + '</table>' +
-      '<span class="file"><i>PDF</i>' + d.file + '</span></div>';
+      (d.file ? '<span class="file"><i>PDF</i>' + d.file + '</span>' : '') + '</div>';
   }
 
   function resultHtml(m) {
@@ -719,6 +720,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     if (m.logged) h += '<div class="done-line">' + TICK + '<span>' + m.logged + '</span></div>';
     if (m.doc) h += docHtml(m);
     if (m.draft) h += '<div class="draft-box"><span class="draft-tag">Email to ' + esc(m.draft.to) + ' &middot; attached &middot; not sent</span><div class="draft">' + esc(m.draft.body) + '</div></div>';
+    if (m.todo) h += '<div class="done-line todo"><span class="dot"></span><span>' + m.todo + '</span></div>';
     if (m.move) h += '<div class="done-line">' + TICK + '<span><b>LM-2291</b> <span class="stage-move"><span>' + m.move[0] + '</span> &rarr; <span class="to">' + m.move[1] + '</span></span> ready 12 Oct</span></div>';
     if (st === 'proposed') {
       h += '<div class="review"><p>' + m.ask + '</p><div class="rv-btns">' +
@@ -749,7 +751,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         h += '<div class="proposal" id="proposal"><p class="p-h">' + m.head + '</p>' + resultHtml(m);
         var next = MAILS[state.arrived];
         if (done(st) && next && state.arrived < MAILS.length) h += '<button type="button" class="linkbtn" data-next="1">Next email arrives &rarr;</button>';
-        if (done(st) && MAILS.every(function (x) { return /^(right|applied)$/.test(state.status[x.id]); })) h += '<p class="fin">From quote to production in three emails. I only clicked Approve.</p>';
+        if (done(st) && MAILS.every(function (x) { return /^(right|applied)$/.test(state.status[x.id]); })) h += '<p class="fin">Quote request to production in three emails. I only confirmed what leaves the company.</p>';
         h += '</div>';
       }
     }
