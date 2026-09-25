@@ -299,7 +299,14 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   section.block { padding: 68px 0; }
   h2 { margin-bottom: 32px; }
   .stats { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .t3 { grid-template-columns: 1fr; }
+  .tiles { gap: 8px; }
+  .t3, .t4 { grid-template-columns: 1fr 1fr; }
+  .t3 > .tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .tile, .tile.sm { padding: 16px 10px 14px; border-radius: 12px; }
+  .tile .badge, .tile.sm .badge { width: 38px; height: 38px; border-radius: 10px; margin: 0 auto 10px; }
+  .tile .ico { width: 22px; height: 22px; }
+  .tile h3, .tile.sm h3 { font-size: 15px; }
+  .tile p, .tile.sm p { font-size: 12.5px; line-height: 1.4; }
   .eng { grid-template-columns: 1fr; }
   .pipe { grid-template-columns: 1fr; gap: 26px; }
   .track { left: 38px; right: auto; top: 38px; bottom: 38px; width: 2px; height: auto; }
@@ -317,8 +324,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   .mail { padding: 12px 14px; }
 }
 @media (max-width: 420px) {
-  .t4 { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .tile.sm { padding: 14px; }
+  .tile h3, .tile.sm h3 { font-size: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
