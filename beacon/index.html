@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#100E0C" />
 <meta name="author" content="Youssef Khoury" />
-<meta name="description" content="Beacon: the operations hub I built and run at Alta Light. An AI mail agent turns supplier and client emails into order, shipment, request and payment updates every 15 minutes, and a person approves anything that leaves the company." />
+<meta name="description" content="Beacon: the operations hub I built and run at a lighting distributor. An AI mail agent turns supplier and client emails into order, shipment, request and payment updates every 15 minutes, and a person approves anything that leaves the company." />
 <meta property="og:title" content="Beacon: an AI operations hub in production · Youssef Khoury" />
 <meta property="og:description" content="An AI mail agent that turns supplier and client emails into order, shipment and payment updates, with a person in charge of anything that goes out." />
 <meta property="og:type" content="article" />
@@ -83,7 +83,9 @@ a { color: inherit; }
 .live { display: inline-flex; align-items: center; gap: 7px; padding: 3px 10px 3px 8px; border: 1px solid rgba(143,203,139,.4); border-radius: 99px; color: var(--ok); }
 .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: pulse 2s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(143,203,139,.55); } 70% { box-shadow: 0 0 0 8px rgba(143,203,139,0); } 100% { box-shadow: 0 0 0 0 rgba(143,203,139,0); } }
-h1 { font: 800 clamp(36px, 7vw, 78px)/1 var(--display); letter-spacing: -.03em; margin: 0 auto 18px; text-align: center; max-width: 15ch; }
+h1 { font: 800 clamp(34px, 6.4vw, 72px)/1.02 var(--display); letter-spacing: -.03em; margin: 0 auto 18px; text-align: center; }
+h1 em { display: block; }
+@media (min-width: 720px) { h1, h1 em { white-space: nowrap; } }
 h1 .w { display: inline-block; }
 .js h1 .w { opacity: 0; transform: translateY(.5em) rotate(4deg); filter: blur(10px); animation: word 1s var(--out) forwards; animation-delay: calc(var(--i) * 70ms + 150ms); }
 @keyframes word { to { opacity: 1; transform: none; filter: none; } }
@@ -350,9 +352,9 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   <section class="hero">
     <div class="glow" id="glow" aria-hidden="true"></div>
     <div class="shell">
-      <p class="eyebrow"><span class="live"><i></i>In production</span><span>Alta Light &middot; since Sep 2026</span></p>
+      <p class="eyebrow"><span class="live"><i></i>In production</span><span>Lighting distribution &middot; since Sep 2026</span></p>
       <h1 id="h1">Every email read. <em>Every order up to date.</em></h1>
-      <p class="sub"><b>Beacon</b> is the AI operations hub behind Alta Light&rsquo;s orders. Every 15 minutes it reads supplier and client emails, <b>updates orders, shipments and requests</b>, and <b>drafts quotations and POs</b>. It never sends email: client replies wait as drafts.</p>
+      <p class="sub"><b>Beacon</b> is the AI operations hub behind a lighting distributor&rsquo;s orders. Every 15 minutes it reads supplier and client emails, <b>updates orders, shipments and requests</b>, and <b>drafts quotations and POs</b>. It never sends email: client replies wait as drafts.</p>
       <div class="hero-actions">
         <a class="btn primary" href="#demo">Try the demo &darr;</a>
         <a class="btn" href="#how">How it works</a>
