@@ -26,6 +26,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" />
 <script defer src="https://cloud.umami.is/script.js" data-website-id="98d1a2bc-2c8e-4650-aa3e-07665e87773f"></script>
+<script>document.documentElement.classList.add('js');</script>
 <style>
 :root {
   --bg: #100E0C; --surface: #191512; --surface-2: #14100D; --surface-3: #1F1A16;
@@ -39,17 +40,32 @@
   --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --shell: min(100% - 32px, 1120px);
   --ease: cubic-bezier(.22,.61,.36,1);
+  --out: cubic-bezier(.16,1,.3,1);
   --r: 12px;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; overflow-x: clip; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: clip; }
 a { color: inherit; }
-.mono { font-family: var(--mono); }
 .shell { width: var(--shell); margin: 0 auto; }
 .skip-link { position: fixed; z-index: 99; top: 10px; left: 10px; padding: 8px 12px; background: var(--accent); color: #1a1204; border-radius: 6px; font: 12px var(--mono); transform: translateY(-160%); }
 .skip-link:focus { transform: none; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* scroll progress */
+.progress { position: fixed; z-index: 30; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* reveal on scroll */
+.js .rv { opacity: 0; transform: translateY(34px); filter: blur(8px); transition: opacity .9s var(--out), transform .9s var(--out), filter .9s var(--out); transition-delay: calc(var(--i, 0) * 90ms); }
+.js .rv.in { opacity: 1; transform: none; filter: none; }
+.js .rv.pop { transform: translateY(24px) scale(.94); }
+.js .rv.pop.in { transform: none; }
+
+/* icons: stroke draws in when revealed */
+.ico { width: 26px; height: 26px; display: block; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ico * { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.js .rv .ico * { stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s var(--ease); transition-delay: calc(var(--i, 0) * 90ms + 250ms); }
+.js .rv.in .ico * { stroke-dashoffset: 0; }
 
 /* top bar */
 .topbar { position: sticky; top: 0; z-index: 20; background: rgba(16,14,12,.86); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
@@ -61,40 +77,94 @@ a { color: inherit; }
 .tb-tag { font: 11px var(--mono); letter-spacing: .12em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
 
 /* hero */
-.hero { padding: 64px 0 40px; border-bottom: 1px solid var(--line); position: relative; }
-.hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 70% at 85% 0%, rgba(232,177,90,.10), transparent 70%); pointer-events: none; }
-.eyebrow { display: inline-flex; align-items: center; gap: 10px; font: 500 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 20px; flex-wrap: wrap; }
+.hero { padding: 72px 0 56px; position: relative; overflow: hidden; }
+.glow { position: absolute; width: 900px; height: 900px; left: 50%; top: -420px; margin-left: -450px; background: radial-gradient(closest-side, rgba(232,177,90,.16), transparent 70%); pointer-events: none; }
+.eyebrow { display: flex; justify-content: center; align-items: center; gap: 10px; font: 500 11.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 22px; flex-wrap: wrap; }
 .live { display: inline-flex; align-items: center; gap: 7px; padding: 3px 10px 3px 8px; border: 1px solid rgba(143,203,139,.4); border-radius: 99px; color: var(--ok); }
-.live i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 rgba(143,203,139,.6); animation: pulse 2s infinite; }
+.live i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: pulse 2s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(143,203,139,.55); } 70% { box-shadow: 0 0 0 8px rgba(143,203,139,0); } 100% { box-shadow: 0 0 0 0 rgba(143,203,139,0); } }
-h1 { font: 800 clamp(34px, 6.2vw, 66px)/1.02 var(--display); letter-spacing: -.025em; margin: 0 0 22px; max-width: 16ch; }
+h1 { font: 800 clamp(36px, 7vw, 78px)/1 var(--display); letter-spacing: -.03em; margin: 0 auto 18px; text-align: center; max-width: 15ch; }
+h1 .w { display: inline-block; }
+.js h1 .w { opacity: 0; transform: translateY(.5em) rotate(4deg); filter: blur(10px); animation: word 1s var(--out) forwards; animation-delay: calc(var(--i) * 70ms + 150ms); }
+@keyframes word { to { opacity: 1; transform: none; filter: none; } }
 h1 em { font-style: normal; color: var(--accent); }
-.dek { font-size: clamp(16px, 1.9vw, 19px); line-height: 1.6; color: var(--muted); max-width: 64ch; margin: 0 0 32px; }
-.dek b { color: var(--ink); font-weight: 500; }
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--surface-2); }
-.stat { padding: 18px 18px 16px; border-right: 1px solid var(--line); }
-.stat:last-child { border-right: 0; }
-.stat b { display: block; font: 800 clamp(26px, 3.4vw, 36px)/1 var(--display); color: var(--accent); letter-spacing: -.02em; margin-bottom: 8px; }
-.stat span { font-size: 13px; color: var(--muted); line-height: 1.45; display: block; }
-.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; align-items: center; }
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 500 12.5px var(--mono); letter-spacing: .04em; text-decoration: none; cursor: pointer; transition: border-color .2s, background .2s, transform .2s var(--ease); }
-.btn:hover { border-color: var(--accent); }
+.sub { text-align: center; font-size: clamp(16px, 2vw, 19px); color: var(--muted); margin: 0 0 30px; }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 500 12.5px var(--mono); letter-spacing: .04em; text-decoration: none; cursor: pointer; transition: border-color .2s, background .2s, transform .2s var(--ease); }
+.btn:hover { border-color: var(--accent); transform: translateY(-2px); }
 .btn.primary { background: var(--accent); color: #1a1204; border-color: var(--accent); font-weight: 600; }
 .btn.primary:hover { background: #F4C56D; }
-.privacy { font: 12px/1.5 var(--mono); color: var(--faint); margin: 18px 0 0; max-width: 70ch; }
+
+.reel-wrap { margin: 48px auto 0; perspective: 1600px; }
+.reel { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line-2); background: #0C0A09; box-shadow: 0 50px 120px -40px rgba(0,0,0,.9), 0 0 0 1px rgba(232,177,90,.06), 0 0 80px -20px rgba(232,177,90,.18); transform-origin: 50% 0; will-change: transform; }
+.reel video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.js .reel { animation: rise 1.4s var(--out) .55s both; }
+@keyframes rise { from { opacity: 0; transform: translateY(60px) rotateX(18deg) scale(.94); } to { opacity: 1; transform: none; } }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 28px; }
+.stat { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface-2); padding: 18px 18px 16px; }
+.stat b { display: block; font: 800 clamp(30px, 4vw, 44px)/1 var(--display); color: var(--accent); letter-spacing: -.02em; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 13px; color: var(--muted); display: block; }
 
 /* sections */
-section.block { padding: 72px 0; border-bottom: 1px solid var(--line); }
-.sec-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 10px; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
-.sec-head span { color: var(--faint); }
-h2 { font: 700 clamp(26px, 3.6vw, 40px)/1.12 var(--display); letter-spacing: -.02em; margin: 0 0 16px; max-width: 24ch; }
-.lead { color: var(--muted); max-width: 66ch; margin: 0 0 32px; font-size: 16px; }
+section.block { padding: 96px 0; border-top: 1px solid var(--line); position: relative; }
+.kick { display: block; text-align: center; font: 500 12px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+h2 { font: 800 clamp(28px, 4.4vw, 50px)/1.05 var(--display); letter-spacing: -.025em; margin: 0 auto 44px; text-align: center; max-width: 20ch; }
+h2 em { font-style: normal; color: var(--accent); }
+.lead { text-align: center; color: var(--muted); margin: -28px auto 36px; max-width: 52ch; }
 
-.probs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.prob { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 22px; }
-.prob .k { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
-.prob h3 { font: 700 19px/1.25 var(--display); margin: 8px 0 8px; }
-.prob p { margin: 0; color: var(--muted); font-size: 14.5px; }
+/* tiles */
+.tiles { display: grid; gap: 12px; }
+.t3 { grid-template-columns: repeat(3, 1fr); }
+.t4 { grid-template-columns: repeat(4, 1fr); }
+.tile { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 22px; position: relative; overflow: hidden; transition: border-color .3s, transform .3s var(--ease); }
+.tile:hover { border-color: var(--line-2); transform: translateY(-3px); }
+.tile::after { content: ""; position: absolute; inset: 0; background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(232,177,90,.08), transparent 45%); opacity: 0; transition: opacity .3s; pointer-events: none; }
+.tile:hover::after { opacity: 1; }
+.badge { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 16px; }
+.badge.g { background: var(--ok-soft); color: var(--ok); }
+.badge.b { background: var(--bad-soft); color: var(--bad); }
+.tile h3 { font: 700 20px/1.2 var(--display); margin: 0 0 4px; letter-spacing: -.01em; }
+.tile p { margin: 0; color: var(--muted); font-size: 14px; }
+.tile.sm { padding: 18px; }
+.tile.sm .badge { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 12px; }
+.tile.sm h3 { font-size: 16.5px; }
+.tile.sm p { font-size: 13px; }
+
+/* before -> after */
+.shift { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 30px; font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.shift b { color: var(--ok); font-weight: 600; }
+.shift i { display: block; width: 90px; height: 1px; background: linear-gradient(90deg, var(--bad), var(--ok)); transform-origin: 0 50%; transform: scaleX(0); transition: transform 1.2s var(--out) .4s; }
+.shift.in i { transform: none; }
+
+/* pipeline (scroll driven) */
+.pipe { --p: 0; position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.track { position: absolute; left: 12.5%; right: 12.5%; top: 38px; height: 2px; background: var(--line); border-radius: 2px; }
+.fill { position: absolute; inset: 0; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transform-origin: 0 50%; transform: scaleX(var(--p)); border-radius: 2px; }
+.packet { position: absolute; top: 50%; left: calc(var(--p) * 100%); width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(232,177,90,.18), 0 0 24px 4px rgba(232,177,90,.5); opacity: calc(var(--p) * 20); }
+.pnode { text-align: center; position: relative; }
+.ring { width: 78px; height: 78px; margin: 0 auto 16px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--line-2); color: var(--faint); position: relative; z-index: 1; transition: color .5s, border-color .5s, box-shadow .5s, transform .5s var(--out); }
+.ring .ico { width: 30px; height: 30px; }
+.pnode.lit .ring { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 6px var(--accent-soft), 0 0 40px -6px rgba(232,177,90,.55); transform: scale(1.06); }
+.pnode.lit.g .ring { color: var(--ok); border-color: var(--ok); box-shadow: 0 0 0 6px var(--ok-soft), 0 0 40px -6px rgba(143,203,139,.55); }
+.pnode h3 { font: 700 18px/1.2 var(--display); margin: 0 0 4px; }
+.pnode p { margin: 0; font: 12px var(--mono); letter-spacing: .04em; color: var(--muted); }
+.loop { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 40px auto 0; width: fit-content; max-width: 100%; border: 1px solid rgba(143,203,139,.35); background: var(--ok-soft); border-radius: 99px; padding: 9px 18px; font-size: 14px; color: var(--ink); }
+.loop .ico { width: 18px; height: 18px; color: var(--ok); flex: none; }
+.js .loop .ico { animation: spin 6s linear infinite; }
+@keyframes spin { to { transform: rotate(-360deg); } }
+.stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 28px auto 0; max-width: 820px; }
+.stack span { font: 500 12px var(--mono); padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 99px; color: var(--ink); background: var(--surface-2); }
+details.more { margin: 30px auto 0; max-width: 820px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+details.more summary { cursor: pointer; padding: 14px 20px; font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); list-style: none; text-align: center; }
+details.more summary::-webkit-details-marker { display: none; }
+details.more summary::before { content: "+ "; color: var(--accent); }
+details.more[open] summary::before { content: "− "; }
+details.more summary:hover { color: var(--ink); }
+.eng { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 28px; margin: 0; padding: 4px 20px 20px; list-style: none; }
+.eng li { position: relative; padding-left: 18px; color: var(--muted); font-size: 14px; }
+.eng li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+.eng li b { color: var(--ink); font-weight: 600; }
 
 /* demo */
 .demo { border: 1px solid var(--line-2); border-radius: 14px; background: var(--surface-2); overflow: hidden; box-shadow: 0 30px 80px -40px rgba(0,0,0,.8); }
@@ -102,7 +172,7 @@ h2 { font: 700 clamp(26px, 3.6vw, 40px)/1.12 var(--display); letter-spacing: -.0
 .win-bar .dots { color: var(--line-2); letter-spacing: 2px; }
 .win-bar button { background: none; border: 1px solid var(--line-2); color: var(--muted); font: 11px var(--mono); letter-spacing: .08em; padding: 4px 10px; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
 .win-bar button:hover { color: var(--ink); border-color: var(--accent); }
-.demo-grid { display: grid; grid-template-columns: 300px 1fr; min-height: 560px; }
+.demo-grid { display: grid; grid-template-columns: 300px 1fr; min-height: 540px; }
 .inbox { border-right: 1px solid var(--line); background: var(--surface-2); }
 .inbox-h { padding: 12px 16px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
 .mail { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line); padding: 14px 16px; color: var(--ink); cursor: pointer; font: inherit; position: relative; transition: background .2s; }
@@ -119,7 +189,6 @@ h2 { font: 700 clamp(26px, 3.6vw, 40px)/1.12 var(--display); letter-spacing: -.0
 .chip.st-ok { color: var(--ok); border-color: rgba(143,203,139,.45); background: var(--ok-soft); }
 .chip.st-bad { color: var(--bad); border-color: rgba(229,138,123,.45); background: var(--bad-soft); }
 .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-
 .detail { padding: 22px 24px 26px; min-width: 0; }
 .email { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 16px 18px; }
 .email .e-meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
@@ -130,15 +199,14 @@ h2 { font: 700 clamp(26px, 3.6vw, 40px)/1.12 var(--display); letter-spacing: -.0
 .att { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 .att span { font: 12px var(--mono); padding: 4px 9px; border: 1px dashed var(--line-2); border-radius: 6px; color: var(--muted); }
 .run-row { display: flex; align-items: center; gap: 14px; margin: 16px 0 0; flex-wrap: wrap; }
-.run-row .hint { font: 12px var(--mono); color: var(--faint); }
-
+#run { animation: nudge 2.4s var(--ease) infinite; }
+@keyframes nudge { 0%, 100% { box-shadow: 0 0 0 0 rgba(232,177,90,.5); } 60% { box-shadow: 0 0 0 10px rgba(232,177,90,0); } }
 .trace { list-style: none; margin: 18px 0 0; padding: 0; border-left: 1px solid var(--line-2); }
-.trace li { position: relative; padding: 4px 0 8px 22px; font-size: 14px; color: var(--muted); opacity: 0; transform: translateY(4px); transition: opacity .3s, transform .3s var(--ease); }
+.trace li { position: relative; padding: 4px 0 8px 22px; font-size: 14px; color: var(--muted); opacity: 0; transform: translateX(-8px); transition: opacity .35s, transform .35s var(--out); }
 .trace li.in { opacity: 1; transform: none; }
 .trace li::before { content: ""; position: absolute; left: -5px; top: 11px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
 .trace li b { color: var(--ink); font-weight: 600; }
 .trace li.guard::before { border-color: var(--ok); }
-
 details.json { margin: 12px 0 0; border: 1px solid var(--line); border-radius: 8px; background: #0C0A09; }
 details.json summary { cursor: pointer; padding: 9px 12px; font: 500 11.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); list-style: none; }
 details.json summary::-webkit-details-marker { display: none; }
@@ -146,12 +214,13 @@ details.json summary::before { content: "+ "; color: var(--accent); }
 details.json[open] summary::before { content: "− "; }
 details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); color: var(--muted); overflow-x: auto; white-space: pre; }
 .j-k { color: #D9C3A0; } .j-s { color: var(--ok); } .j-b { color: var(--accent); }
-
 .proposal { margin: 18px 0 0; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s var(--ease); }
 .proposal.in { opacity: 1; transform: none; }
 .p-h { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; }
 .changes { display: grid; gap: 8px; }
 .chg { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; border: 1px solid var(--line); background: var(--surface); border-radius: 9px; padding: 11px 12px; font-size: 14px; }
+.proposal.in .chg { animation: land .5s var(--out) both; }
+.proposal.in .chg:nth-child(2) { animation-delay: .08s; } .proposal.in .chg:nth-child(3) { animation-delay: .16s; } .proposal.in .chg:nth-child(4) { animation-delay: .24s; }
 .chg .ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font: 600 12px var(--mono); }
 .chg .ic.g { background: var(--ok-soft); color: var(--ok); }
 .chg .t b { font-weight: 600; }
@@ -165,23 +234,20 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .lk td { padding: 6px 8px; border-top: 1px solid var(--line); vertical-align: top; }
 .lk td:first-child { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
 .lk .y { color: var(--ok); } .lk .n { color: var(--warn); }
-
 .review { margin-top: 16px; border: 1px solid var(--line-2); border-radius: 10px; padding: 14px; background: var(--surface-3); }
 .review p { margin: 0 0 10px; font-size: 13.5px; color: var(--muted); }
 .rv-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-.rv { flex: 1 1 110px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 600 12.5px var(--mono); letter-spacing: .04em; cursor: pointer; transition: border-color .2s, background .2s; }
-.rv.right:hover { border-color: var(--ok); background: var(--ok-soft); }
-.rv.fix:hover { border-color: var(--accent); background: var(--accent-soft); }
-.rv.wrong:hover { border-color: var(--bad); background: var(--bad-soft); }
-.outcome { margin-top: 12px; padding: 12px 14px; border-radius: 9px; font-size: 14px; border: 1px solid; }
+.rvb { flex: 1 1 110px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 600 12.5px var(--mono); letter-spacing: .04em; cursor: pointer; transition: border-color .2s, background .2s; }
+.rvb.right:hover { border-color: var(--ok); background: var(--ok-soft); }
+.rvb.fix:hover { border-color: var(--accent); background: var(--accent-soft); }
+.rvb.wrong:hover { border-color: var(--bad); background: var(--bad-soft); }
+.outcome { margin-top: 12px; padding: 12px 14px; border-radius: 9px; font-size: 14px; border: 1px solid; animation: land .5s var(--out); }
 .outcome.ok { border-color: rgba(143,203,139,.4); background: var(--ok-soft); }
 .outcome.fix { border-color: rgba(232,177,90,.45); background: var(--accent-soft); }
 .outcome.bad { border-color: rgba(229,138,123,.4); background: var(--bad-soft); }
 .outcome b { font-weight: 600; }
 .outcome .lesson { display: block; margin-top: 6px; font: 12.5px/1.5 var(--mono); color: var(--muted); }
 .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font: 500 12.5px var(--mono); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-top: 8px; }
-
-/* board + today */
 .after { display: grid; grid-template-columns: 1.6fr 1fr; border-top: 1px solid var(--line); }
 .pane { padding: 18px 20px 22px; min-width: 0; }
 .pane + .pane { border-left: 1px solid var(--line); }
@@ -192,13 +258,13 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .card { border: 1px solid var(--line-2); background: var(--surface-2); border-radius: 7px; padding: 7px 8px; margin-bottom: 6px; font-size: 12px; line-height: 1.35; }
 .card b { display: block; font: 600 11.5px var(--mono); color: var(--ink); }
 .card span { color: var(--muted); font-size: 11.5px; }
-.card.hot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); animation: land .6s var(--ease); }
+.card.hot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); animation: land .6s var(--out); }
 @keyframes land { from { transform: translateY(-8px) scale(.97); opacity: .3; } to { transform: none; opacity: 1; } }
 .today-g { margin-bottom: 12px; }
 .today-g h5 { margin: 0 0 6px; font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 .today-g ul { margin: 0; padding: 0; list-style: none; }
 .today-g li { font-size: 13px; color: var(--muted); padding: 6px 0; border-top: 1px solid var(--line); }
-.today-g li.new { color: var(--ink); animation: land .6s var(--ease); }
+.today-g li.new { color: var(--ink); animation: land .6s var(--out); }
 .today-g li.new::after { content: " new"; font: 600 10px var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: .08em; }
 .auto { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
 .auto-h { display: flex; justify-content: space-between; gap: 8px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
@@ -209,59 +275,14 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .a-s { grid-column: 1 / -1; font: 11px/1.45 var(--mono); color: var(--faint); }
 .a-s.won, .a-s.ok { color: var(--ok); }
 .a-s.bad { color: var(--bad); }
-.auto-note { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); }
+.auto-note { margin: 6px 0 0; font: 11.5px/1.5 var(--mono); color: var(--faint); }
 .pips { display: flex; gap: 5px; }
 .pips i { flex: 1; height: 7px; border-radius: 4px; background: var(--line); transition: background .3s; }
 .pips i.on { background: var(--ok); }
-.demo-note { font: 12px/1.5 var(--mono); color: var(--faint); margin: 14px 2px 0; }
 
-/* modules */
-.mods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.mod { border: 1px solid var(--line); border-radius: var(--r); padding: 18px 18px 16px; background: var(--surface); }
-.mod .k { font: 500 10.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
-.mod h3 { font: 700 17px/1.25 var(--display); margin: 6px 0 6px; }
-.mod p { margin: 0; color: var(--muted); font-size: 14px; }
-
-/* flow */
-.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; align-items: stretch; margin-bottom: 14px; }
-.node { position: relative; border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); padding: 14px 14px 12px; margin-right: 26px; }
-.node:last-child { margin-right: 0; }
-.node:not(:last-child)::after { content: "→"; position: absolute; right: -21px; top: 50%; transform: translateY(-50%); color: var(--accent); font: 16px var(--mono); }
-.node .k { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
-.node h3 { font: 700 15.5px/1.25 var(--display); margin: 5px 0 4px; }
-.node p { margin: 0; font-size: 13px; color: var(--muted); }
-.loop { margin: 14px 0 0; border: 1px solid rgba(143,203,139,.35); background: var(--ok-soft); border-radius: 10px; padding: 12px 14px; font-size: 14px; }
-.loop b { color: var(--ok); font-weight: 600; }
-.stack { display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; }
-.stack span { font: 500 12px var(--mono); padding: 5px 10px; border: 1px solid var(--line-2); border-radius: 99px; color: var(--ink); }
-.eng { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 28px; margin: 28px 0 0; padding: 0; list-style: none; }
-.eng li { position: relative; padding-left: 18px; color: var(--muted); font-size: 14.5px; }
-.eng li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
-.eng li b { color: var(--ink); font-weight: 600; }
-details.more { margin: 26px 0 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
-details.more summary { cursor: pointer; padding: 14px 20px; font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); list-style: none; }
-details.more summary::-webkit-details-marker { display: none; }
-details.more summary::before { content: "+ "; color: var(--accent); }
-details.more[open] summary::before { content: "− "; }
-details.more summary:hover { color: var(--ink); }
-details.more .eng { margin: 0; padding: 4px 20px 20px; }
-h2 + .probs, h2 + .mods, h2 + .flow { margin-top: 30px; }
-
-/* rules */
-.rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; counter-reset: r; }
-.rule { border: 1px solid var(--line); border-radius: var(--r); padding: 18px; background: var(--surface); counter-increment: r; }
-.rule::before { content: "0" counter(r); font: 600 11px var(--mono); color: var(--ok); letter-spacing: .1em; }
-.rule h3 { font: 700 17px/1.25 var(--display); margin: 6px 0 6px; }
-.rule p { margin: 0; color: var(--muted); font-size: 14px; }
-
-/* role + next */
-.two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-.list { margin: 0; padding: 0; list-style: none; }
-.list li { padding: 12px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
-.list li b { color: var(--ink); font-weight: 600; }
-.cta { padding: 72px 0 80px; }
-.cta h2 { max-width: 22ch; }
-.cta p { color: var(--muted); max-width: 60ch; }
+.cta { padding: 110px 0 100px; border-top: 1px solid var(--line); text-align: center; position: relative; overflow: hidden; }
+.cta .glow { top: auto; bottom: -560px; }
+.cta h2 { margin-bottom: 30px; }
 footer { border-top: 1px solid var(--line); padding: 22px 0 30px; font: 11.5px var(--mono); color: var(--faint); letter-spacing: .06em; }
 footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
@@ -270,36 +291,46 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   .inbox { border-right: 0; border-bottom: 1px solid var(--line); }
   .after { grid-template-columns: 1fr; }
   .pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
-  .mods, .rules { grid-template-columns: repeat(2, 1fr); }
-  .flow { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .node { margin-right: 0; }
-  .node:not(:last-child)::after { display: none; }
+  .t3, .t4 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 720px) {
-  .hero { padding: 40px 0 32px; }
-  section.block { padding: 52px 0; }
-  .stats { grid-template-columns: 1fr 1fr; }
-  .stat:nth-child(2) { border-right: 0; }
-  .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
-  .probs, .mods, .rules, .two, .eng { grid-template-columns: 1fr; }
-  .two { gap: 28px; }
+  .hero { padding: 44px 0 40px; }
+  .reel-wrap { margin-top: 34px; }
+  section.block { padding: 68px 0; }
+  h2 { margin-bottom: 32px; }
+  .stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .t3 { grid-template-columns: 1fr; }
+  .eng { grid-template-columns: 1fr; }
+  .pipe { grid-template-columns: 1fr; gap: 26px; }
+  .track { left: 38px; right: auto; top: 38px; bottom: 38px; width: 2px; height: auto; }
+  .fill { transform-origin: 50% 0; transform: scaleY(var(--p)); }
+  .packet { left: 50%; top: calc(var(--p) * 100%); margin: -6px 0 0 -6px; }
+  .pnode { display: grid; grid-template-columns: 78px 1fr; gap: 0 18px; align-items: center; text-align: left; }
+  .ring { margin: 0; grid-row: span 2; }
+  .pnode h3 { align-self: end; }
+  .pnode p { align-self: start; }
   .detail { padding: 16px 14px 20px; }
   .pane { padding: 16px 14px 18px; }
   .board { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
   .col { flex: 0 0 62%; scroll-snap-align: start; min-height: 120px; }
-  .flow { grid-template-columns: 1fr; }
   .tb-tag .long { display: none; }
-  .inbox { max-height: none; }
   .mail { padding: 12px 14px; }
+}
+@media (max-width: 420px) {
+  .t4 { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tile.sm { padding: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
+  .js .rv, .js h1 .w { opacity: 1; transform: none; filter: none; }
+  .js .rv .ico * { stroke-dashoffset: 0; }
 }
 </style>
 </head>
 <body>
 <a class="skip-link" href="#demo">Skip to the demo</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="shell">
@@ -310,44 +341,79 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 
 <main>
   <section class="hero">
+    <div class="glow" id="glow" aria-hidden="true"></div>
     <div class="shell">
-      <p class="eyebrow"><span class="live"><i></i>In production</span><span>Built &amp; run at Alta Light &middot; since Sep 2026</span></p>
-      <h1>Beacon turns the operations inbox into work, <em>and knows when to ask.</em></h1>
-      <p class="dek">Alta Light supplies architectural lighting to projects in <b>Beirut, Dubai and Abidjan</b>, and every order runs on email. I built Beacon so order updates <b>land on one board by themselves</b>, prices are one search away, and a person approves anything that leaves the company.</p>
-      <div class="stats" role="list">
-        <div class="stat" role="listitem"><b>15 min</b><span>Inbox and sent mail read, understood and filed</span></div>
-        <div class="stat" role="listitem"><b>~240k</b><span>Supplier product codes in one search</span></div>
-        <div class="stat" role="listitem"><b>5 stages</b><span>Every supplier order tracked, from ordered to delivered</span></div>
-        <div class="stat" role="listitem"><b>0</b><span>Emails sent by the agent. It can only draft</span></div>
-      </div>
+      <p class="eyebrow"><span class="live"><i></i>In production</span><span>Alta Light &middot; since Sep 2026</span></p>
+      <h1 id="h1">Emails in. Orders updated. <em>Nothing sent without me.</em></h1>
+      <p class="sub">The AI operations hub I built and run.</p>
       <div class="hero-actions">
         <a class="btn primary" href="#demo">Try the demo &darr;</a>
-        <a class="btn" href="#how">How it's built</a>
-        <a class="btn" href="#rules">Rules it can't break</a>
+        <a class="btn" href="#how">How it works</a>
       </div>
-      <p class="privacy">The live system runs on private company data, so the demo uses made-up names, codes and dates.</p>
+      <div class="reel-wrap">
+        <div class="reel" id="reel">
+          <video id="reel-v" autoplay muted loop playsinline preload="metadata" poster="../assets/beacon-reel-poster.jpg" aria-label="35-second walkthrough of Beacon with made-up data">
+            <source src="../assets/beacon-reel.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat rv" style="--i:0"><b data-count="15" data-suf=" min">15 min</b><span>inbox read and filed</span></div>
+        <div class="stat rv" style="--i:1"><b data-count="240" data-pre="~" data-suf="k">~240k</b><span>codes, one search</span></div>
+        <div class="stat rv" style="--i:2"><b data-count="5">5</b><span>order stages tracked</span></div>
+        <div class="stat rv" style="--i:3"><b data-count="0" data-from="9">0</b><span>emails it can send</span></div>
+      </div>
     </div>
   </section>
 
   <section class="block" id="problem">
     <div class="shell">
-      <p class="sec-head">01 <span>/ The problem</span></p>
-      <h2>40+ live orders, 20+ suppliers, and the truth scattered across inboxes.</h2>
-      <div class="probs">
-        <div class="prob"><span class="k">Status</span><h3>Lived in email threads</h3><p>Paid, in production or ready to collect? The answer was buried in a thread with the supplier, forwarder or client.</p></div>
-        <div class="prob"><span class="k">Pricing</span><h3>Lived in spreadsheets</h3><p>Dozens of supplier price lists, one of them 240,000 lines, opened one file at a time.</p></div>
-        <div class="prob"><span class="k">Follow-up</span><h3>Lived in people's heads</h3><p>Who owes a reply, which order needs chasing, which payment is due. Easy to drop with 40 orders moving at once.</p></div>
+      <span class="kick rv">Before</span>
+      <h2 class="rv" style="--i:1">40+ orders. 20+ suppliers. <em>All in email.</em></h2>
+      <div class="tiles t3">
+        <div class="tile rv pop" style="--i:0"><div class="badge b"><svg class="ico" data-i="mail"></svg></div><h3>Status</h3><p>buried in threads</p></div>
+        <div class="tile rv pop" style="--i:1"><div class="badge b"><svg class="ico" data-i="sheet"></svg></div><h3>Prices</h3><p>one spreadsheet at a time</p></div>
+        <div class="tile rv pop" style="--i:2"><div class="badge b"><svg class="ico" data-i="user"></svg></div><h3>Follow-ups</h3><p>in people's heads</p></div>
       </div>
+      <div class="shift rv" style="--i:3"><span>scattered</span><i></i><b>one hub</b></div>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="shell">
+      <span class="kick rv">How it works</span>
+      <h2 class="rv" style="--i:1">Every 15 minutes, <em>on its own.</em></h2>
+      <div class="pipe" id="pipe">
+        <div class="track" aria-hidden="true"><div class="fill"></div><div class="packet"></div></div>
+        <div class="pnode"><div class="ring"><svg class="ico" data-i="mail"></svg></div><h3>Mailbox</h3><p>read + draft only</p></div>
+        <div class="pnode"><div class="ring"><svg class="ico" data-i="cpu"></svg></div><h3>AI agent</h3><p>reads mail + files</p></div>
+        <div class="pnode g"><div class="ring"><svg class="ico" data-i="check2"></svg></div><h3>Second check</h3><p>must agree</p></div>
+        <div class="pnode"><div class="ring"><svg class="ico" data-i="board"></svg></div><h3>Hub</h3><p>logged &middot; 1-click undo</p></div>
+      </div>
+      <div class="loop rv"><svg class="ico" data-i="loop"></svg>Every correction becomes a lesson</div>
+      <div class="stack" aria-label="Stack">
+        <span class="rv" style="--i:0">Python</span><span class="rv" style="--i:1">Microsoft Graph</span><span class="rv" style="--i:2">OpenAI API</span><span class="rv" style="--i:3">Cloudflare Workers</span><span class="rv" style="--i:4">D1 (SQLite)</span><span class="rv" style="--i:5">Workers KV</span><span class="rv" style="--i:6">JavaScript</span><span class="rv" style="--i:7">Xero API</span><span class="rv" style="--i:8">OAuth / MSAL</span>
+      </div>
+      <details class="more">
+        <summary>Engineering notes</summary>
+        <ul class="eng">
+          <li><b>Nothing missed, nothing doubled.</b> Each run re-scans a 6-hour overlap and skips mail already processed.</li>
+          <li><b>Sent mail reads differently.</b> What we send is a confirmed action; what a supplier sends is a claim.</li>
+          <li><b>Attachments are evidence.</b> PDFs, spreadsheets and photos are read; order refs come from file names too.</li>
+          <li><b>Failures don't block the queue.</b> Retries with backoff; 3 failures and a person takes it.</li>
+          <li><b>Runs on free tiers.</b> The 240k-code catalogue is split into sorted chunks with a binary-search index.</li>
+          <li><b>Tested before it ships.</b> Automated suites cover the API, permissions, screens and invoice builder.</li>
+        </ul>
+      </details>
     </div>
   </section>
 
   <section class="block" id="demo">
     <div class="shell">
-      <p class="sec-head">02 <span>/ See it work</span></p>
-      <h2>Pick an email. See what the agent does alone, and what it asks about.</h2>
-      <p class="lead">Four typical emails, replayed with made-up data. Order updates apply after a second check and can be undone in one click; anything that could reach a client waits for my review.</p>
-
-      <div class="demo" aria-label="Interactive demo of the mail agent">
+      <span class="kick rv">Try it</span>
+      <h2 class="rv" style="--i:1">Pick an email. <em>Hit Run.</em></h2>
+      <p class="lead rv" style="--i:2">Made-up data. Order updates apply on their own; client replies wait for me.</p>
+      <div class="demo rv" style="--i:2" aria-label="Interactive demo of the mail agent">
         <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; Beacon &middot; mail agent</span><button type="button" id="reset">Reset</button></div>
         <div class="demo-grid">
           <nav class="inbox" aria-label="Sample emails">
@@ -358,117 +424,74 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         </div>
         <div class="after">
           <div class="pane">
-            <div class="pane-h"><span>Shipments board</span><span>supplier orders by stage</span></div>
+            <div class="pane-h"><span>Shipments board</span><span>by stage</span></div>
             <div class="board" id="board"></div>
           </div>
           <div class="pane">
-            <div class="pane-h"><span>Today</span><span>my landing page</span></div>
+            <div class="pane-h"><span>Today</span><span>landing page</span></div>
             <div id="today"></div>
             <div class="auto">
-              <div class="auto-h"><span>Autonomy</span><span>by action type</span></div>
+              <div class="auto-h"><span>Autonomy</span><span>by action</span></div>
               <div id="auto"></div>
-              <p class="auto-note">Hub-only actions run alone after 5 approvals in a row; a Fix it or Wrong resets the count. Anything that can reach a client always asks.</p>
+              <p class="auto-note">5 approvals in a row &rarr; runs alone. Client replies always ask.</p>
             </div>
           </div>
         </div>
       </div>
-      <p class="demo-note">In the live system this flow runs every 15 minutes on the real operations mailbox.</p>
     </div>
   </section>
 
   <section class="block" id="inside">
     <div class="shell">
-      <p class="sec-head">03 <span>/ What's inside</span></p>
-      <h2>One hub for the team, with admin-only areas for money.</h2>
-      <div class="mods">
-        <div class="mod"><span class="k">Landing page</span><h3>Today</h3><p>What's waiting on me, what to chase, what's ready to collect and which payments are due.</p></div>
-        <div class="mod"><span class="k">From mail</span><h3>Requests</h3><p>Asks pulled from email, each with a plan I mark Right, Fix it or Wrong.</p></div>
-        <div class="mod"><span class="k">From mail</span><h3>Projects</h3><p>Status, open items and a timeline, rewritten as mail arrives.</p></div>
-        <div class="mod"><span class="k">From mail</span><h3>Shipments</h3><p>Every supplier order on a five-stage board, with lead times and dates.</p></div>
-        <div class="mod"><span class="k">Pricing</span><h3>Price lookup</h3><p>One search across every price list, with a purchase draft by cheapest supplier.</p></div>
-        <div class="mod"><span class="k">Pricing</span><h3>New prices</h3><p>Prices from finished quotes wait for approval before anyone can search them.</p></div>
-        <div class="mod"><span class="k">Helper</span><h3>Quote extension</h3><p>Fills costs into our quoting tool from exact matches only.</p></div>
-        <div class="mod"><span class="k">Helper</span><h3>Xero invoice drafts</h3><p>Turns a quotation (Excel, PDF or image) into a draft invoice in Xero.</p></div>
-        <div class="mod"><span class="k">Nightly</span><h3>Daily check</h3><p>Re-reads recent threads and corrects order cards. Every fix is logged and can be undone.</p></div>
+      <span class="kick rv">Inside</span>
+      <h2 class="rv" style="--i:1">One hub. <em>Nine tools.</em></h2>
+      <div class="tiles t3">
+        <div class="tile sm rv" style="--i:0"><div class="badge"><svg class="ico" data-i="home"></svg></div><h3>Today</h3><p>what needs me now</p></div>
+        <div class="tile sm rv" style="--i:1"><div class="badge"><svg class="ico" data-i="inbox"></svg></div><h3>Requests</h3><p>asks pulled from email</p></div>
+        <div class="tile sm rv" style="--i:2"><div class="badge"><svg class="ico" data-i="folder"></svg></div><h3>Projects</h3><p>status, updated by mail</p></div>
+        <div class="tile sm rv" style="--i:3"><div class="badge"><svg class="ico" data-i="truck"></svg></div><h3>Shipments</h3><p>five-stage board</p></div>
+        <div class="tile sm rv" style="--i:4"><div class="badge"><svg class="ico" data-i="search"></svg></div><h3>Price lookup</h3><p>every list, one search</p></div>
+        <div class="tile sm rv" style="--i:5"><div class="badge"><svg class="ico" data-i="tag"></svg></div><h3>New prices</h3><p>approved before use</p></div>
+        <div class="tile sm rv" style="--i:6"><div class="badge"><svg class="ico" data-i="plug"></svg></div><h3>Quote helper</h3><p>fills exact matches</p></div>
+        <div class="tile sm rv" style="--i:7"><div class="badge"><svg class="ico" data-i="receipt"></svg></div><h3>Xero drafts</h3><p>quote &rarr; draft invoice</p></div>
+        <div class="tile sm rv" style="--i:8"><div class="badge"><svg class="ico" data-i="moon"></svg></div><h3>Nightly check</h3><p>re-reads, fixes, logs</p></div>
       </div>
-    </div>
-  </section>
-
-  <section class="block" id="how">
-    <div class="shell">
-      <p class="sec-head">04 <span>/ How it's built</span></p>
-      <h2>Plain parts, wired so a mistake is cheap to spot and undo.</h2>
-      <div class="flow">
-        <div class="node"><span class="k">1 &middot; Source</span><h3>Outlook mailbox</h3><p>Microsoft Graph, with read and draft access only. No send.</p></div>
-        <div class="node"><span class="k">2 &middot; Agent</span><h3>Python mail agent</h3><p>Runs every 15 minutes with attachments, open orders and past lessons.</p></div>
-        <div class="node"><span class="k">3 &middot; Model</span><h3>Language model</h3><p>One strict JSON object per email. A second call re-checks every order update.</p></div>
-        <div class="node"><span class="k">4 &middot; Hub</span><h3>Cloud API + database</h3><p>Validates, applies and logs each change with its source email.</p></div>
-      </div>
-      <div class="loop"><b>Feedback loop:</b> every Fix it, Wrong or undo becomes a lesson the agent reads before its next run. Every Right counts toward autonomy.</div>
-      <div class="stack" aria-label="Stack">
-        <span>Python</span><span>Microsoft Graph API</span><span>OpenAI API &middot; JSON output</span><span>Cloudflare Workers</span><span>D1 (SQLite)</span><span>Workers KV</span><span>JavaScript</span><span>Xero API</span><span>OAuth / MSAL</span><span>Task Scheduler</span>
-      </div>
-      <details class="more">
-        <summary>Engineering notes</summary>
-        <ul class="eng">
-          <li><b>Nothing missed, nothing doubled.</b> Each run re-scans a 6-hour overlap and skips mail it has already processed.</li>
-          <li><b>Sent mail reads differently.</b> What we send is a confirmed action; what a supplier sends is a claim.</li>
-          <li><b>Attachments are evidence.</b> PDFs, spreadsheets and photos are read, and order references are picked up from file names.</li>
-          <li><b>Failures don't block the queue.</b> Calls retry with backoff; an email that fails 3 times is set aside for a person.</li>
-          <li><b>Runs on free tiers.</b> The 240k-code catalogue is split into sorted chunks with a binary-search index.</li>
-          <li><b>Tested before it ships.</b> Automated suites cover the hub's API, permissions, screens and the invoice builder.</li>
-        </ul>
-      </details>
     </div>
   </section>
 
   <section class="block" id="rules">
     <div class="shell">
-      <p class="sec-head">05 <span>/ Rules it can't break</span></p>
-      <h2>Useful only if the team can trust it, so the limits come first.</h2>
-      <p class="lead">Most of the design work went into what the agent is not allowed to do.</p>
-      <div class="rules">
-        <div class="rule"><h3>It can't send email</h3><p>No send permission. Replies and invoices stay drafts until a person confirms.</p></div>
-        <div class="rule"><h3>It never invents a number</h3><p>Missing prices, dates and lead times stay blank. A guess is worse than a gap.</p></div>
-        <div class="rule"><h3>Exact codes only</h3><p>Near matches are shown for review, never filled in.</p></div>
-        <div class="rule"><h3>Money stays private</h3><p>Priced documents are recognised by name and kept out of shared project files. Costs are admin-only.</p></div>
-        <div class="rule"><h3>Checked twice, traceable always</h3><p>A second AI call re-checks every order update. Each change is logged and can be undone in one click.</p></div>
-        <div class="rule"><h3>Autonomy is earned</h3><p>Hub-only actions run alone after five approvals in a row. Replies to clients always wait for me.</p></div>
+      <span class="kick rv">Guardrails</span>
+      <h2 class="rv" style="--i:1">Rules it <em>can't break.</em></h2>
+      <div class="tiles t3">
+        <div class="tile rv pop" style="--i:0"><div class="badge g"><svg class="ico" data-i="nosend"></svg></div><h3>Can't send email</h3><p>drafts only</p></div>
+        <div class="tile rv pop" style="--i:1"><div class="badge g"><svg class="ico" data-i="blank"></svg></div><h3>Never guesses numbers</h3><p>a gap beats a guess</p></div>
+        <div class="tile rv pop" style="--i:2"><div class="badge g"><svg class="ico" data-i="hash"></svg></div><h3>Exact codes only</h3><p>near matches flagged</p></div>
+        <div class="tile rv pop" style="--i:3"><div class="badge g"><svg class="ico" data-i="lock"></svg></div><h3>Costs stay private</h3><p>admin-only</p></div>
+        <div class="tile rv pop" style="--i:4"><div class="badge g"><svg class="ico" data-i="undo"></svg></div><h3>Checked twice</h3><p>one-click undo</p></div>
+        <div class="tile rv pop" style="--i:5"><div class="badge g"><svg class="ico" data-i="steps"></svg></div><h3>Autonomy is earned</h3><p>5 approvals in a row</p></div>
       </div>
     </div>
   </section>
 
   <section class="block" id="role">
-    <div class="shell two">
-      <div>
-        <p class="sec-head">06 <span>/ My part</span></p>
-        <h2>I own it end to end.</h2>
-        <ul class="list">
-          <li><b>Process:</b> mapped how orders, payments and pickups really move through email, then turned it into stages and rules.</li>
-          <li><b>Data:</b> designed the model for projects, orders, requests, prices, stock and an audit log.</li>
-          <li><b>Testing:</b> ran it on real threads and turned the pattern behind each wrong call into a rule.</li>
-          <li><b>Rollout:</b> shared pages for the team, admin-only areas for costs, payments and agent controls.</li>
-        </ul>
-      </div>
-      <div>
-        <p class="sec-head">07 <span>/ How I measure it</span></p>
-        <h2>Proving it with numbers, not impressions.</h2>
-        <ul class="list">
-          <li><b>Accuracy:</b> plans right first time, by action type.</li>
-          <li><b>Trust:</b> agent changes kept versus undone.</li>
-          <li><b>Speed:</b> time from a supplier email to a correct order card.</li>
-          <li><b>Turnaround:</b> time from a request to done.</li>
-        </ul>
+    <div class="shell">
+      <span class="kick rv">My part</span>
+      <h2 class="rv" style="--i:1">Built and run <em>end to end.</em></h2>
+      <div class="tiles t4">
+        <div class="tile sm rv" style="--i:0"><div class="badge"><svg class="ico" data-i="map"></svg></div><h3>Process</h3><p>mapped the real flow</p></div>
+        <div class="tile sm rv" style="--i:1"><div class="badge"><svg class="ico" data-i="db"></svg></div><h3>Data</h3><p>designed the model</p></div>
+        <div class="tile sm rv" style="--i:2"><div class="badge"><svg class="ico" data-i="flask"></svg></div><h3>Testing</h3><p>real threads &rarr; rules</p></div>
+        <div class="tile sm rv" style="--i:3"><div class="badge"><svg class="ico" data-i="users"></svg></div><h3>Rollout</h3><p>team + admin areas</p></div>
       </div>
     </div>
   </section>
 
   <section class="cta">
+    <div class="glow" aria-hidden="true"></div>
     <div class="shell">
-      <p class="sec-head">Next</p>
-      <h2>Happy to walk you through how it works.</h2>
-      <p>I build tools like this for the operations I run every day. If your team has the same inbox problem, let's talk.</p>
-      <div class="hero-actions">
+      <h2 class="rv">Want the <em>walkthrough?</em></h2>
+      <div class="hero-actions rv" style="--i:1">
         <a class="btn primary" href="mailto:youssefkhoury01@gmail.com?subject=Beacon">Email me</a>
         <a class="btn" href="https://www.linkedin.com/in/youssefkhoury/" target="_blank" rel="noreferrer">LinkedIn &#8599;</a>
         <a class="btn" href="../#work">All work</a>
@@ -480,6 +503,128 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 <footer><div class="shell"><span>&copy; 2026 Youssef Khoury</span><span>Demo data is fictional</span></div></footer>
 
 <script>
+// Motion: icons, reveal on scroll, count-ups, scroll-driven pipeline and hero reel.
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ICONS = {
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2" pathLength="1"/><path d="M3 7l9 6 9-6" pathLength="1"/>',
+    sheet: '<rect x="3" y="4" width="18" height="16" rx="2" pathLength="1"/><path d="M3 10h18M3 15h18M9 4v16" pathLength="1"/>',
+    user: '<circle cx="12" cy="8" r="4" pathLength="1"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" pathLength="1"/>',
+    cpu: '<rect x="6" y="6" width="12" height="12" rx="2" pathLength="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" pathLength="1"/>',
+    check2: '<path d="M2 12.5l4.5 4.5L16 7.5" pathLength="1"/><path d="M11.5 16.5l.5.5L21.5 7.5" pathLength="1"/>',
+    board: '<rect x="3" y="4" width="18" height="16" rx="2" pathLength="1"/><path d="M9 4v16M15 4v16" pathLength="1"/>',
+    loop: '<path d="M21 12a9 9 0 11-3-6.7" pathLength="1"/><path d="M21 3v6h-6" pathLength="1"/>',
+    home: '<path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z" pathLength="1"/>',
+    inbox: '<path d="M3 13l3-8h12l3 8v6a1 1 0 01-1 1H4a1 1 0 01-1-1z" pathLength="1"/><path d="M3 13h5l1 3h6l1-3h5" pathLength="1"/>',
+    folder: '<path d="M3 6a1 1 0 011-1h5l2 2h9a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1z" pathLength="1"/>',
+    truck: '<path d="M2 6h12v10H2zM14 10h4l3 3v3h-7" pathLength="1"/><circle cx="6" cy="18" r="2" pathLength="1"/><circle cx="17" cy="18" r="2" pathLength="1"/>',
+    search: '<circle cx="11" cy="11" r="7" pathLength="1"/><path d="M20 20l-4-4" pathLength="1"/>',
+    tag: '<path d="M3 12V4h8l10 10-8 8z" pathLength="1"/><circle cx="7.5" cy="8.5" r="1.5" pathLength="1"/>',
+    plug: '<path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 01-12 0zM12 18v4" pathLength="1"/>',
+    receipt: '<path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z" pathLength="1"/><path d="M9 8h6M9 12h6" pathLength="1"/>',
+    moon: '<path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z" pathLength="1"/>',
+    nosend: '<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" pathLength="1"/><path d="M3 21L21 3" pathLength="1"/>',
+    blank: '<circle cx="12" cy="12" r="9" pathLength="1"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .6-1.5 1.2-1.5 2.3M12 17h.01" pathLength="1"/>',
+    hash: '<path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18" pathLength="1"/>',
+    lock: '<rect x="4" y="11" width="16" height="10" rx="2" pathLength="1"/><path d="M8 11V7a4 4 0 018 0v4" pathLength="1"/>',
+    undo: '<path d="M9 14L4 9l5-5" pathLength="1"/><path d="M4 9h11a5 5 0 010 10h-3" pathLength="1"/>',
+    steps: '<path d="M3 20h5v-5h5v-5h5V5h3" pathLength="1"/>',
+    map: '<circle cx="5" cy="6" r="2" pathLength="1"/><circle cx="19" cy="6" r="2" pathLength="1"/><circle cx="12" cy="18" r="2" pathLength="1"/><path d="M7 6h10M6 8l5 8M18 8l-5 8" pathLength="1"/>',
+    db: '<ellipse cx="12" cy="5" rx="8" ry="3" pathLength="1"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" pathLength="1"/>',
+    flask: '<path d="M9 3h6M10 3v6L4 19a1.5 1.5 0 001.3 2h13.4A1.5 1.5 0 0020 19l-6-10V3" pathLength="1"/>',
+    users: '<circle cx="9" cy="8" r="3" pathLength="1"/><path d="M3 20c.8-3 3-5 6-5s5.2 2 6 5" pathLength="1"/><circle cx="17" cy="9" r="2.5" pathLength="1"/><path d="M16 14.5c2.5 0 4.3 1.6 5 4.5" pathLength="1"/>'
+  };
+  document.querySelectorAll('svg.ico[data-i]').forEach(function (s) {
+    s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('aria-hidden', 'true');
+    s.innerHTML = ICONS[s.getAttribute('data-i')] || '';
+  });
+
+  // headline words
+  var h1 = document.getElementById('h1'), n = 0;
+  (function split(node) {
+    Array.prototype.slice.call(node.childNodes).forEach(function (c) {
+      if (c.nodeType === 3) {
+        var frag = document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          var w = document.createElement('span'); w.className = 'w'; w.style.setProperty('--i', n++); w.textContent = part; frag.appendChild(w);
+        });
+        node.replaceChild(frag, c);
+      } else if (c.nodeType === 1) split(c);
+    });
+  })(h1);
+
+  function count(b) {
+    var to = +b.getAttribute('data-count'), from = +(b.getAttribute('data-from') || 0);
+    var pre = b.getAttribute('data-pre') || '', suf = b.getAttribute('data-suf') || '', t0 = null;
+    if (reduced) return;
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var k = Math.min(1, (ts - t0) / 1400), e = 1 - Math.pow(1 - k, 4);
+      b.textContent = pre + Math.round(from + (to - from) * e) + suf;
+      if (k < 1) requestAnimationFrame(step);
+    }
+    b.textContent = pre + from + suf;
+    requestAnimationFrame(step);
+  }
+
+  var items = document.querySelectorAll('.rv');
+  if (reduced || !('IntersectionObserver' in window)) {
+    items.forEach(function (x) { x.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        var b = e.target.querySelector('[data-count]'); if (b) count(b);
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+    items.forEach(function (x) { io.observe(x); });
+  }
+
+  // cursor light on tiles
+  document.querySelectorAll('.tile').forEach(function (t) {
+    t.addEventListener('pointermove', function (e) {
+      var r = t.getBoundingClientRect();
+      t.style.setProperty('--mx', (e.clientX - r.left) + 'px'); t.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  var bar = document.getElementById('progress'), pipe = document.getElementById('pipe');
+  var nodes = pipe.querySelectorAll('.pnode'), reel = document.getElementById('reel'), glow = document.getElementById('glow');
+  var video = document.getElementById('reel-v'), ticking = false;
+  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function frame() {
+    ticking = false;
+    var vh = window.innerHeight, de = document.documentElement;
+    bar.style.transform = 'scaleX(' + clamp(window.scrollY / (de.scrollHeight - vh)) + ')';
+    var r = pipe.getBoundingClientRect();
+    var p = reduced ? 1 : clamp((vh * 0.82 - r.top) / (vh * 0.5));
+    pipe.style.setProperty('--p', p.toFixed(4));
+    nodes.forEach(function (nd, i) { nd.classList.toggle('lit', p >= i / (nodes.length - 1) - 0.02); });
+    if (!reduced) {
+      var h = clamp(window.scrollY / (vh * 0.9));
+      reel.style.transform = h ? 'rotateX(' + (h * 10).toFixed(2) + 'deg) scale(' + (1 - h * 0.06).toFixed(4) + ')' : '';
+      glow.style.transform = 'translateY(' + (window.scrollY * 0.35).toFixed(1) + 'px)';
+    }
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  frame();
+  reel.addEventListener('animationend', function () { reel.style.animation = 'none'; frame(); });
+
+  if (reduced) { video.removeAttribute('autoplay'); video.pause(); video.controls = true; }
+  else if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { var pr = video.play(); if (pr && pr.catch) pr.catch(function () {}); } else video.pause(); });
+    }, { threshold: 0.2 }).observe(video);
+  }
+})();
+
+// Demo
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var STEP = reduced ? 0 : 420;
@@ -519,11 +664,11 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       body: 'Hello Youssef,\n\nThe 24 pcs of Arco 3000K downlights for order LM-2291 are finished and packed. They are ready for collection at our Milan warehouse from Monday 28 September.\n\nPacking list attached.\n\nKind regards,\nGiulia',
       att: ['Packing list LM-2291.pdf'],
       trace: [
-        '<b>Inbound</b> from a known supplier (Lumeria)',
-        'Read attachment: <b>Packing list LM-2291.pdf</b>',
-        'Matched order <b>LM-2291</b> to project <b>Villa Cedar</b>',
-        'Finished and packed, so <b>production &rarr; ready</b>. No forwarder named, so that field stays blank',
-        'G:<b>Second check:</b> a separate model call confirms the email proves this order and the stage isn&rsquo;t ahead of it. Passed'
+        '<b>Inbound</b> from a known supplier',
+        'Read <b>Packing list LM-2291.pdf</b>',
+        'Matched <b>LM-2291</b> &rarr; <b>Villa Cedar</b>',
+        '<b>production &rarr; ready</b> &middot; no forwarder named, left blank',
+        'G:<b>Second check</b> agrees. Passed'
       ],
       json: {
         classification: 'shipment', project_name: 'Villa Cedar', supplier: 'Lumeria',
@@ -532,9 +677,9 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         reasoning_summary: 'The supplier confirms the goods are finished and packed, so the order moves to ready. No forwarder is named, so none is filled in.'
       },
       changes: [
-        { ic: '&rarr;', html: '<b>Moved LM-2291</b> on the shipments board<small>Ready by Mon 28 Sep &middot; Villa Cedar</small>', move: ['production', 'ready'] },
+        { ic: '&rarr;', html: '<b>Moved LM-2291</b><small>Ready by Mon 28 Sep &middot; Villa Cedar</small>', move: ['production', 'ready'] },
         { ic: '&#9675;', html: '<b>Today</b> &middot; Ready to collect<small>' + READY_ITEM + '</small>' },
-        { ic: '&#8226;', html: '<b>Project timeline</b> &middot; Villa Cedar<small>Lumeria packed 24 pcs, ready for collection 28 Sep</small>' }
+        { ic: '&#8226;', html: '<b>Timeline</b> &middot; Villa Cedar<small>Lumeria packed 24 pcs, ready 28 Sep</small>' }
       ],
       apply: function (s) { setCard(s, 'LM-2291', { stage: 'ready', note: 'ready by 28 Sep' }); addToday(s, 'Ready to collect', READY_ITEM); },
       revert: function (s) { setCard(s, 'LM-2291', { stage: 'production', note: '' }); dropToday(s, READY_ITEM); },
@@ -546,12 +691,11 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       body: "Hello Petr, hope you're well,\n\nPlease find attached our purchase order for 36 pcs of Lyra pendants. The 50% advance was transferred today.\n\nKindly confirm and start production.\n\nThank you.\n\n> On 21 Sep, Petr Novak wrote:\n> Lead time is 5–6 weeks from payment.",
       att: ['PO-0412.pdf'],
       trace: [
-        '<b>Sent by us</b>, so it counts as our own confirmed action',
-        'Read attachment: <b>PO-0412.pdf</b>',
-        'No order number in the body, so it comes from the file name: <b>PO-0412</b>',
-        'Lead time from the quoted thread: <b>5&ndash;6 weeks from payment</b>. No ready date given, so none is guessed',
-        'G:<b>Second check:</b> a separate model call confirms a real order was placed with this supplier. Passed',
-        'G:<b>PO-0412.pdf</b> carries prices, so it stays out of the files the whole team sees'
+        '<b>Sent by us</b> = confirmed action',
+        'Order ref from the file name: <b>PO-0412</b>',
+        'Lead time <b>5&ndash;6 weeks</b> &middot; no ready date, none guessed',
+        'G:<b>Second check</b> agrees. Passed',
+        'G:<b>PO-0412.pdf</b> has prices &rarr; kept private'
       ],
       json: {
         classification: 'shipment', project_name: 'Clinique Lagune', supplier: 'Kristall Works',
@@ -560,11 +704,11 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         reasoning_summary: 'We sent the PO and paid the advance ourselves, so the order is placed. The supplier has not given a ready date, so it stays blank.'
       },
       changes: [
-        { ic: '+', html: '<b>New order card PO-0412</b> &middot; ordered 24 Sep<small>Kristall Works &middot; Clinique Lagune &middot; lead time 5&ndash;6 weeks from payment &middot; ready date blank until the supplier gives one</small>', move: [null, 'ordered'] },
-        { ic: '&#8226;', html: '<b>Project timeline</b> &middot; Clinique Lagune<small>Sent PO-0412 and the 50% advance to Kristall Works</small>' },
-        { ic: '&#10003;', g: true, html: '<b>Guardrail</b> &middot; PO-0412.pdf kept out of shared project files<small>Documents with prices stay out of the files the whole team sees</small>' }
+        { ic: '+', html: '<b>New card PO-0412</b> &middot; ordered 24 Sep<small>Kristall Works &middot; Clinique Lagune &middot; 5&ndash;6 weeks &middot; ready date blank</small>', move: [null, 'ordered'] },
+        { ic: '&#8226;', html: '<b>Timeline</b> &middot; Clinique Lagune<small>PO-0412 and 50% advance sent</small>' },
+        { ic: '&#10003;', g: true, html: '<b>Guardrail</b> &middot; priced PDF kept out of shared files' }
       ],
-      apply: function (s) { addCard(s, { ref: 'PO-0412', sup: 'Kristall Works', proj: 'Clinique Lagune', stage: 'ordered', note: 'advance paid · 5–6 wks from payment' }); },
+      apply: function (s) { addCard(s, { ref: 'PO-0412', sup: 'Kristall Works', proj: 'Clinique Lagune', stage: 'ordered', note: 'advance paid · 5–6 wks' }); },
       revert: function (s) { dropCard(s, 'PO-0412'); },
       lesson: 'On project "Clinique Lagune", adding a "Kristall Works" supplier order based on the email "Clinique Lagune: purchase order and advance" was WRONG and was undone by me. Do not repeat this.'
     },
@@ -574,11 +718,11 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       body: 'Hi Youssef,\n\nCould you price the following for the lobby?\n18 x TL-SPOT-30-930-BK\n18 x TL-ADPT-3PH\n2 x DRV-150W-DALI\n\nWe need it by Thursday if possible.\n\nThanks,\nLea',
       att: [],
       trace: [
-        '<b>Inbound</b> from a known specifier on <b>Marina Tower</b>',
-        'Found <b>3 product codes</b> and quantities in the body',
-        'A client wants prices, so it becomes a <b>request</b> with a plan and a draft reply',
-        'G:The draft has <b>no prices and no promises</b>. Prices come from the price lists, never from the model',
-        'G:A reply can reach a client, so the plan <b>waits for my review</b>'
+        '<b>Client</b> on <b>Marina Tower</b>',
+        'Found <b>3 codes</b> + quantities',
+        '&rarr; <b>request</b> + plan + draft reply',
+        'G:Draft has <b>no prices, no promises</b>',
+        'G:Can reach a client &rarr; <b>waits for me</b>'
       ],
       json: {
         classification: 'quote_request', project_name: 'Marina Tower lobby', client_name: 'Studio Mira',
@@ -591,12 +735,11 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         reasoning_summary: 'A specifier is asking for a quotation on an active project, with codes and a deadline.'
       },
       changes: [
-        { ic: '?', html: '<b>Request created</b> &middot; Marina Tower lobby pricing<small>Client asked for Thursday &middot; added to Today under Waiting on you</small>' },
-        { ic: '&#9656;', html: '<b>Proposed plan</b> &middot; Draft a reply<small>Price 3 item(s) for Marina Tower lobby, then reply to Lea</small>' },
-        { ic: '#', title: '<b>Check 3 codes</b> &middot; one click in the hub, exact matches only', lookup: [
-          ['TL-SPOT-30-930-BK', 'Exact match &middot; Trackline 2026 list', true],
-          ['TL-ADPT-3PH', 'Exact match &middot; Trackline 2026 list', true],
-          ['DRV-150W-DALI', 'No exact match &middot; left blank for me', false]
+        { ic: '?', html: '<b>Request</b> &middot; Marina Tower lobby pricing<small>Due Thursday &middot; added to Today</small>' },
+        { ic: '#', title: '<b>3 codes checked</b> &middot; exact matches only', lookup: [
+          ['TL-SPOT-30-930-BK', 'Exact match', true],
+          ['TL-ADPT-3PH', 'Exact match', true],
+          ['DRV-150W-DALI', 'No exact match &middot; left blank', false]
         ] },
         { ic: '&#9998;', draft: { to: 'Lea &middot; Studio Mira', body: REPLY } }
       ],
@@ -609,12 +752,12 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       body: "This week: tunable white goes mainstream, why DALI-2 matters, and the trade shows you shouldn't miss.\n\nRead the full issue online.",
       att: [],
       trace: [
-        'Sender is a <b>newsletter list</b>',
-        'No order, request, project or supplier update in it',
-        'Classified as <b>ignore</b>. Nothing created'
+        '<b>Newsletter</b>',
+        'No order, request or project',
+        '&rarr; <b>ignore</b>'
       ],
       json: { classification: 'ignore', reasoning_summary: 'Industry newsletter. No order, request or project in it.' },
-      changes: [ { ic: '&#8212;', g: true, html: '<b>Nothing to do</b><small>No card, no task, no noise on Today</small>' } ]
+      changes: [ { ic: '&#8212;', g: true, html: '<b>Nothing to do</b><small>No card, no task, no noise</small>' } ]
     }
   ];
 
@@ -691,12 +834,12 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 
   function outcomeHtml(m) {
     var st = state.status[m.id];
-    if (st === 'applied') return '<div class="outcome ok"><b>Applied by the agent.</b> Order-card updates don&rsquo;t wait for review: they pass a second check, are logged with this email as the source, and one click undoes them.<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo this change</button></div>';
-    if (st === 'undone') return '<div class="outcome bad"><b>Undone.</b> The card is back where it was, and the daily check won&rsquo;t redo it. The undo is saved as a lesson:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
-    if (st === 'right') return '<div class="outcome ok"><b>Plan approved.</b> The draft goes into the Outlook thread when I press the button, and I send it myself. Replies never run on their own, however many I approve.</div>';
-    if (st === 'fix') return '<div class="outcome fix"><b>Corrected.</b> My note on what it should have done is saved as a lesson, and the approval streak goes back to 0:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
-    if (st === 'wrong') return '<div class="outcome bad"><b>Rejected.</b> My note is saved as a lesson the agent reads before its next run, and the approval streak goes back to 0:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
-    if (st === 'ignored') return '<div class="outcome ok"><b>Ignored.</b> No card, no task, no noise on Today.</div>';
+    if (st === 'applied') return '<div class="outcome ok"><b>Applied.</b> Second check passed, logged, one click to undo.<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo this change</button></div>';
+    if (st === 'undone') return '<div class="outcome bad"><b>Undone.</b> Saved as a lesson:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'right') return '<div class="outcome ok"><b>Approved.</b> The draft goes to Outlook. I send it myself.</div>';
+    if (st === 'fix') return '<div class="outcome fix"><b>Corrected.</b> Saved as a lesson, streak back to 0:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'wrong') return '<div class="outcome bad"><b>Rejected.</b> Saved as a lesson, streak back to 0:<span class="lesson">&ldquo;' + esc(m.lesson) + '&rdquo;</span></div>';
+    if (st === 'ignored') return '<div class="outcome ok"><b>Ignored.</b> No noise.</div>';
     return '';
   }
 
@@ -709,7 +852,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       (m.att.length ? '<div class="att">' + m.att.map(function (a) { return '<span>&#128206; ' + esc(a) + '</span>'; }).join('') + '</div>' : '') +
       '</article>';
     if (!st) {
-      h += '<div class="run-row"><button type="button" class="btn primary" id="run">Run the agent &rarr;</button><span class="hint">reads the email, then acts or asks</span></div>';
+      h += '<div class="run-row"><button type="button" class="btn primary" id="run">Run the agent &rarr;</button></div>';
     } else {
       var shown = st === 'running' ? state.shown[m.id] : m.trace.length;
       h += '<ol class="trace" id="trace">' + m.trace.map(function (t, i) {
@@ -721,10 +864,10 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
           '<details class="json"><summary>Structured output</summary><pre>' + jsonHtml(m.json) + '</pre></details>' +
           '<p class="p-h" style="margin-top:16px">' + HEADS[m.mode] + '</p><div class="changes">' + renderChanges(m) + '</div>';
         if (st === 'proposed') {
-          h += '<div class="review"><p>A reply can reach a client, so this waits for me. Is the plan right?</p><div class="rv-btns">' +
-            '<button type="button" class="rv right" data-rv="right">&#10003; Right</button>' +
-            '<button type="button" class="rv fix" data-rv="fix">&#9998; Fix it</button>' +
-            '<button type="button" class="rv wrong" data-rv="wrong">&#10005; Wrong</button></div></div>';
+          h += '<div class="review"><p>Can reach a client, so it waits for me.</p><div class="rv-btns">' +
+            '<button type="button" class="rvb right" data-rv="right">&#10003; Right</button>' +
+            '<button type="button" class="rvb fix" data-rv="fix">&#9998; Fix it</button>' +
+            '<button type="button" class="rvb wrong" data-rv="wrong">&#10005; Wrong</button></div></div>';
         }
         h += outcomeHtml(m);
         var next = MAILS.filter(function (x) { return !state.status[x.id]; })[0];
@@ -766,10 +909,10 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         for (var i = 0; i < AUTO_AFTER; i++) pips += '<i' + (i < on ? ' class="on"' : '') + '></i>';
         right = '<span class="pips" aria-hidden="true">' + pips + '</span>';
         if (a.streak >= AUTO_AFTER) { status = 'runs on its own &middot; I can pause it'; tone = 'won'; }
-        else status = a.streak + ' of ' + AUTO_AFTER + ' approvals in a row';
+        else status = a.streak + ' of ' + AUTO_AFTER + ' in a row';
       } else {
         right = '<span class="a-n">' + a.streak + ' in a row</span>';
-        status = a.note || 'always asks: it can reach a client';
+        status = a.note || 'always asks: can reach a client';
       }
       return '<div class="auto-row"><span class="a-l">' + a.label + '</span>' + right + '<span class="a-s' + (tone ? ' ' + tone : '') + '">' + status + '</span></div>';
     }).join('');
@@ -809,8 +952,8 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     state.status[m.id] = kind;
     state.auto.forEach(function (a) {
       if (a.key !== m.action) return;
-      if (kind === 'right') { a.streak += 1; a.note = '+1 approval &middot; still always asks'; a.tone = 'ok'; }
-      else { a.streak = 0; a.note = 'reset to 0 by a ' + (kind === 'fix' ? 'Fix it' : 'Wrong') + ' &middot; always asks'; a.tone = 'bad'; }
+      if (kind === 'right') { a.streak += 1; a.note = '+1 &middot; still always asks'; a.tone = 'ok'; }
+      else { a.streak = 0; a.note = 'reset to 0 &middot; always asks'; a.tone = 'bad'; }
     });
     state.hot = null;
     renderAll();
