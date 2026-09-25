@@ -88,7 +88,8 @@ h1 .w { display: inline-block; }
 .js h1 .w { opacity: 0; transform: translateY(.5em) rotate(4deg); filter: blur(10px); animation: word 1s var(--out) forwards; animation-delay: calc(var(--i) * 70ms + 150ms); }
 @keyframes word { to { opacity: 1; transform: none; filter: none; } }
 h1 em { font-style: normal; color: var(--accent); }
-.sub { text-align: center; font-size: clamp(16px, 2vw, 19px); color: var(--muted); margin: 0 0 30px; }
+.sub { text-align: center; font-size: clamp(16px, 2vw, 19px); color: var(--muted); margin: 0 auto 30px; max-width: 58ch; }
+.sub b { color: var(--ink); font-weight: 600; }
 .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 500 12.5px var(--mono); letter-spacing: .04em; text-decoration: none; cursor: pointer; transition: border-color .2s, background .2s, transform .2s var(--ease); }
 .btn:hover { border-color: var(--accent); transform: translateY(-2px); }
@@ -351,7 +352,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <p class="eyebrow"><span class="live"><i></i>In production</span><span>Alta Light &middot; since Sep 2026</span></p>
       <h1 id="h1">Emails in. Orders updated. <em>Nothing sent without me.</em></h1>
-      <p class="sub">The AI operations hub I built and run.</p>
+      <p class="sub">The AI operations hub I built and run. Every 15 minutes it reads supplier and client emails, then <b>updates orders, shipments and requests</b> on its own. Replies to clients are <b>drafted, never sent</b>, until I approve.</p>
       <div class="hero-actions">
         <a class="btn primary" href="#demo">Try the demo &darr;</a>
         <a class="btn" href="#how">How it works</a>
