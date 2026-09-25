@@ -199,24 +199,33 @@ details.more summary:hover { color: var(--ink); }
 .email .e-meta dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .email h3 { font: 700 17px/1.3 var(--display); margin: 0 0 10px; }
 .email .e-body { white-space: pre-line; font-size: 14.5px; line-height: 1.6; color: var(--ink); margin: 0; }
-.att { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-.att span { font: 12px var(--mono); padding: 4px 9px; border: 1px dashed var(--line-2); border-radius: 6px; color: var(--muted); }
 .run-row { display: flex; align-items: center; gap: 14px; margin: 16px 0 0; flex-wrap: wrap; }
 #run { animation: nudge 2.4s var(--ease) infinite; }
 @keyframes nudge { 0%, 100% { box-shadow: 0 0 0 0 rgba(232,177,90,.5); } 60% { box-shadow: 0 0 0 10px rgba(232,177,90,0); } }
-.trace { list-style: none; margin: 18px 0 0; padding: 0; border-left: 1px solid var(--line-2); }
-.trace li { position: relative; padding: 4px 0 8px 22px; font-size: 14px; color: var(--muted); opacity: 0; transform: translateX(-8px); transition: opacity .35s, transform .35s var(--out); }
-.trace li.in { opacity: 1; transform: none; }
-.trace li::before { content: ""; position: absolute; left: -5px; top: 11px; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
-.trace li b { color: var(--ink); font-weight: 600; }
-.trace li.guard::before { border-color: var(--ok); }
-details.json { margin: 12px 0 0; border: 1px solid var(--line); border-radius: 8px; background: #0C0A09; }
-details.json summary { cursor: pointer; padding: 9px 12px; font: 500 11.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); list-style: none; }
-details.json summary::-webkit-details-marker { display: none; }
-details.json summary::before { content: "+ "; color: var(--accent); }
-details.json[open] summary::before { content: "− "; }
-details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); color: var(--muted); overflow-x: auto; white-space: pre; }
-.j-k { color: #D9C3A0; } .j-s { color: var(--ok); } .j-b { color: var(--accent); }
+.steps { list-style: none; margin: 16px 0 0; padding: 4px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.steps li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 14px; color: var(--muted); opacity: 0; transform: translateY(4px); transition: opacity .35s, transform .35s var(--out); }
+.steps li + li { border-top: 1px solid var(--line); }
+.steps li.in { opacity: 1; transform: none; }
+.steps li b { color: var(--ink); font-weight: 600; }
+.steps .tk { flex: 0 0 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+.steps .tk svg { width: 13px; height: 13px; }
+.steps li.guard { color: var(--ok); }
+.steps li.guard .tk { background: var(--ok-soft); color: var(--ok); }
+.done-line { display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 10px; flex-wrap: wrap; }
+.done-line > svg { width: 16px; height: 16px; color: var(--ok); flex: 0 0 16px; }
+.done-line b { font-weight: 600; }
+.doc { border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); padding: 12px 14px; }
+.doc-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+.doc-h b { font: 600 13px var(--mono); }
+.doc-t { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.doc-t td { padding: 6px 0; border-top: 1px solid var(--line); color: var(--muted); }
+.doc-t td:nth-child(2) { text-align: center; font-family: var(--mono); font-size: 12.5px; }
+.doc-t td:last-child { text-align: right; font-family: var(--mono); font-size: 12.5px; }
+.doc-t tr.tot td { color: var(--ink); font-weight: 600; }
+.file { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; font: 12px var(--mono); color: var(--ink); padding: 5px 10px 5px 5px; border: 1px solid var(--line-2); border-radius: 7px; background: var(--surface-2); }
+.file i { font-style: normal; font: 700 10px var(--mono); background: var(--bad); color: #1a0f0c; border-radius: 4px; padding: 3px 5px; }
+.draft-box { margin-top: 10px; }
+.fin { margin: 12px 0 0; font-size: 14px; color: var(--ok); }
 .proposal { margin: 18px 0 0; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s var(--ease); }
 .proposal.in { opacity: 1; transform: none; }
 .p-h { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; }
@@ -233,23 +242,16 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .stage-move span.to { border-color: var(--accent); color: var(--accent); }
 .draft { margin-top: 8px; border-left: 2px solid var(--accent-2); padding: 8px 12px; background: var(--surface-2); border-radius: 0 6px 6px 0; white-space: pre-line; font-size: 13.5px; color: var(--ink); }
 .draft-tag { font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
-.lk { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12.5px; }
-.lk td { padding: 6px 8px; border-top: 1px solid var(--line); vertical-align: top; }
-.lk td:first-child { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
-.lk .y { color: var(--ok); } .lk .n { color: var(--warn); }
 .review { margin-top: 16px; border: 1px solid var(--line-2); border-radius: 10px; padding: 14px; background: var(--surface-3); }
 .review p { margin: 0 0 10px; font-size: 13.5px; color: var(--muted); }
 .rv-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .rvb { flex: 1 1 110px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 600 12.5px var(--mono); letter-spacing: .04em; cursor: pointer; transition: border-color .2s, background .2s; }
 .rvb.right:hover { border-color: var(--ok); background: var(--ok-soft); }
-.rvb.fix:hover { border-color: var(--accent); background: var(--accent-soft); }
 .rvb.wrong:hover { border-color: var(--bad); background: var(--bad-soft); }
 .outcome { margin-top: 12px; padding: 12px 14px; border-radius: 9px; font-size: 14px; border: 1px solid; animation: land .5s var(--out); }
 .outcome.ok { border-color: rgba(143,203,139,.4); background: var(--ok-soft); }
-.outcome.fix { border-color: rgba(232,177,90,.45); background: var(--accent-soft); }
 .outcome.bad { border-color: rgba(229,138,123,.4); background: var(--bad-soft); }
 .outcome b { font-weight: 600; }
-.outcome .lesson { display: block; margin-top: 6px; font: 12.5px/1.5 var(--mono); color: var(--muted); }
 .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font: 500 12.5px var(--mono); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-top: 8px; }
 .after { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
 .pane { padding: 18px 20px 22px; min-width: 0; }
@@ -263,22 +265,12 @@ details.json pre { margin: 0; padding: 0 14px 14px; font: 12px/1.6 var(--mono); 
 .card span { color: var(--muted); font-size: 11.5px; }
 .card.hot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); animation: land .6s var(--out); }
 @keyframes land { from { transform: translateY(-8px) scale(.97); opacity: .3; } to { transform: none; opacity: 1; } }
-.today-g { margin-bottom: 12px; }
-.today-g h5 { margin: 0 0 6px; font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
-.today-g ul { margin: 0; padding: 0; list-style: none; }
-.today-g li { font-size: 13px; color: var(--muted); padding: 6px 0; border-top: 1px solid var(--line); }
-.today-g li.new { color: var(--ink); animation: land .6s var(--out); }
-.today-g li.new::after { content: " new"; font: 600 10px var(--mono); color: var(--accent); text-transform: uppercase; letter-spacing: .08em; }
-.auto { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
-.auto-h { display: flex; justify-content: space-between; gap: 8px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
-.auto-row { display: grid; grid-template-columns: 1fr 70px; gap: 3px 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
 #auto .auto-row:first-child { border-top: 0; }
 .a-l { font-size: 13px; color: var(--ink); }
 .a-n { font: 11px var(--mono); color: var(--muted); text-align: right; white-space: nowrap; }
 .a-s { grid-column: 1 / -1; font: 11px/1.45 var(--mono); color: var(--faint); }
 .a-s.won, .a-s.ok { color: var(--ok); }
 .a-s.bad { color: var(--bad); }
-.auto-note { margin: 6px 0 0; font: 11.5px/1.5 var(--mono); color: var(--faint); }
 .pips { display: flex; gap: 5px; }
 .pips i { flex: 1; height: 7px; border-radius: 4px; background: var(--line); transition: background .3s; }
 .pips i.on { background: var(--ok); }
@@ -420,13 +412,13 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   <section class="block" id="demo">
     <div class="shell">
       <span class="kick rv">Try it</span>
-      <h2 class="rv" style="--i:1">Pick an email. <em>Hit Run.</em></h2>
-      <p class="lead rv" style="--i:2">Three emails, three outcomes: it updates, it asks, or it ignores. Made-up data.</p>
+      <h2 class="rv" style="--i:1">One order. <em>Three emails.</em></h2>
+      <p class="lead rv" style="--i:2">One order, start to finish: a quote request, the approval and payment, then the supplier. Made-up data.</p>
       <div class="demo rv" style="--i:2" aria-label="Interactive demo of the mail agent">
         <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; Beacon &middot; mail agent</span><button type="button" id="reset">Reset</button></div>
         <div class="demo-grid">
           <nav class="inbox" aria-label="Sample emails">
-            <div class="inbox-h"><span>operations inbox</span><span id="inbox-count">3 new</span></div>
+            <div class="inbox-h"><span>operations inbox</span><span id="inbox-count">step 1 of 3</span></div>
             <div id="mails"></div>
           </nav>
           <div class="detail" id="detail" aria-live="polite"></div>
@@ -624,51 +616,60 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   }
 })();
 
-// Demo: three emails, three outcomes (applied, waits for me, ignored).
+// Demo: one order, start to finish. Each email arrives after the previous one is handled.
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var STEP = reduced ? 0 : 420;
+  var STEP = reduced ? 0 : 480;
   var STAGES = ['ordered', 'production', 'ready', 'transit', 'delivered'];
-  var HEADS = { apply: 'What it changed', review: 'What it prepared', ignore: 'Result' };
-  var REPLY = "Hello Lea,\n\nThanks for the request. We're preparing the lobby pricing and will send it before Thursday.\n\nBest regards";
+  var TICK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var LOCK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l5 2v4c0 3.2-2.1 5.6-5 7-2.9-1.4-5-3.8-5-7v-4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
 
   var BASE_CARDS = [
     { ref: 'TR-7710', sup: 'Trackline', proj: 'Marina Tower', stage: 'ordered' },
-    { ref: 'LM-2291', sup: 'Lumeria', proj: 'Villa Cedar', stage: 'production' },
-    { ref: 'KW-0388', sup: 'Kristall Works', proj: 'Villa Cedar', stage: 'transit' }
+    { ref: 'KW-0388', sup: 'Kristall Works', proj: 'Palm Court', stage: 'transit' }
   ];
 
-  // mode: 'apply' = order update, applied after a second check and undoable;
-  // 'review' = waits for Approve / Reject; 'ignore' = not work.
+  // mode 'review' waits for Approve / Reject; 'apply' runs on its own and can be undone.
   var MAILS = [
     {
-      id: 'm1', mode: 'apply', from: 'Giulia · Lumeria', addr: 'giulia@lumeria.example', time: '09:12',
-      tag: 'supplier', subject: 'Order LM-2291: goods ready',
-      body: 'Hello Youssef,\n\nOrder LM-2291 is packed and ready for collection from Monday 28 September.\n\nGiulia',
-      trace: ['Supplier update on <b>LM-2291</b>', 'Moves it to <b>ready</b>', 'G:Second check agrees'],
-      changes: [{ ic: '&rarr;', html: '<b>LM-2291 moved to ready</b><small>Ready from Mon 28 Sep</small>', move: ['production', 'ready'] }],
-      apply: function (s) { setCard(s, 'LM-2291', { stage: 'ready', note: 'from 28 Sep' }); },
-      revert: function (s) { setCard(s, 'LM-2291', { stage: 'production', note: '' }); }
+      id: 'm1', mode: 'review', from: 'Lea · Studio Mira', addr: 'lea@studiomira.example', time: '09:12',
+      tag: 'client', subject: 'Villa Cedar: quote please',
+      body: 'Hi Youssef,\n\nCould you quote 18 track spots and 2 drivers for the Villa Cedar lobby?\n\nLea',
+      steps: ['Quote request from <b>Studio Mira</b>', 'Matched exact codes <b>TR-S12</b> and <b>DRV-60</b>', 'Priced from the approved price list', 'G:Goes to a client, so it waits for me'],
+      head: 'Quotation ready',
+      doc: { no: 'Q-1042', file: 'Q-1042_Villa-Cedar.pdf', rows: [['TR-S12 track spot', 18, 64], ['DRV-60 driver', 2, 38]] },
+      draft: { to: 'Lea', body: 'Hello Lea,\n\nPlease find our quotation Q-1042 attached.\n\nBest regards' },
+      ask: 'Reply with the quote attached. Send it?',
+      okText: 'Draft goes to Outlook with the PDF attached. I send it myself.'
     },
     {
-      id: 'm2', mode: 'review', from: 'Lea · Studio Mira', addr: 'lea@studiomira.example', time: '11:05',
-      tag: 'client', subject: 'Marina Tower: pricing request',
-      body: 'Hi Youssef,\n\nCould you price 18 track spots and 2 drivers for the lobby? We need it by Thursday.\n\nLea',
-      trace: ['Client asking for a price', 'Drafts a reply', 'G:Could reach a client, so it waits for me'],
-      changes: [{ ic: '&#9998;', draft: { to: 'Lea', body: REPLY } }]
+      id: 'm2', mode: 'review', from: 'Lea · Studio Mira', addr: 'lea@studiomira.example', time: '14:40',
+      tag: 'client', subject: 'Re: Villa Cedar: quote please',
+      body: 'Approved. Payment sent today, receipt attached.\n\nLea',
+      steps: ['Quote <b>Q-1042</b> approved', 'Payment of <b>USD 1,228</b> matched to it', 'Supplier for these codes: <b>Lumeria</b>', 'G:Goes to a supplier, so it waits for me'],
+      head: 'Purchase order ready',
+      logged: 'Payment logged, order <b>LM-2291</b> opened',
+      doc: { no: 'PO-0317', file: 'PO-0317_Lumeria.pdf', tag: 'Xero draft', rows: [['TR-S12 track spot', 18], ['DRV-60 driver', 2]] },
+      draft: { to: 'Giulia at Lumeria', body: 'Hello Giulia,\n\nPlease find PO-0317 attached. Kindly confirm the ready date.\n\nBest regards' },
+      ask: 'PO to the supplier. Send it?',
+      okText: 'PO goes to Xero and the email to Outlook. I send it myself.',
+      onRun: function (s) { s.cards.unshift({ ref: 'LM-2291', sup: 'Lumeria', proj: 'Villa Cedar', stage: 'ordered', note: 'paid' }); s.hot = 'LM-2291'; }
     },
     {
-      id: 'm3', mode: 'ignore', from: 'LightWorld Weekly', addr: 'news@lightworld.example', time: '11:30',
-      tag: 'newsletter', subject: '5 lighting trends for 2027',
-      body: 'This week: tunable white goes mainstream, and the trade shows to watch.',
-      trace: ['Newsletter, no order or request', '&rarr; <b>ignore</b>'],
-      changes: [{ ic: '&#8212;', g: true, html: '<b>Nothing to do</b><small>No card, no task, no noise</small>' }]
+      id: 'm3', mode: 'apply', from: 'Giulia · Lumeria', addr: 'giulia@lumeria.example', time: '+2 days',
+      tag: 'supplier', subject: 'Re: PO-0317',
+      body: 'PO-0317 confirmed. Production started, ready on 12 October.\n\nGiulia',
+      steps: ['Matched <b>PO-0317</b> to order <b>LM-2291</b>', 'Moves it to <b>production</b>, ready 12 Oct', 'G:Second check agrees'],
+      head: 'Order updated',
+      move: ['ordered', 'production'],
+      apply: function (s) { setCard(s, 'LM-2291', { stage: 'production', note: 'ready 12 Oct' }); },
+      revert: function (s) { setCard(s, 'LM-2291', { stage: 'ordered', note: 'paid' }); }
     }
   ];
 
   var state, timers = [];
   function fresh() {
-    return { cards: BASE_CARDS.map(function (c) { return Object.assign({}, c); }), status: {}, shown: {}, selected: 'm1', hot: null, landed: null };
+    return { cards: BASE_CARDS.map(function (c) { return Object.assign({}, c); }), status: {}, shown: {}, arrived: 1, selected: 'm1', hot: null, landed: null };
   }
 
   function el(id) { return document.getElementById(id); }
@@ -676,10 +677,12 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   function mail(id) { return MAILS.filter(function (x) { return x.id === id; })[0]; }
   function later(fn) { timers.push(setTimeout(fn, STEP)); }
   function setCard(s, ref, patch) { s.cards.forEach(function (c) { if (c.ref === ref) Object.assign(c, patch); }); s.hot = ref; }
+  function money(n) { return n.toLocaleString('en-US'); }
+  function done(st) { return st && st !== 'running' && st !== 'proposed'; }
 
   var CHIPS = {
-    running: ['st-run', 'reading…'], applied: ['st-ok', 'applied'], undone: ['st-bad', 'undone'],
-    proposed: ['st-prop', 'needs you'], right: ['st-ok', 'approved'], wrong: ['st-bad', 'rejected'], ignored: ['', 'ignored']
+    running: ['st-run', 'reading…'], applied: ['st-ok', 'updated'], undone: ['st-bad', 'undone'],
+    proposed: ['st-prop', 'needs you'], right: ['st-ok', 'approved'], wrong: ['st-bad', 'rejected']
   };
   function statusChip(id) {
     var c = CHIPS[state.status[id]] || ['', 'new'];
@@ -687,38 +690,46 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   }
 
   function renderInbox() {
-    el('mails').innerHTML = MAILS.map(function (m) {
+    el('mails').innerHTML = MAILS.slice(0, state.arrived).map(function (m) {
       return '<button type="button" class="mail" data-id="' + m.id + '" aria-current="' + (state.selected === m.id) + '">' +
         '<span class="m-top"><span class="m-from">' + esc(m.from) + '</span><span>' + m.time + '</span></span>' +
         '<span class="m-sub">' + esc(m.subject) + '</span>' +
         '<span class="chips"><span class="chip">' + m.tag + '</span>' + statusChip(m.id) + '</span>' +
         '</button>';
-    }).join('');
-    var pending = MAILS.filter(function (m) { return !state.status[m.id]; }).length;
-    el('inbox-count').textContent = pending ? pending + ' new' : 'all handled';
+    }).reverse().join('');
+    var left = MAILS.length - MAILS.filter(function (m) { return done(state.status[m.id]); }).length;
+    el('inbox-count').textContent = left ? 'step ' + Math.min(state.arrived, 3) + ' of 3' : 'order handled';
   }
 
-  function renderChanges(m) {
-    return m.changes.map(function (c) {
-      var inner;
-      if (c.draft) {
-        inner = '<span class="draft-tag">Draft reply &middot; to ' + c.draft.to + ' &middot; not sent</span><div class="draft">' + esc(c.draft.body) + '</div>';
-      } else {
-        inner = c.html;
-        if (c.move) inner += '<span class="stage-move"><span>' + c.move[0] + '</span> &rarr; <span class="to">' + c.move[1] + '</span></span>';
-      }
-      return '<div class="chg"><span class="ic' + (c.g ? ' g' : '') + '" aria-hidden="true">' + c.ic + '</span><div class="t">' + inner + '</div></div>';
+  function docHtml(m) {
+    var d = m.doc, total = 0;
+    var rows = d.rows.map(function (r) {
+      var amt = r[2] ? r[1] * r[2] : null;
+      if (amt) total += amt;
+      return '<tr><td>' + esc(r[0]) + '</td><td>&times;' + r[1] + '</td>' + (r[2] ? '<td>' + money(amt) + '</td>' : '') + '</tr>';
     }).join('');
+    if (total) rows += '<tr class="tot"><td>Total</td><td></td><td>USD ' + money(total) + '</td></tr>';
+    return '<div class="doc"><div class="doc-h"><b>' + d.no + '</b>' + (d.tag ? '<span class="chip">' + d.tag + '</span>' : '') + '</div>' +
+      '<table class="doc-t">' + rows + '</table>' +
+      '<span class="file"><i>PDF</i>' + d.file + '</span></div>';
   }
 
-  function outcomeHtml(m) {
-    var st = state.status[m.id];
-    if (st === 'applied') return '<div class="outcome ok"><b>Applied.</b> Logged, one click to undo.<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo this change</button></div>';
-    if (st === 'undone') return '<div class="outcome bad"><b>Undone.</b> Saved as a lesson so it won&rsquo;t repeat.</div>';
-    if (st === 'right') return '<div class="outcome ok"><b>Approved.</b> The draft goes to Outlook. I send it myself.</div>';
-    if (st === 'wrong') return '<div class="outcome bad"><b>Rejected.</b> Saved as a lesson so it won&rsquo;t repeat.</div>';
-    if (st === 'ignored') return '<div class="outcome ok"><b>Ignored.</b> No noise.</div>';
-    return '';
+  function resultHtml(m) {
+    var st = state.status[m.id], h = '';
+    if (m.logged) h += '<div class="done-line">' + TICK + '<span>' + m.logged + '</span></div>';
+    if (m.doc) h += docHtml(m);
+    if (m.draft) h += '<div class="draft-box"><span class="draft-tag">Email to ' + esc(m.draft.to) + ' &middot; attached &middot; not sent</span><div class="draft">' + esc(m.draft.body) + '</div></div>';
+    if (m.move) h += '<div class="done-line">' + TICK + '<span><b>LM-2291</b> <span class="stage-move"><span>' + m.move[0] + '</span> &rarr; <span class="to">' + m.move[1] + '</span></span> ready 12 Oct</span></div>';
+    if (st === 'proposed') {
+      h += '<div class="review"><p>' + m.ask + '</p><div class="rv-btns">' +
+        '<button type="button" class="rvb right" data-rv="right">&#10003; Approve</button>' +
+        '<button type="button" class="rvb wrong" data-rv="wrong">&#10005; Reject</button></div></div>';
+    }
+    if (st === 'right') h += '<div class="outcome ok"><b>Approved.</b> ' + m.okText + '</div>';
+    if (st === 'wrong') h += '<div class="outcome bad"><b>Rejected.</b> Saved as a lesson so it won&rsquo;t repeat.</div>';
+    if (st === 'applied') h += '<div class="outcome ok"><b>Updated on its own.</b> Logged, one click to undo.<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo</button></div>';
+    if (st === 'undone') h += '<div class="outcome bad"><b>Undone.</b> Saved as a lesson so it won&rsquo;t repeat.</div>';
+    return h;
   }
 
   function renderDetail() {
@@ -729,21 +740,16 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     if (!st) {
       h += '<div class="run-row"><button type="button" class="btn primary" id="run">Run the agent &rarr;</button></div>';
     } else {
-      var shown = st === 'running' ? state.shown[m.id] : m.trace.length;
-      h += '<ol class="trace" id="trace">' + m.trace.map(function (t, i) {
+      var shown = st === 'running' ? state.shown[m.id] : m.steps.length;
+      h += '<ol class="steps" id="steps">' + m.steps.map(function (t, i) {
         var guard = t.indexOf('G:') === 0;
-        return '<li class="' + (guard ? 'guard' : '') + (i < shown ? ' in' : '') + '">' + (guard ? t.slice(2) : t) + '</li>';
+        return '<li class="' + (guard ? 'guard' : '') + (i < shown ? ' in' : '') + '"><span class="tk">' + (guard ? LOCK : TICK) + '</span><span>' + (guard ? t.slice(2) : t) + '</span></li>';
       }).join('') + '</ol>';
       if (st !== 'running') {
-        h += '<div class="proposal" id="proposal"><p class="p-h" style="margin-top:16px">' + HEADS[m.mode] + '</p><div class="changes">' + renderChanges(m) + '</div>';
-        if (st === 'proposed') {
-          h += '<div class="review"><p>It could reach a client, so it waits for me.</p><div class="rv-btns">' +
-            '<button type="button" class="rvb right" data-rv="right">&#10003; Approve</button>' +
-            '<button type="button" class="rvb wrong" data-rv="wrong">&#10005; Reject</button></div></div>';
-        }
-        h += outcomeHtml(m);
-        var next = MAILS.filter(function (x) { return !state.status[x.id]; })[0];
-        if (st !== 'proposed' && next) h += '<button type="button" class="linkbtn" data-go="' + next.id + '">Next email &rarr;</button>';
+        h += '<div class="proposal" id="proposal"><p class="p-h">' + m.head + '</p>' + resultHtml(m);
+        var next = MAILS[state.arrived];
+        if (done(st) && next && state.arrived < MAILS.length) h += '<button type="button" class="linkbtn" data-next="1">Next email arrives &rarr;</button>';
+        if (done(st) && MAILS.every(function (x) { return /^(right|applied)$/.test(state.status[x.id]); })) h += '<p class="fin">From quote to production in three emails. I only clicked Approve.</p>';
         h += '</div>';
       }
     }
@@ -773,9 +779,9 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     renderInbox(); renderDetail();
     function tick() {
       if (state.status[id] !== 'running') return;
-      if (state.shown[id] < m.trace.length) {
+      if (state.shown[id] < m.steps.length) {
         state.shown[id] += 1;
-        var li = state.selected === id && document.querySelectorAll('#trace li')[state.shown[id] - 1];
+        var li = state.selected === id && document.querySelectorAll('#steps li')[state.shown[id] - 1];
         if (li) li.classList.add('in');
         later(tick);
       } else finish(id);
@@ -785,9 +791,9 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 
   function finish(id) {
     var m = mail(id);
+    if (m.onRun) m.onRun(state);
     if (m.mode === 'apply') { m.apply(state); state.status[id] = 'applied'; }
-    else if (m.mode === 'review') state.status[id] = 'proposed';
-    else state.status[id] = 'ignored';
+    else state.status[id] = 'proposed';
     renderInbox(); renderBoard();
     if (state.selected === id) { state.landed = id; renderDetail(); }
   }
@@ -796,7 +802,6 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     var m = mail(state.selected);
     if (state.status[m.id] !== 'proposed') return;
     state.status[m.id] = kind;
-    state.hot = null;
     renderAll();
   }
 
@@ -808,7 +813,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     renderAll();
   }
 
-  function select(id) { state.selected = id; state.hot = null; renderInbox(); renderDetail(); renderBoard(); }
+  function select(id) { state.selected = id; state.hot = null; renderAll(); }
 
   document.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('button');
@@ -817,7 +822,12 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     if (t.id === 'run') { run(state.selected); return; }
     if (t.hasAttribute('data-rv')) { review(t.getAttribute('data-rv')); return; }
     if (t.hasAttribute('data-undo')) { undo(t.getAttribute('data-undo')); return; }
-    if (t.hasAttribute('data-go')) { select(t.getAttribute('data-go')); el('detail').scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' }); return; }
+    if (t.hasAttribute('data-next')) {
+      state.arrived = Math.min(state.arrived + 1, MAILS.length);
+      select(MAILS[state.arrived - 1].id);
+      el('detail').scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+      return;
+    }
     if (t.id === 'reset') { timers.forEach(clearTimeout); timers = []; state = fresh(); renderAll(); }
   });
 
