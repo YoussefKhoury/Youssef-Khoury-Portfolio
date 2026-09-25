@@ -154,8 +154,8 @@ h2 em { font-style: normal; color: var(--accent); }
 .pnode p { margin: 0; font: 12px var(--mono); letter-spacing: .04em; color: var(--muted); }
 .loop { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 40px auto 0; width: fit-content; max-width: 100%; border: 1px solid rgba(143,203,139,.35); background: var(--ok-soft); border-radius: 99px; padding: 9px 18px; font-size: 14px; color: var(--ink); }
 .loop .ico { width: 18px; height: 18px; color: var(--ok); flex: none; }
-.js .loop .ico { animation: spin 3s linear infinite; transform-origin: 50% 50%; transform-box: fill-box; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.js .loop .ico { animation: think 2.4s var(--ease) infinite; transform-origin: 50% 50%; transform-box: fill-box; }
+@keyframes think { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(143,203,139,0)); } 50% { transform: scale(1.12); filter: drop-shadow(0 0 6px rgba(143,203,139,.7)); } }
 .stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 28px auto 0; max-width: 820px; }
 .stack span { font: 500 12px var(--mono); padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 99px; color: var(--ink); background: var(--surface-2); }
 details.more { margin: 30px auto 0; max-width: 820px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
@@ -395,7 +395,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         <div class="pnode g"><div class="ring"><svg class="ico" data-i="check2"></svg></div><h3>Second check</h3><p>must agree</p></div>
         <div class="pnode"><div class="ring"><svg class="ico" data-i="board"></svg></div><h3>Hub</h3><p>logged &middot; 1-click undo</p></div>
       </div>
-      <div class="loop rv"><svg class="ico" data-i="loop"></svg>Every correction becomes a lesson</div>
+      <div class="loop rv"><svg class="ico" data-i="brain"></svg>Every correction becomes a lesson</div>
       <div class="stack" aria-label="Stack">
         <span class="rv" style="--i:0">Python</span><span class="rv" style="--i:1">Microsoft Graph</span><span class="rv" style="--i:2">OpenAI API</span><span class="rv" style="--i:3">Cloudflare Workers</span><span class="rv" style="--i:4">D1 (SQLite)</span><span class="rv" style="--i:5">Workers KV</span><span class="rv" style="--i:6">JavaScript</span><span class="rv" style="--i:7">Xero API</span><span class="rv" style="--i:8">OAuth / MSAL</span>
       </div>
@@ -509,6 +509,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     cpu: '<rect x="6" y="6" width="12" height="12" rx="2" pathLength="1"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" pathLength="1"/>',
     check2: '<path d="M2 12.5l4.5 4.5L16 7.5" pathLength="1"/><path d="M11.5 16.5l.5.5L21.5 7.5" pathLength="1"/>',
     board: '<rect x="3" y="4" width="18" height="16" rx="2" pathLength="1"/><path d="M9 4v16M15 4v16" pathLength="1"/>',
+    brain: '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" pathLength="1"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" pathLength="1"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" pathLength="1"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375" pathLength="1"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" pathLength="1"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396" pathLength="1"/><path d="M19.938 10.5a4 4 0 0 1 .585.396" pathLength="1"/><path d="M6 18a4 4 0 0 1-1.967-.516" pathLength="1"/><path d="M19.967 17.484A4 4 0 0 1 18 18" pathLength="1"/>',
     loop: '<path d="M21 12a9 9 0 11-3-6.7" pathLength="1"/><path d="M21 3v6h-6" pathLength="1"/>',
     home: '<path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z" pathLength="1"/>',
     inbox: '<path d="M3 13l3-8h12l3 8v6a1 1 0 01-1 1H4a1 1 0 01-1-1z" pathLength="1"/><path d="M3 13h5l1 3h6l1-3h5" pathLength="1"/>',
