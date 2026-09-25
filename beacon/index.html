@@ -226,6 +226,8 @@ details.more summary:hover { color: var(--ink); }
 .file i { font-style: normal; font: 700 10px var(--mono); background: var(--bad); color: #1a0f0c; border-radius: 4px; padding: 3px 5px; }
 .draft-box { margin-top: 10px; }
 .fin { margin: 12px 0 0; font-size: 14px; color: var(--ok); }
+.next-btn { display: flex; width: 100%; justify-content: center; align-items: center; gap: 10px; margin-top: 16px; animation: nudge 2.4s var(--ease) infinite; }
+.nb-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.6s infinite; }
 .done-line.todo { margin: 10px 0 0; color: var(--accent); }
 .done-line .dot { width: 8px; height: 8px; margin: 0 4px; border-radius: 50%; background: var(--accent); flex: 0 0 8px; }
 .proposal { margin: 18px 0 0; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s var(--ease); }
@@ -750,7 +752,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       if (st !== 'running') {
         h += '<div class="proposal" id="proposal"><p class="p-h">' + m.head + '</p>' + resultHtml(m);
         var next = MAILS[state.arrived];
-        if (done(st) && next && state.arrived < MAILS.length) h += '<button type="button" class="linkbtn" data-next="1">Next email arrives &rarr;</button>';
+        if (done(st) && next && state.arrived < MAILS.length) h += '<button type="button" class="btn primary next-btn" data-next="1"><span class="nb-dot"></span>New email from ' + esc(next.from.split(' · ')[0]) + ' &rarr;</button>';
         if (done(st) && MAILS.every(function (x) { return /^(right|applied)$/.test(state.status[x.id]); })) h += '<p class="fin">Quote request to production in three emails. I only confirmed what leaves the company.</p>';
         h += '</div>';
       }
