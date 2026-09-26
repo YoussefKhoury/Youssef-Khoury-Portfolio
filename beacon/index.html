@@ -392,7 +392,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         <div class="track" aria-hidden="true"><div class="fill"></div><div class="packet"></div></div>
         <div class="pnode"><div class="ring"><svg class="ico" data-i="mail"></svg></div><h3>Mailbox</h3><p>read + draft only</p></div>
         <div class="pnode"><div class="ring"><svg class="ico" data-i="cpu"></svg></div><h3>AI agent</h3><p>reads mail + files</p></div>
-        <div class="pnode g"><div class="ring"><svg class="ico" data-i="check2"></svg></div><h3>Second check</h3><p>must agree</p></div>
+        <div class="pnode g"><div class="ring"><svg class="ico" data-i="check2"></svg></div><h3>Second check</h3><p>agrees, or a person decides</p></div>
         <div class="pnode"><div class="ring"><svg class="ico" data-i="board"></svg></div><h3>Hub</h3><p>logged &middot; 1-click undo</p></div>
       </div>
       <div class="loop rv"><svg class="ico" data-i="brain"></svg>Every correction becomes a lesson</div>
@@ -405,6 +405,8 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
           <li><b>Nothing missed, nothing doubled.</b> Each run re-scans a 6-hour overlap and skips mail already processed.</li>
           <li><b>Sent mail reads differently.</b> What we send is a confirmed action; what a supplier sends is a claim.</li>
           <li><b>Attachments are evidence.</b> PDFs, spreadsheets and photos are read; order refs come from file names too.</li>
+          <li><b>Doubts go to a person.</b> If the second check disagrees, the change waits in Needs review. Every Keep or Discard is saved to measure accuracy.</li>
+          <li><b>Only live facts.</b> It reads the email, the thread and live project data, so old order details can't leak into new updates.</li>
           <li><b>Failures don't block the queue.</b> Retries with backoff; 3 failures and a person takes it.</li>
           <li><b>Runs on free tiers.</b> Big price lists (the largest has 240k lines) are split into sorted chunks with a binary-search index.</li>
           <li><b>Tested before it ships.</b> Automated suites cover the API, permissions, screens and invoice builder.</li>
@@ -416,13 +418,13 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   <section class="block" id="demo">
     <div class="shell">
       <span class="kick rv">Try it</span>
-      <h2 class="rv" style="--i:1">One order. <em>Three emails.</em></h2>
-      <p class="lead rv" style="--i:2">One order, start to finish: a quote request, the approval and payment, then the supplier. Made-up data.</p>
+      <h2 class="rv" style="--i:1">One order. <em>Four emails.</em></h2>
+      <p class="lead rv" style="--i:2">One order, start to finish: a quote request, the approval and payment, the supplier, then a vague update it won&rsquo;t act on alone. Made-up data.</p>
       <div class="demo rv" style="--i:2" aria-label="Interactive demo of the mail agent">
         <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; Beacon &middot; mail agent</span><button type="button" id="reset">Reset</button></div>
         <div class="demo-grid">
           <nav class="inbox" aria-label="Sample emails">
-            <div class="inbox-h"><span>operations inbox</span><span id="inbox-count">step 1 of 3</span></div>
+            <div class="inbox-h"><span>operations inbox</span><span id="inbox-count">step 1 of 4</span></div>
             <div id="mails"></div>
           </nav>
           <div class="detail" id="detail" aria-live="polite"></div>
@@ -668,6 +670,15 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       move: ['ordered', 'production'],
       apply: function (s) { s.cards.unshift({ ref: 'LM-2291', sup: 'Lumeria', proj: 'Villa Cedar', stage: 'production', note: 'ready 12 Oct' }); s.hot = 'LM-2291'; },
       revert: function (s) { s.cards = s.cards.filter(function (c) { return c.ref !== 'LM-2291'; }); s.hot = null; }
+    },
+    {
+      id: 'm4', mode: 'doubt', from: 'Giulia · Lumeria', addr: 'giulia@lumeria.example', time: '+5 days',
+      tag: 'supplier', subject: 'Re: PO-0317',
+      body: 'Small hold-up on the drivers, probably about a week. We will confirm the new date.\n\nGiulia',
+      steps: ['Matched to order <b>LM-2291</b>', 'First read: push ready date to <b>~19 Oct</b>', 'G:Second check disagrees: no firm date yet'],
+      head: 'Sent to Needs review',
+      doubt: { ref: 'LM-2291', from: 'ready 12 Oct', to: 'delayed, ~19 Oct', reason: 'The email gives no confirmed date.' },
+      apply: function (s) { setCard(s, 'LM-2291', { note: 'delayed, ~19 Oct' }); }
     }
   ];
 
@@ -686,10 +697,12 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 
   var CHIPS = {
     running: ['st-run', 'reading…'], applied: ['st-ok', 'updated'], undone: ['st-bad', 'undone'],
-    proposed: ['st-prop', 'needs you'], right: ['st-ok', 'approved'], wrong: ['st-bad', 'rejected']
+    proposed: ['st-prop', 'needs you'], right: ['st-ok', 'approved'], wrong: ['st-bad', 'rejected'],
+    kept: ['st-ok', 'kept'], discarded: ['st-ok', 'discarded']
   };
   function statusChip(id) {
     var c = CHIPS[state.status[id]] || ['', 'new'];
+    if (state.status[id] === 'proposed' && mail(id).doubt) c = ['st-prop', 'needs review'];
     return '<span class="chip' + (c[0] ? ' ' + c[0] : '') + '">' + c[1] + '</span>';
   }
 
@@ -702,7 +715,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         '</button>';
     }).reverse().join('');
     var left = MAILS.length - MAILS.filter(function (m) { return done(state.status[m.id]); }).length;
-    el('inbox-count').textContent = left ? 'step ' + Math.min(state.arrived, 3) + ' of 3' : 'order handled';
+    el('inbox-count').textContent = left ? 'step ' + state.arrived + ' of ' + MAILS.length : 'order handled';
   }
 
   function docHtml(m) {
@@ -725,6 +738,18 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     if (m.draft) h += '<div class="draft-box"><span class="draft-tag">Email to ' + esc(m.draft.to) + ' &middot; attached &middot; not sent</span><div class="draft">' + esc(m.draft.body) + '</div></div>';
     if (m.todo) h += '<div class="done-line todo"><span class="dot"></span><span>' + m.todo + '</span></div>';
     if (m.move) h += '<div class="done-line">' + TICK + '<span><b>LM-2291</b> <span class="stage-move"><span>' + m.move[0] + '</span> &rarr; <span class="to">' + m.move[1] + '</span></span> ready 12 Oct</span></div>';
+    if (m.doubt) {
+      var d = m.doubt;
+      h += '<div class="doc"><div class="doc-h"><b>' + d.ref + '</b><span class="chip st-prop">not applied</span></div>' +
+        '<table class="doc-t"><tr><td>Proposed</td><td></td><td>' + d.from + ' &rarr; ' + d.to + '</td></tr>' +
+        '<tr><td>Why it waits</td><td></td><td>' + d.reason + '</td></tr></table></div>';
+      if (st === 'proposed') h += '<div class="review"><p>Beacon wasn&rsquo;t sure, so nothing changed. Your call:</p><div class="rv-btns">' +
+        '<button type="button" class="rvb right" data-rv="kept">&#10003; Keep</button>' +
+        '<button type="button" class="rvb wrong" data-rv="discarded">&#10005; Discard</button></div></div>';
+      if (st === 'kept') h += '<div class="outcome ok"><b>Kept.</b> Card updated. Decision saved to measure accuracy.</div>';
+      if (st === 'discarded') h += '<div class="outcome ok"><b>Discarded.</b> Nothing changed. Decision saved to measure accuracy.</div>';
+      return h;
+    }
     if (st === 'proposed') {
       h += '<div class="review"><p>' + m.ask + '</p><div class="rv-btns">' +
         '<button type="button" class="rvb right" data-rv="right">&#10003; Approve</button>' +
@@ -754,7 +779,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         h += '<div class="proposal" id="proposal"><p class="p-h">' + m.head + '</p>' + resultHtml(m);
         var next = MAILS[state.arrived];
         if (done(st) && next && state.arrived < MAILS.length) h += '<button type="button" class="btn primary next-btn" data-next="1"><span class="nb-dot"></span>New email from ' + esc(next.from.split(' · ')[0]) + ' &rarr;</button>';
-        if (done(st) && MAILS.every(function (x) { return /^(right|applied)$/.test(state.status[x.id]); })) h += '<p class="fin">Quote request to production in three emails. I only confirmed what leaves the company.</p>';
+        if (done(st) && MAILS.every(function (x) { return /^(right|applied|kept|discarded)$/.test(state.status[x.id]); })) h += '<p class="fin">Quote request to production in four emails. I only stepped in for what leaves the company, and the one it doubted.</p>';
         h += '</div>';
       }
     }
@@ -807,6 +832,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     var m = mail(state.selected);
     if (state.status[m.id] !== 'proposed') return;
     state.status[m.id] = kind;
+    if (kind === 'kept') m.apply(state);
     renderAll();
   }
 
