@@ -177,6 +177,35 @@ details.more summary:hover { color: var(--ink); }
   html::-webkit-scrollbar-thumb { background: var(--accent); border: 3px solid var(--surface-2); border-radius: 999px; }
   html::-webkit-scrollbar-thumb:hover { background: #F4C56D; }
 }
+/* guardrails: a numbered rulebook, not boxes */
+.rules { list-style: none; margin: 0 auto; padding: 0; max-width: 920px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 44px; border-top: 1px solid var(--line); }
+.rules li { display: grid; grid-template-columns: 26px 40px minmax(0, 1fr); align-items: center; gap: 14px; padding: 20px 6px; border-bottom: 1px solid var(--line); transition: background .3s; }
+.rules li:hover { background: linear-gradient(90deg, var(--ok-soft), transparent 70%); }
+.rl-n { font: 500 11px var(--mono); letter-spacing: .1em; color: var(--faint); }
+.rl-ico { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(143,203,139,.4); color: var(--ok); }
+.rl-ico .ico { width: 19px; height: 19px; }
+.rules h3 { font: 700 17.5px/1.25 var(--display); margin: 0; letter-spacing: -.01em; }
+.rules p { margin: 3px 0 0; font-size: 13.5px; color: var(--muted); }
+/* my part: four connected steps */
+.flow4 { list-style: none; margin: 0 auto; padding: 0; max-width: 980px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 18px; }
+.flow4 li { position: relative; padding-top: 66px; text-align: center; }
+.flow4 li:not(:last-child)::before { content: ""; position: absolute; top: 25px; left: calc(50% + 36px); width: calc(100% + 18px - 72px); height: 2px; background: linear-gradient(90deg, var(--accent), var(--line-2)); }
+.fl-dot { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(232,177,90,.5); background: var(--accent-soft); color: var(--accent); }
+.fl-dot .ico { width: 22px; height: 22px; }
+.fl-n { display: block; margin-bottom: 6px; font: 500 10.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.flow4 h3 { font: 700 19px/1.2 var(--display); margin: 0 0 4px; }
+.flow4 p { margin: 0 auto; max-width: 22ch; font-size: 14px; color: var(--muted); }
+@media (max-width: 720px) {
+  .rules { grid-template-columns: 1fr; }
+  .rules li { grid-template-columns: 22px 36px minmax(0, 1fr); gap: 12px; padding: 16px 2px; }
+  .rl-ico { width: 36px; height: 36px; }
+  .flow4 { grid-template-columns: 1fr; max-width: 420px; }
+  .flow4 li { text-align: left; padding: 4px 0 30px 70px; min-height: 52px; }
+  .flow4 li:last-child { padding-bottom: 0; }
+  .flow4 li:not(:last-child)::before { top: 58px; left: 25px; bottom: 6px; width: 2px; height: auto; background: linear-gradient(180deg, var(--accent), var(--line-2)); }
+  .fl-dot { left: 0; transform: none; }
+  .flow4 p { margin: 0; max-width: none; }
+}
 /* demo */
 .demo { max-width: 980px; margin: 0 auto; scroll-margin-top: 76px; border: 1px solid var(--line-2); border-radius: 16px; background: var(--surface-2); overflow: hidden; box-shadow: 0 30px 80px -40px rgba(0,0,0,.8); }
 .win-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface); font: 11px var(--mono); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
@@ -490,14 +519,14 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <span class="kick rv">Guardrails</span>
       <h2 class="rv" style="--i:1">Rules it <em>can't break.</em></h2>
-      <div class="tiles t3">
-        <div class="tile rv pop" style="--i:0"><div class="badge g"><svg class="ico" data-i="nosend"></svg></div><h3>Can't send email</h3><p>drafts only</p></div>
-        <div class="tile rv pop" style="--i:1"><div class="badge g"><svg class="ico" data-i="blank"></svg></div><h3>Never guesses numbers</h3><p>a gap beats a guess</p></div>
-        <div class="tile rv pop" style="--i:2"><div class="badge g"><svg class="ico" data-i="hash"></svg></div><h3>Exact codes only</h3><p>near matches flagged</p></div>
-        <div class="tile rv pop" style="--i:3"><div class="badge g"><svg class="ico" data-i="lock"></svg></div><h3>Costs stay private</h3><p>admin-only</p></div>
-        <div class="tile rv pop" style="--i:4"><div class="badge g"><svg class="ico" data-i="undo"></svg></div><h3>Checked twice</h3><p>one-click undo</p></div>
-        <div class="tile rv pop" style="--i:5"><div class="badge g"><svg class="ico" data-i="steps"></svg></div><h3>Autonomy is earned</h3><p>5 approvals in a row</p></div>
-      </div>
+      <ol class="rules">
+        <li class="rv" style="--i:0"><span class="rl-n">01</span><span class="rl-ico"><svg class="ico" data-i="nosend"></svg></span><div><h3>Can't send email</h3><p>It only writes drafts. You press send.</p></div></li>
+        <li class="rv" style="--i:1"><span class="rl-n">02</span><span class="rl-ico"><svg class="ico" data-i="blank"></svg></span><div><h3>Never guesses numbers</h3><p>A blank beats a made-up price or date.</p></div></li>
+        <li class="rv" style="--i:2"><span class="rl-n">03</span><span class="rl-ico"><svg class="ico" data-i="hash"></svg></span><div><h3>Exact codes only</h3><p>A near match is flagged for a person.</p></div></li>
+        <li class="rv" style="--i:3"><span class="rl-n">04</span><span class="rl-ico"><svg class="ico" data-i="lock"></svg></span><div><h3>Costs stay private</h3><p>Only admins see buying costs.</p></div></li>
+        <li class="rv" style="--i:4"><span class="rl-n">05</span><span class="rl-ico"><svg class="ico" data-i="undo"></svg></span><div><h3>Checked twice</h3><p>A second check must agree; one click undoes it.</p></div></li>
+        <li class="rv" style="--i:5"><span class="rl-n">06</span><span class="rl-ico"><svg class="ico" data-i="steps"></svg></span><div><h3>Autonomy is earned</h3><p>It acts alone only after 5 approvals in a row.</p></div></li>
+      </ol>
     </div>
   </section>
 
@@ -505,12 +534,12 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <span class="kick rv">My part</span>
       <h2 class="rv" style="--i:1">Built and run <em>end to end.</em></h2>
-      <div class="tiles t4">
-        <div class="tile sm rv" style="--i:0"><div class="badge"><svg class="ico" data-i="map"></svg></div><h3>Process</h3><p>mapped the real flow</p></div>
-        <div class="tile sm rv" style="--i:1"><div class="badge"><svg class="ico" data-i="db"></svg></div><h3>Data</h3><p>designed the model</p></div>
-        <div class="tile sm rv" style="--i:2"><div class="badge"><svg class="ico" data-i="flask"></svg></div><h3>Testing</h3><p>real threads &rarr; rules</p></div>
-        <div class="tile sm rv" style="--i:3"><div class="badge"><svg class="ico" data-i="users"></svg></div><h3>Rollout</h3><p>team + admin areas</p></div>
-      </div>
+      <ol class="flow4">
+        <li class="rv" style="--i:0"><span class="fl-dot"><svg class="ico" data-i="map"></svg></span><span class="fl-n">Step 1</span><h3>Process</h3><p>Mapped how orders really move</p></li>
+        <li class="rv" style="--i:1"><span class="fl-dot"><svg class="ico" data-i="db"></svg></span><span class="fl-n">Step 2</span><h3>Data</h3><p>Designed the order and price model</p></li>
+        <li class="rv" style="--i:2"><span class="fl-dot"><svg class="ico" data-i="flask"></svg></span><span class="fl-n">Step 3</span><h3>Testing</h3><p>Turned real email threads into rules</p></li>
+        <li class="rv" style="--i:3"><span class="fl-dot"><svg class="ico" data-i="users"></svg></span><span class="fl-n">Step 4</span><h3>Rollout</h3><p>Team and admin areas, now live</p></li>
+      </ol>
     </div>
   </section>
 
