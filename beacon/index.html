@@ -391,7 +391,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       </div>
       <div class="reel-wrap">
         <div class="reel" id="reel">
-          <video id="reel-v" autoplay muted loop playsinline preload="metadata" poster="../assets/beacon-reel-poster.jpg" aria-label="35-second walkthrough of Beacon with made-up data">
+          <video id="reel-v" controls muted loop playsinline preload="metadata" poster="../assets/beacon-reel-poster.jpg" aria-label="35-second walkthrough of Beacon with made-up data">
             <source src="../assets/beacon-reel.mp4" type="video/mp4" />
           </video>
         </div>
@@ -622,7 +622,15 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
 
   var bar = document.getElementById('progress'), pipe = document.getElementById('pipe');
   var nodes = pipe.querySelectorAll('.pnode'), reel = document.getElementById('reel'), glow = document.getElementById('glow');
-  var video = document.getElementById('reel-v'), ticking = false;
+  var video = document.getElementById('reel-v'), ticking = false, userPaused = false, ourPause = false;
+  // Only we pause it off-screen; a pause from the viewer's own click sticks until they press play.
+  video.addEventListener('pause', function () { if (!ourPause) userPaused = true; ourPause = false; });
+  video.addEventListener('play', function () { userPaused = false; });
+  function playIfSeen(vh) {
+    var r = video.getBoundingClientRect(), seen = (Math.min(r.bottom, vh) - Math.max(r.top, 0)) / r.height;
+    if (seen >= 0.6 && window.scrollY > 40 && video.paused && !userPaused) { var pr = video.play(); if (pr && pr.catch) pr.catch(function () {}); }
+    else if (seen < 0.2 && !video.paused) { ourPause = true; video.pause(); }
+  }
   function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
   function frame() {
     ticking = false;
@@ -636,6 +644,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       var h = clamp(window.scrollY / (vh * 0.9));
       reel.style.transform = h ? 'rotateX(' + (h * 10).toFixed(2) + 'deg) scale(' + (1 - h * 0.06).toFixed(4) + ')' : '';
       glow.style.transform = 'translateY(' + (window.scrollY * 0.35).toFixed(1) + 'px)';
+      playIfSeen(vh);
     }
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
@@ -644,12 +653,6 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   frame();
   reel.addEventListener('animationend', function () { reel.style.animation = 'none'; frame(); });
 
-  if (reduced) { video.removeAttribute('autoplay'); video.pause(); video.controls = true; }
-  else if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { var pr = video.play(); if (pr && pr.catch) pr.catch(function () {}); } else video.pause(); });
-    }, { threshold: 0.2 }).observe(video);
-  }
 })();
 
 // Demo: one order told in four emails. Each email plays as: email in, what Beacon does, your part.
