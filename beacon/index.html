@@ -375,12 +375,17 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   .tile h3, .tile.sm h3 { font-size: 15px; }
   .tile p, .tile.sm p { font-size: 12.5px; line-height: 1.4; }
   .eng { grid-template-columns: 1fr; }
-  .pipe { grid-template-columns: 1fr; gap: 26px; }
-  .track { left: 38px; right: auto; top: 38px; bottom: 38px; width: 2px; height: auto; }
+  .pipe { grid-template-columns: 1fr; gap: 18px; max-width: 360px; margin: 0 auto; }
+  .track { left: 26px; right: auto; top: 26px; bottom: 26px; width: 2px; height: auto; }
   .fill { transform-origin: 50% 0; transform: scaleY(var(--p)); }
   .packet { left: 50%; top: calc(var(--p) * 100%); margin: -6px 0 0 -6px; }
-  .pnode { display: grid; grid-template-columns: 78px 1fr; gap: 0 18px; align-items: center; text-align: left; }
-  .ring { margin: 0; grid-row: span 2; }
+  .pnode { display: grid; grid-template-columns: 52px 1fr; gap: 0 14px; align-items: center; text-align: left; }
+  .ring { margin: 0; grid-row: span 2; width: 52px; height: 52px; }
+  .ring .ico { width: 22px; height: 22px; }
+  .pnode.lit .ring { transform: none; box-shadow: 0 0 0 4px var(--accent-soft), 0 0 24px -6px rgba(232,177,90,.55); }
+  .pnode.lit.g .ring { box-shadow: 0 0 0 4px var(--ok-soft), 0 0 24px -6px rgba(143,203,139,.55); }
+  .pnode h3 { font-size: 16px; margin-bottom: 2px; }
+  .pnode p { font-size: 11.5px; }
   .pnode h3 { align-self: end; }
   .pnode p { align-self: start; }
   .tb-tag .long { display: none; }
