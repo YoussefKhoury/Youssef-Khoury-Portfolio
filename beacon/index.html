@@ -169,6 +169,14 @@ details.more summary:hover { color: var(--ink); }
 .eng li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
 .eng li b { color: var(--ink); font-weight: 600; }
 
+/* desktop scrollbar, same as the main site */
+@media (min-width: 900px) {
+  html { scrollbar-color: var(--accent) var(--surface-2); scrollbar-width: thin; }
+  html::-webkit-scrollbar { width: 12px; }
+  html::-webkit-scrollbar-track { background: var(--surface-2); border-left: 1px solid var(--line); }
+  html::-webkit-scrollbar-thumb { background: var(--accent); border: 3px solid var(--surface-2); border-radius: 999px; }
+  html::-webkit-scrollbar-thumb:hover { background: #F4C56D; }
+}
 /* demo */
 .demo { max-width: 980px; margin: 0 auto; scroll-margin-top: 76px; border: 1px solid var(--line-2); border-radius: 16px; background: var(--surface-2); overflow: hidden; box-shadow: 0 30px 80px -40px rgba(0,0,0,.8); }
 .win-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface); font: 11px var(--mono); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
