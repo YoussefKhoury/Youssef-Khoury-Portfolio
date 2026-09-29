@@ -190,7 +190,8 @@ details.more summary:hover { color: var(--ink); }
 .flow4 { list-style: none; margin: 0 auto; padding: 0; max-width: 980px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 18px; }
 .flow4 li { position: relative; padding-top: 66px; text-align: center; }
 .flow4 li:not(:last-child)::before { content: ""; position: absolute; top: 25px; left: calc(50% + 36px); width: calc(100% + 18px - 72px); height: 2px; background: linear-gradient(90deg, var(--accent), var(--line-2)); }
-.fl-dot { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(232,177,90,.5); background: var(--accent-soft); color: var(--accent); }
+.fl-path { display: none; }
+.fl-dot { position: absolute; z-index: 1; top: 0; left: 50%; transform: translateX(-50%); width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(232,177,90,.5); background: var(--accent-soft); color: var(--accent); }
 .fl-dot .ico { width: 22px; height: 22px; }
 .fl-n { display: block; margin-bottom: 6px; font: 500 10.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
 .flow4 h3 { font: 700 19px/1.2 var(--display); margin: 0 0 4px; }
@@ -199,12 +200,17 @@ details.more summary:hover { color: var(--ink); }
   .rules { grid-template-columns: 1fr; }
   .rules li { grid-template-columns: 22px 36px minmax(0, 1fr); gap: 12px; padding: 16px 2px; }
   .rl-ico { width: 36px; height: 36px; }
-  .flow4 { grid-template-columns: 1fr; max-width: 420px; }
-  .flow4 li { text-align: left; padding: 4px 0 30px 70px; min-height: 52px; }
-  .flow4 li:last-child { padding-bottom: 0; }
-  .flow4 li:not(:last-child)::before { top: 58px; left: 25px; bottom: 6px; width: 2px; height: auto; background: linear-gradient(180deg, var(--accent), var(--line-2)); }
-  .fl-dot { left: 0; transform: none; }
-  .flow4 p { margin: 0; max-width: none; }
+  /* zigzag: steps alternate sides, joined by diagonal lines */
+  .flow4 { position: relative; grid-template-columns: 1fr; max-width: 420px; }
+  .fl-path { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .flow4 li { height: 150px; padding: 2px 8% 0 calc(12% + 38px); text-align: left; }
+  .flow4 li:last-child { height: 100px; }
+  .flow4 li:not(:last-child)::before { display: none; }
+  .flow4 li:nth-child(even) { padding: 2px calc(12% + 38px) 0 8%; text-align: right; }
+  .fl-dot { left: calc(12% - 26px); transform: none; background: var(--bg); box-shadow: inset 0 0 0 60px var(--accent-soft); }
+  .flow4 li:nth-child(even) .fl-dot { left: calc(88% - 26px); }
+  .flow4 h3 { font-size: 17px; }
+  .flow4 p { margin: 0; max-width: none; font-size: 13.5px; }
 }
 /* demo */
 .demo { max-width: 980px; margin: 0 auto; scroll-margin-top: 76px; border: 1px solid var(--line-2); border-radius: 16px; background: var(--surface-2); overflow: hidden; box-shadow: 0 30px 80px -40px rgba(0,0,0,.8); }
@@ -540,6 +546,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       <span class="kick rv">My part</span>
       <h2 class="rv" style="--i:1">Built and run <em>end to end.</em></h2>
       <ol class="flow4">
+        <svg class="fl-path" viewBox="0 0 100 550" preserveAspectRatio="none" aria-hidden="true"><polyline points="12,26 88,176 12,326 88,476" fill="none" stroke="var(--accent)" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 6" vector-effect="non-scaling-stroke"/></svg>
         <li class="rv" style="--i:0"><span class="fl-dot"><svg class="ico" data-i="map"></svg></span><span class="fl-n">Step 1</span><h3>Process</h3><p>Mapped how orders really move</p></li>
         <li class="rv" style="--i:1"><span class="fl-dot"><svg class="ico" data-i="db"></svg></span><span class="fl-n">Step 2</span><h3>Data</h3><p>Designed the order and price model</p></li>
         <li class="rv" style="--i:2"><span class="fl-dot"><svg class="ico" data-i="flask"></svg></span><span class="fl-n">Step 3</span><h3>Testing</h3><p>Turned real email threads into rules</p></li>
