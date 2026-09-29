@@ -170,114 +170,149 @@ details.more summary:hover { color: var(--ink); }
 .eng li b { color: var(--ink); font-weight: 600; }
 
 /* demo */
-.demo { border: 1px solid var(--line-2); border-radius: 14px; background: var(--surface-2); overflow: hidden; box-shadow: 0 30px 80px -40px rgba(0,0,0,.8); }
+.demo { max-width: 980px; margin: 0 auto; scroll-margin-top: 76px; border: 1px solid var(--line-2); border-radius: 16px; background: var(--surface-2); overflow: hidden; box-shadow: 0 30px 80px -40px rgba(0,0,0,.8); }
 .win-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface); font: 11px var(--mono); letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
 .win-bar .dots { color: var(--line-2); letter-spacing: 2px; }
+.win-bar .wb-r { display: flex; align-items: center; gap: 12px; }
 .win-bar button { background: none; border: 1px solid var(--line-2); color: var(--muted); font: 11px var(--mono); letter-spacing: .08em; padding: 4px 10px; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
 .win-bar button:hover { color: var(--ink); border-color: var(--accent); }
-.demo-grid { display: grid; grid-template-columns: 300px 1fr; min-height: 540px; }
-.inbox { border-right: 1px solid var(--line); background: var(--surface-2); }
-.inbox-h { padding: 12px 16px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
-.mail { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line); padding: 14px 16px; color: var(--ink); cursor: pointer; font: inherit; position: relative; transition: background .2s; }
-.mail:hover { background: var(--surface); }
-.mail[aria-current="true"] { background: var(--surface-3); }
-.mail[aria-current="true"]::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
-.mail .m-top { display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; color: var(--muted); margin-bottom: 3px; }
-.mail .m-from { font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mail .m-sub { font-size: 13.5px; line-height: 1.35; display: block; margin-bottom: 7px; }
-.chip { display: inline-flex; align-items: center; gap: 6px; font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line-2); color: var(--faint); }
-.chip.dir-out { color: var(--accent-2); border-color: rgba(201,127,75,.45); }
-.chip.st-run { color: var(--accent); border-color: rgba(232,177,90,.5); }
-.chip.st-prop { color: var(--accent); border-color: rgba(232,177,90,.5); background: var(--accent-soft); }
-.chip.st-ok { color: var(--ok); border-color: rgba(143,203,139,.45); background: var(--ok-soft); }
-.chip.st-bad { color: var(--bad); border-color: rgba(229,138,123,.45); background: var(--bad-soft); }
-.chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.detail { padding: 22px 24px 26px; min-width: 0; }
-.email { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 16px 18px; }
-.email .e-meta { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-.email .e-meta dt { font: 500 11px/1.9 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
-.email .e-meta dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
-.email h3 { font: 700 17px/1.3 var(--display); margin: 0 0 10px; }
-.email .e-body { white-space: pre-line; font-size: 14.5px; line-height: 1.6; color: var(--ink); margin: 0; }
-.run-row { display: flex; align-items: center; gap: 14px; margin: 16px 0 0; flex-wrap: wrap; }
-#run { animation: nudge 2.4s var(--ease) infinite; }
-@keyframes nudge { 0%, 100% { box-shadow: 0 0 0 0 rgba(232,177,90,.5); } 60% { box-shadow: 0 0 0 10px rgba(232,177,90,0); } }
-.steps { list-style: none; margin: 16px 0 0; padding: 4px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
-.steps li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: 14px; color: var(--muted); opacity: 0; transform: translateY(4px); transition: opacity .35s, transform .35s var(--out); }
-.steps li + li { border-top: 1px solid var(--line); }
-.steps li.in { opacity: 1; transform: none; }
-.steps li b { color: var(--ink); font-weight: 600; }
-.steps .tk { flex: 0 0 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
-.steps .tk svg { width: 13px; height: 13px; }
-.steps li.guard { color: var(--ok); }
-.steps li.guard .tk { background: var(--ok-soft); color: var(--ok); }
-.done-line { display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 10px; flex-wrap: wrap; }
-.done-line > svg { width: 16px; height: 16px; color: var(--ok); flex: 0 0 16px; }
-.done-line b { font-weight: 600; }
-.doc { border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); padding: 12px 14px; }
-.doc-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
-.doc-h b { font: 600 13px var(--mono); }
-.doc-t { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-.doc-t td { padding: 6px 0; border-top: 1px solid var(--line); color: var(--muted); }
-.doc-t td:nth-child(2) { text-align: center; font-family: var(--mono); font-size: 12.5px; }
-.doc-t td:last-child { text-align: right; font-family: var(--mono); font-size: 12.5px; }
-.doc-t tr.tot td { color: var(--ink); font-weight: 600; }
-.file { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; font: 12px var(--mono); color: var(--ink); padding: 5px 10px 5px 5px; border: 1px solid var(--line-2); border-radius: 7px; background: var(--surface-2); }
-.file i { font-style: normal; font: 700 10px var(--mono); background: var(--bad); color: #1a0f0c; border-radius: 4px; padding: 3px 5px; }
-.draft-box { margin-top: 10px; }
-.fin { margin: 12px 0 0; font-size: 14px; color: var(--ok); }
-.next-btn { display: flex; width: 100%; justify-content: center; align-items: center; gap: 10px; margin-top: 16px; animation: nudge 2.4s var(--ease) infinite; }
+.demo-body { display: grid; grid-template-columns: minmax(0, 1fr); }
+
+/* order tracker */
+.side { background: var(--surface); border-bottom: 1px solid var(--line); padding: 14px 16px 12px; }
+.tr-h { font: 500 10.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 0 0 12px; }
+.tr-h b { color: var(--ink); font-weight: 600; }
+.tr { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.tr li { position: relative; text-align: center; font-size: 12px; line-height: 1.3; color: var(--faint); transition: color .4s; }
+.tr li + li::before { content: ""; position: absolute; top: 11px; right: 50%; width: 100%; height: 2px; background: var(--line); transition: background .5s; }
+.tr li.on::before { background: var(--ok); }
+.tr-dot { position: relative; z-index: 1; width: 24px; height: 24px; margin: 0 auto 6px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); border: 2px solid var(--line-2); color: #10200f; transition: background .4s, border-color .4s; }
+.tr-dot svg { width: 13px; height: 13px; }
+.tr li.on { color: var(--ink); }
+.tr li.on .tr-dot { background: var(--ok); border-color: var(--ok); }
+.tr li.now .tr-dot { animation: pulse 1.8s infinite; }
+.tr li.flash .tr-dot { animation: pop 1s var(--out); }
+.tr small { display: block; min-height: 1.3em; margin-top: 2px; font: 11px/1.3 var(--mono); color: var(--muted); }
+.tr li.late small { color: var(--accent); }
+.tr li.flash small { animation: rise .6s var(--out) both; }
+@keyframes pop { 0% { transform: scale(.6); } 60% { transform: scale(1.25); box-shadow: 0 0 0 8px rgba(143,203,139,.25); } 100% { transform: none; } }
+.legend { display: none; }
+
+/* scene */
+.scene { padding: 20px 22px 24px; min-width: 0; }
+.lane { position: relative; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 0 14px; padding-bottom: 18px; }
+.lane::before { content: ""; position: absolute; left: 17px; top: 42px; bottom: 4px; width: 2px; background: var(--line); }
+.lane.you::before, .lane.auto::before { display: none; }
+.l-ico { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-3); border: 1px solid var(--line-2); color: var(--muted); }
+.l-ico svg { width: 18px; height: 18px; }
+.lane.bot .l-ico, .lane.auto .l-ico { color: var(--ok); border-color: rgba(143,203,139,.45); background: var(--ok-soft); }
+.lane.you .l-ico { color: var(--accent); border-color: rgba(232,177,90,.5); background: var(--accent-soft); }
+.l-h { display: flex; justify-content: space-between; gap: 8px; margin: 9px 0 10px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.lane.bot .l-h span:first-child, .lane.auto .l-h span:first-child { color: var(--ok); }
+.lane.you .l-h span:first-child { color: var(--accent); }
+.bubble { background: var(--surface); border: 1px solid var(--line); border-radius: 4px 14px 14px 14px; padding: 12px 15px 14px; }
+.who { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-bottom: 7px; }
+.who b { color: var(--ink); font-weight: 600; }
+.av { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 12px var(--display); color: #1a1204; background: #D9A066; }
+.av.supplier { background: #9DB8D6; color: #0e1620; }
+.bubble p { margin: 0; font-size: 15.5px; line-height: 1.55; color: var(--ink); }
+.acts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.acts li { display: flex; align-items: center; gap: 10px; font-size: 14.5px; line-height: 1.4; }
+.acts li b { font-weight: 600; }
+.acts .tk { flex: 0 0 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--ok-soft); color: var(--ok); font: 700 12px var(--mono); }
+.acts .tk svg { width: 13px; height: 13px; }
+.acts li.warn { color: var(--accent); }
+.acts li.warn .tk { background: var(--accent-soft); color: var(--accent); }
+.result { margin-top: 14px; }
+
+/* documents Beacon makes */
+.paper { position: relative; max-width: 400px; background: #F3EBDD; color: #2a211a; border-radius: 8px; padding: 13px 16px 12px; box-shadow: 0 14px 30px -14px rgba(0,0,0,.8); }
+.paper-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #7a6652; }
+.paper-h b { font: 700 15px var(--display); letter-spacing: 0; text-transform: none; color: #2a211a; }
+.ln { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-top: 1px dashed #d4c6ae; font-size: 13.5px; }
+.ln span:last-child { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+.ln.tot { border-top: 1.5px solid #2a211a; font-weight: 700; }
+.stamp { position: absolute; right: 14px; top: 38px; transform: rotate(-10deg); border: 2px solid #b8543d; color: #b8543d; border-radius: 4px; padding: 1px 8px; font: 800 12px var(--mono); letter-spacing: .14em; opacity: .85; }
+.attach { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; font-size: 13px; color: var(--muted); }
+.attach i { font-style: normal; font: 700 10px var(--mono); background: var(--bad); color: #1a0f0c; border-radius: 4px; padding: 3px 5px; }
+.remind { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 13.5px; color: var(--muted); }
+.remind::before { content: ""; flex: 0 0 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.change { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; max-width: 400px; background: var(--surface); border: 1px solid var(--line-2); border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+.change .k { color: var(--muted); }
+.change .from { color: var(--faint); text-decoration: line-through; }
+.change .to { color: var(--ok); font-weight: 600; }
+.change.maybe .to { color: var(--accent); }
+.change .chip { margin-left: auto; }
+.chip { display: inline-flex; align-items: center; font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line-2); color: var(--faint); }
+.chip.amber { color: var(--accent); border-color: rgba(232,177,90,.5); background: var(--accent-soft); }
+
+/* your part */
+.why { margin: 0 0 12px; font-size: 14.5px; line-height: 1.5; color: var(--muted); }
+.why b { color: var(--ink); font-weight: 600; }
+.dec-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.dec { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1 1 200px; min-height: 46px; padding: 11px 16px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); font: 600 14px var(--body); cursor: pointer; transition: background .2s, border-color .2s, color .2s, transform .2s var(--ease); }
+.dec svg { width: 15px; height: 15px; }
+.dec.yes { background: var(--accent); border-color: var(--accent); color: #1a1204; animation: nudge 2.4s var(--ease) infinite; }
+.dec.yes:hover { background: #F4C56D; transform: translateY(-1px); }
+.dec.no { flex: 0 1 160px; }
+.dec.no:hover { color: var(--ink); border-color: var(--bad); }
+.said { padding: 12px 14px; border-radius: 10px; border: 1px solid; font-size: 14.5px; line-height: 1.5; animation: rise .5s var(--out); }
+.said.ok { border-color: rgba(143,203,139,.4); background: var(--ok-soft); }
+.said.bad { border-color: rgba(229,138,123,.4); background: var(--bad-soft); }
+.said b { font-weight: 600; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--muted); font: 500 12.5px var(--mono); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.linkbtn:hover { color: var(--ink); }
+.next-btn { display: flex; width: 100%; justify-content: center; align-items: center; gap: 10px; min-height: 50px; margin-top: 4px; font-size: 13.5px; animation: nudge 2.4s var(--ease) infinite, rise .5s var(--out); }
 .nb-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: pulse 1.6s infinite; }
-.done-line.todo { margin: 10px 0 0; color: var(--accent); }
-.done-line .dot { width: 8px; height: 8px; margin: 0 4px; border-radius: 50%; background: var(--accent); flex: 0 0 8px; }
-.proposal { margin: 18px 0 0; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s var(--ease); }
-.proposal.in { opacity: 1; transform: none; }
-.p-h { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; }
-.changes { display: grid; gap: 8px; }
-.chg { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; border: 1px solid var(--line); background: var(--surface); border-radius: 9px; padding: 11px 12px; font-size: 14px; }
-.proposal.in .chg { animation: land .5s var(--out) both; }
-.proposal.in .chg:nth-child(2) { animation-delay: .08s; } .proposal.in .chg:nth-child(3) { animation-delay: .16s; } .proposal.in .chg:nth-child(4) { animation-delay: .24s; }
-.chg .ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font: 600 12px var(--mono); }
-.chg .ic.g { background: var(--ok-soft); color: var(--ok); }
-.chg .t b { font-weight: 600; }
-.chg .t small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
-.stage-move { display: inline-flex; align-items: center; gap: 6px; font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; margin-top: 6px; flex-wrap: wrap; }
-.stage-move span { padding: 2px 7px; border-radius: 5px; border: 1px solid var(--line-2); color: var(--muted); }
-.stage-move span.to { border-color: var(--accent); color: var(--accent); }
-.draft { margin-top: 8px; border-left: 2px solid var(--accent-2); padding: 8px 12px; background: var(--surface-2); border-radius: 0 6px 6px 0; white-space: pre-line; font-size: 13.5px; color: var(--ink); }
-.draft-tag { font: 500 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-2); }
-.review { margin-top: 16px; border: 1px solid var(--line-2); border-radius: 10px; padding: 14px; background: var(--surface-3); }
-.review p { margin: 0 0 10px; font-size: 13.5px; color: var(--muted); }
-.rv-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-.rvb { flex: 1 1 110px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font: 600 12.5px var(--mono); letter-spacing: .04em; cursor: pointer; transition: border-color .2s, background .2s; }
-.rvb.right:hover { border-color: var(--ok); background: var(--ok-soft); }
-.rvb.wrong:hover { border-color: var(--bad); background: var(--bad-soft); }
-.outcome { margin-top: 12px; padding: 12px 14px; border-radius: 9px; font-size: 14px; border: 1px solid; animation: land .5s var(--out); }
-.outcome.ok { border-color: rgba(143,203,139,.4); background: var(--ok-soft); }
-.outcome.bad { border-color: rgba(229,138,123,.4); background: var(--bad-soft); }
-.outcome b { font-weight: 600; }
-.linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font: 500 12.5px var(--mono); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-top: 8px; }
-.after { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); }
-.pane { padding: 18px 20px 22px; min-width: 0; }
-.pane + .pane { border-left: 1px solid var(--line); }
-.pane-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; }
-.board { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
-.col { background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 8px; min-height: 150px; }
-.col h4 { margin: 0 0 8px; font: 600 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
-.card { border: 1px solid var(--line-2); background: var(--surface-2); border-radius: 7px; padding: 7px 8px; margin-bottom: 6px; font-size: 12px; line-height: 1.35; }
-.card b { display: block; font: 600 11.5px var(--mono); color: var(--ink); }
-.card span { color: var(--muted); font-size: 11.5px; }
-.card.hot { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); animation: land .6s var(--out); }
-@keyframes land { from { transform: translateY(-8px) scale(.97); opacity: .3; } to { transform: none; opacity: 1; } }
-#auto .auto-row:first-child { border-top: 0; }
-.a-l { font-size: 13px; color: var(--ink); }
-.a-n { font: 11px var(--mono); color: var(--muted); text-align: right; white-space: nowrap; }
-.a-s { grid-column: 1 / -1; font: 11px/1.45 var(--mono); color: var(--faint); }
-.a-s.won, .a-s.ok { color: var(--ok); }
-.a-s.bad { color: var(--bad); }
-.pips { display: flex; gap: 5px; }
-.pips i { flex: 1; height: 7px; border-radius: 4px; background: var(--line); transition: background .3s; }
-.pips i.on { background: var(--ok); }
+.fin-card { margin-top: 4px; border: 1px solid rgba(143,203,139,.4); background: var(--ok-soft); border-radius: 12px; padding: 18px; text-align: center; animation: rise .6s var(--out); }
+.fin-h { margin: 0 0 14px; font: 700 18px var(--display); }
+.fin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.fin-grid div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 6px; }
+.fin-grid b { display: block; font: 800 26px/1.1 var(--display); color: var(--ok); }
+.fin-grid span { font-size: 12px; color: var(--muted); line-height: 1.3; display: block; margin-top: 4px; }
+.fin-p { margin: 0 auto 14px; max-width: 46ch; font-size: 14px; color: var(--muted); }
+.hid { display: none !important; }
+.pop { animation: rise .5s var(--out) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes nudge { 0%, 100% { box-shadow: 0 0 0 0 rgba(232,177,90,.5); } 60% { box-shadow: 0 0 0 10px rgba(232,177,90,0); } }
+
+@media (min-width: 880px) {
+  .demo-body { grid-template-columns: minmax(0, 1fr) 260px; }
+  .side { order: 2; border-bottom: 0; border-left: 1px solid var(--line); padding: 24px 22px; }
+  .side-in { position: sticky; top: 90px; }
+  .tr-h { margin-bottom: 18px; }
+  .tr { grid-template-columns: 1fr; }
+  .tr li { display: grid; grid-template-columns: 24px 1fr; gap: 0 12px; align-items: center; text-align: left; font-size: 14px; padding-bottom: 22px; }
+  .tr li:last-child { padding-bottom: 0; }
+  .tr li + li::before { display: none; }
+  .tr li:not(:last-child)::after { content: ""; position: absolute; left: 11px; top: 26px; bottom: 2px; width: 2px; background: var(--line); transition: background .5s; }
+  .tr li.link::after { background: var(--ok); }
+  .tr-dot { grid-row: span 2; margin: 0; align-self: start; }
+  .tr small { margin: 0; }
+  .legend { display: grid; gap: 9px; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  .legend span { display: flex; align-items: center; gap: 9px; }
+  .legend i { flex: 0 0 10px; height: 10px; border-radius: 50%; }
+  .legend .lg-ok { background: var(--ok); }
+  .legend .lg-you { background: var(--accent); }
+  .legend .clk { margin-top: 6px; }
+  .legend .clk b { color: var(--ink); font: 700 15px var(--mono); margin-left: auto; }
+  .scene { padding: 26px 28px 28px; }
+}
+@media (max-width: 520px) {
+  .scene { padding: 16px 14px 20px; }
+  .lane { grid-template-columns: 30px minmax(0, 1fr); gap: 0 11px; }
+  .lane::before { left: 14px; top: 36px; }
+  .l-ico { width: 30px; height: 30px; }
+  .l-ico svg { width: 16px; height: 16px; }
+  .l-h { margin: 6px 0 8px; }
+  .bubble p { font-size: 15px; }
+  .acts li { font-size: 14px; }
+  .dec, .dec.no { flex: 1 1 100%; }
+  .tr li { font-size: 11px; }
+  .tr small { font-size: 10px; }
+  .fin-grid b { font-size: 22px; }
+  .win-bar .wb-t { display: none; }
+}
 
 .cta { padding: 110px 0 100px; border-top: 1px solid var(--line); text-align: center; position: relative; overflow: hidden; }
 .cta .glow { top: auto; bottom: -560px; }
@@ -286,10 +321,6 @@ footer { border-top: 1px solid var(--line); padding: 22px 0 30px; font: 11.5px v
 footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
 @media (max-width: 980px) {
-  .demo-grid { grid-template-columns: 1fr; }
-  .inbox { border-right: 0; border-bottom: 1px solid var(--line); }
-  .after { grid-template-columns: 1fr; }
-  .pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
   .t3, .t4 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 720px) {
@@ -315,12 +346,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   .ring { margin: 0; grid-row: span 2; }
   .pnode h3 { align-self: end; }
   .pnode p { align-self: start; }
-  .detail { padding: 16px 14px 20px; }
-  .pane { padding: 16px 14px 18px; }
-  .board { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
-  .col { flex: 0 0 62%; scroll-snap-align: start; min-height: 120px; }
   .tb-tag .long { display: none; }
-  .mail { padding: 12px 14px; }
 }
 @media (max-width: 420px) {
   .tile h3, .tile.sm h3 { font-size: 14px; }
@@ -419,21 +445,16 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     <div class="shell">
       <span class="kick rv">Try it</span>
       <h2 class="rv" style="--i:1">One order. <em>Four emails.</em></h2>
-      <p class="lead rv" style="--i:2">One order, start to finish: a quote request, the approval and payment, the supplier, then a vague update it won&rsquo;t act on alone. Made-up data.</p>
-      <div class="demo rv" style="--i:2" aria-label="Interactive demo of the mail agent">
-        <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; Beacon &middot; mail agent</span><button type="button" id="reset">Reset</button></div>
-        <div class="demo-grid">
-          <nav class="inbox" aria-label="Sample emails">
-            <div class="inbox-h"><span>operations inbox</span><span id="inbox-count">step 1 of 4</span></div>
-            <div id="mails"></div>
-          </nav>
-          <div class="detail" id="detail" aria-live="polite"></div>
-        </div>
-        <div class="after">
-          <div class="pane">
-            <div class="pane-h"><span>Orders board</span><span>updates itself</span></div>
-            <div class="board" id="board"></div>
-          </div>
+      <p class="lead rv" style="--i:2">Watch Beacon handle one order from the first email to production. <b style="color:var(--ok)">Green</b> is what it does on its own; <b style="color:var(--accent)">amber</b> is where you decide. Made-up data.</p>
+      <div class="demo rv" style="--i:2" id="demo-box" aria-label="Interactive demo of the mail agent">
+        <div class="win-bar"><span><span class="dots">&#9679;&#9679;&#9679;</span>&nbsp; <span class="wb-t">Beacon &middot; </span>mail agent</span><span class="wb-r"><span id="demo-count">email 1 of 4</span><button type="button" id="reset">Restart</button></span></div>
+        <div class="demo-body">
+          <aside class="side" aria-label="The order in Beacon"><div class="side-in">
+            <p class="tr-h">Order &middot; <b>Villa Cedar</b></p>
+            <ol class="tr" id="tracker"></ol>
+            <div class="legend"><span><i class="lg-ok"></i>Beacon does it on its own</span><span><i class="lg-you"></i>Waits for you</span><span class="clk">Your clicks <b id="clicks">0</b></span></div>
+          </div></aside>
+          <div class="scene" id="scene" aria-live="polite"></div>
         </div>
       </div>
     </div>
@@ -623,247 +644,203 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   }
 })();
 
-// Demo: one order, start to finish. Each email arrives after the previous one is handled.
+// Demo: one order told in four emails. Each email plays as: email in, what Beacon does, your part.
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var STEP = reduced ? 0 : 480;
-  var STAGES = ['ordered', 'production', 'ready', 'transit', 'delivered'];
-  var TICK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  var LOCK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l5 2v4c0 3.2-2.1 5.6-5 7-2.9-1.4-5-3.8-5-7v-4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
-
-  var BASE_CARDS = [
-    { ref: 'TR-7710', sup: 'Trackline', proj: 'Marina Tower', stage: 'ordered' },
-    { ref: 'KW-0388', sup: 'Kristall Works', proj: 'Palm Court', stage: 'transit' }
-  ];
-
-  // mode 'review' waits for Approve / Reject; 'apply' runs on its own and can be undone.
-  var MAILS = [
-    {
-      id: 'm1', mode: 'review', from: 'Lea · Studio Mira', addr: 'lea@studiomira.example', time: '09:12',
-      tag: 'client', subject: 'Villa Cedar: quote please',
-      body: 'Hi Youssef,\n\nCould you quote 18 track spots and 2 drivers for the Villa Cedar lobby?\n\nLea',
-      steps: ['Quote request logged for <b>Villa Cedar</b>', 'Priced in Quotient: exact codes <b>TR-S12</b>, <b>DRV-60</b>', 'Stock check: 6 spots on hand, <b>12 short</b>', 'G:Goes to a client, so it waits for me'],
-      head: 'Quotation ready',
-      doc: { no: 'Q-1042', tag: 'Quotient', file: 'Q-1042_Villa-Cedar.pdf', rows: [['TR-S12 track spot', 18, 64], ['DRV-60 driver', 2, 38]] },
-      draft: { to: 'Lea', body: 'Hello Lea,\n\nPlease find our quotation Q-1042 attached.\n\nBest regards' },
-      ask: 'Reply with the quote attached. Save it as a draft?',
-      okText: 'Draft saved in the Outlook thread with the PDF. I send it myself.'
-    },
-    {
-      id: 'm2', mode: 'review', from: 'Lea · Studio Mira', addr: 'lea@studiomira.example', time: '14:40',
-      tag: 'client', subject: 'Re: Villa Cedar: quote please',
-      body: 'Approved. Payment sent today, slip attached.\n\nLea',
-      steps: ['Payment slip read: <b>USD 1,228</b> for Q-1042', 'Villa Cedar moved to <b>ongoing</b>', 'Order needed from <b>Lumeria</b>: 12 spots, 2 drivers', 'G:Invoices stay drafts until I confirm'],
-      head: 'Invoice ready',
-      logged: 'Payment logged against <b>Q-1042</b>',
-      doc: { no: 'Draft invoice', tag: 'Xero draft', rows: [['TR-S12 track spot', 18, 64], ['DRV-60 driver', 2, 38]] },
-      todo: 'To do: send PO to Lumeria for 12 &times; TR-S12, 2 &times; DRV-60',
-      ask: 'Create this invoice as a draft in Xero?',
-      okText: 'Draft invoice created in Xero. Beacon never approves or emails invoices.'
-    },
-    {
-      id: 'm3', mode: 'apply', from: 'Giulia · Lumeria', addr: 'giulia@lumeria.example', time: '+2 days',
-      tag: 'supplier', subject: 'Re: PO-0317',
-      body: 'Thanks for PO-0317. Confirmed, pro forma PI-5520 attached. Ready on 12 October.\n\nGiulia',
-      steps: ['Matched my <b>PO-0317</b> to their <b>PI-5520</b>', 'Order <b>LM-2291</b> added to Villa Cedar', 'Moves it to <b>production</b>, ready 12 Oct', 'G:Second check agrees'],
-      head: 'Order updated',
-      move: ['ordered', 'production'],
-      apply: function (s) { s.cards.unshift({ ref: 'LM-2291', sup: 'Lumeria', proj: 'Villa Cedar', stage: 'production', note: 'ready 12 Oct' }); s.hot = 'LM-2291'; },
-      revert: function (s) { s.cards = s.cards.filter(function (c) { return c.ref !== 'LM-2291'; }); s.hot = null; }
-    },
-    {
-      id: 'm4', mode: 'doubt', from: 'Giulia · Lumeria', addr: 'giulia@lumeria.example', time: '+5 days',
-      tag: 'supplier', subject: 'Re: PO-0317',
-      body: 'Small hold-up on the drivers, probably about a week. We will confirm the new date.\n\nGiulia',
-      steps: ['Matched to order <b>LM-2291</b>', 'First read: push ready date to <b>~19 Oct</b>', 'G:Second check disagrees: no firm date yet'],
-      head: 'Sent to Needs review',
-      doubt: { ref: 'LM-2291', from: 'ready 12 Oct', to: 'delayed, ~19 Oct', reason: 'The email gives no confirmed date.' },
-      apply: function (s) { setCard(s, 'LM-2291', { note: 'delayed, ~19 Oct' }); }
-    }
-  ];
-
-  var state, timers = [];
-  function fresh() {
-    return { cards: BASE_CARDS.map(function (c) { return Object.assign({}, c); }), status: {}, shown: {}, arrived: 1, selected: 'm1', hot: null, landed: null };
-  }
-
-  function el(id) { return document.getElementById(id); }
-  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  function mail(id) { return MAILS.filter(function (x) { return x.id === id; })[0]; }
-  function later(fn) { timers.push(setTimeout(fn, STEP)); }
-  function setCard(s, ref, patch) { s.cards.forEach(function (c) { if (c.ref === ref) Object.assign(c, patch); }); s.hot = ref; }
-  function money(n) { return n.toLocaleString('en-US'); }
-  function done(st) { return st && st !== 'running' && st !== 'proposed'; }
-
-  var CHIPS = {
-    running: ['st-run', 'reading…'], applied: ['st-ok', 'updated'], undone: ['st-bad', 'undone'],
-    proposed: ['st-prop', 'needs you'], right: ['st-ok', 'approved'], wrong: ['st-bad', 'rejected'],
-    kept: ['st-ok', 'kept'], discarded: ['st-ok', 'discarded']
+  var STEP = reduced ? 0 : 560;
+  function svg(p) { return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + p + '</svg>'; }
+  var I = {
+    mail: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'),
+    bot: svg('<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>'),
+    you: svg('<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>'),
+    auto: svg('<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'),
+    tick: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>')
   };
-  function statusChip(id) {
-    var c = CHIPS[state.status[id]] || ['', 'new'];
-    if (state.status[id] === 'proposed' && mail(id).doubt) c = ['st-prop', 'needs review'];
-    return '<span class="chip' + (c[0] ? ' ' + c[0] : '') + '">' + c[1] + '</span>';
+
+  function paper(title, no, stamp) {
+    return '<div class="paper"><div class="paper-h"><span>' + title + '</span><b>' + no + '</b></div>' +
+      (stamp ? '<span class="stamp">' + stamp + '</span>' : '') +
+      '<div class="ln"><span>18 &times; track spot</span><span>1,152</span></div>' +
+      '<div class="ln"><span>2 &times; driver</span><span>76</span></div>' +
+      '<div class="ln tot"><span>Total</span><span>USD 1,228</span></div></div>';
   }
 
-  function renderInbox() {
-    el('mails').innerHTML = MAILS.slice(0, state.arrived).map(function (m) {
-      return '<button type="button" class="mail" data-id="' + m.id + '" aria-current="' + (state.selected === m.id) + '">' +
-        '<span class="m-top"><span class="m-from">' + esc(m.from) + '</span><span>' + m.time + '</span></span>' +
-        '<span class="m-sub">' + esc(m.subject) + '</span>' +
-        '<span class="chips"><span class="chip">' + m.tag + '</span>' + statusChip(m.id) + '</span>' +
-        '</button>';
-    }).reverse().join('');
-    var left = MAILS.length - MAILS.filter(function (m) { return done(state.status[m.id]); }).length;
-    el('inbox-count').textContent = left ? 'step ' + state.arrived + ' of ' + MAILS.length : 'order handled';
+  var SCENES = [
+    {
+      id: 'm1', mode: 'review', when: 'Mon 09:12', who: 'Lea', role: 'client &middot; Studio Mira', kind: 'client',
+      text: 'Hi Youssef, can you quote 18 track spots and 2 drivers for the Villa Cedar lobby?',
+      acts: ['Found the exact prices in Quotient', 'Checked stock: <b>12 spots short</b>', 'Made the quote and a reply draft'],
+      result: function () { return paper('Quote', 'Q-1042') + '<div class="attach"><i>PDF</i>attached to a reply to Lea, not sent</div>'; },
+      why: 'It goes to a client, so <b>you check it first</b>.',
+      yes: 'Looks right, save the draft', no: 'Something&rsquo;s off',
+      ok: 'Saved in Outlook with the PDF attached. <b>You press send.</b>',
+      next: 'Lea approves and pays'
+    },
+    {
+      id: 'm2', mode: 'review', when: 'Mon 14:40', who: 'Lea', role: 'client &middot; Studio Mira', kind: 'client',
+      text: 'Approved! Payment sent today, slip attached.',
+      acts: ['Read the payment slip: <b>USD 1,228</b>', 'Matched it to quote Q-1042', 'Prepared the invoice'],
+      result: function () { return paper('Invoice &middot; Xero', 'Q-1042', 'DRAFT') + '<div class="remind">Reminder for you: order the spots and drivers from Lumeria</div>'; },
+      why: 'Invoices are money, so <b>you confirm first</b>.',
+      yes: 'Create the draft invoice', no: 'Something&rsquo;s off',
+      ok: 'Draft invoice created in Xero. <b>You approve and send it.</b>',
+      next: 'the supplier confirms'
+    },
+    {
+      id: 'm3', mode: 'auto', when: 'Wed 10:05', who: 'Giulia', role: 'supplier &middot; Lumeria', kind: 'supplier',
+      text: 'Thanks for your order PO-0317. Confirmed, it will be ready on 12 October.',
+      acts: ['Matched it to your order with Lumeria', 'A second AI check agrees'],
+      result: function () { return '<div class="change"><span class="k">Villa Cedar</span><span class="from">paid</span>&rarr;<span class="to">in production</span></div>'; },
+      why: 'Nothing leaves the company and both checks agree, so <b>Beacon updated it on its own</b>. It&rsquo;s logged, with one-click undo.',
+      next: 'a vague update'
+    },
+    {
+      id: 'm4', mode: 'doubt', when: 'Fri 16:20', who: 'Giulia', role: 'supplier &middot; Lumeria', kind: 'supplier',
+      text: 'Small hold-up on the drivers, probably about a week. We will confirm the new date.',
+      acts: ['Wants to move the ready date', 'W:A second AI check disagrees: no firm date'],
+      result: function () { return '<div class="change maybe"><span class="k">Ready</span><span class="from">12 Oct</span>&rarr;<span class="to">~19 Oct</span><span class="chip amber">not changed</span></div>'; },
+      why: 'Beacon isn&rsquo;t sure, so <b>nothing changed</b>. It waits for you in Needs review.',
+      yes: 'Keep the change', no: 'Discard',
+      okKeep: 'Ready date moved to ~19 Oct. <b>Your choice is saved</b> to measure accuracy.',
+      okDrop: 'Nothing changed. <b>Your choice is saved</b> to measure accuracy.'
+    }
+  ];
+
+  var DONE = /^(yes|no|auto|undone|keep|drop)$/;
+  var box = document.getElementById('demo-box');
+  var state, timers = [];
+  function fresh() { return { at: 0, st: {}, p: {}, clicks: 0, flash: null, anim: false, started: false }; }
+  function el(id) { return document.getElementById(id); }
+  function later(fn) { timers.push(setTimeout(fn, STEP)); }
+  function finished(id) { var v = state.st[id]; return !!v && v !== 'running'; }
+
+  // k > p: not shown yet; k === p: just appeared (animate once); k < p: already there.
+  function seq(k, p) { return k > p ? ' hid' : (k === p && state.anim ? ' pop' : ''); }
+
+  function decision(s, st) {
+    if (s.mode === 'auto') {
+      return st === 'undone' ? '<div class="said bad">Undone. Beacon saves that as a lesson.</div>'
+        : '<button type="button" class="linkbtn" data-undo="1">Undo</button>';
+    }
+    if (!DONE.test(st || '')) {
+      var y = s.mode === 'doubt' ? 'keep' : 'yes', n = s.mode === 'doubt' ? 'drop' : 'no';
+      return '<div class="dec-row"><button type="button" class="dec yes" data-dec="' + y + '">' + I.tick + s.yes + '</button>' +
+        '<button type="button" class="dec no" data-dec="' + n + '">' + s.no + '</button></div>';
+    }
+    if (st === 'no') return '<div class="said bad">Not saved. You fix it yourself, and <b>Beacon learns from your fix</b>.</div>';
+    return '<div class="said ok">' + (st === 'keep' ? s.okKeep : st === 'drop' ? s.okDrop : s.ok) + '</div>';
   }
 
-  function docHtml(m) {
-    var d = m.doc, total = 0;
-    var rows = d.rows.map(function (r) {
-      var amt = r[2] ? r[1] * r[2] : null;
-      if (amt) total += amt;
-      return '<tr><td>' + esc(r[0]) + '</td><td>&times;' + r[1] + '</td>' + (r[2] ? '<td>' + money(amt) + '</td>' : '') + '</tr>';
+  function finCard() {
+    return '<div class="fin-card"><p class="fin-h">Order handled, start to production.</p>' +
+      '<div class="fin-grid"><div><b>4</b><span>emails read by Beacon</span></div><div><b>' + state.clicks + '</b><span>clicks from you</span></div><div><b>0</b><span>emails sent without you</span></div></div>' +
+      '<p class="fin-p">Beacon did the reading, pricing and updating. You only checked what leaves the company, and the one update it wasn&rsquo;t sure about.</p>' +
+      '<button type="button" class="btn" data-restart="1">Watch again</button></div>';
+  }
+
+  function renderScene() {
+    var i = state.at, s = SCENES[i], st = state.st[s.id], p = state.p[s.id] || 0, n = s.acts.length;
+    var auto = s.mode === 'auto';
+    var h = '<div class="lane"><div class="l-ico">' + I.mail + '</div><div class="l-b">' +
+      '<div class="l-h"><span>New email</span><span>' + s.when + '</span></div>' +
+      '<div class="bubble"><div class="who"><span class="av ' + s.kind + '">' + s.who.charAt(0) + '</span><b>' + s.who + '</b><span>' + s.role + '</span></div><p>' + s.text + '</p></div></div></div>';
+    h += '<div class="lane bot' + seq(1, p) + '"><div class="l-ico">' + I.bot + '</div><div class="l-b">' +
+      '<div class="l-h"><span>Beacon</span><span>' + (st === 'running' && p <= n ? 'working&hellip;' : 'done') + '</span></div><ul class="acts">' +
+      s.acts.map(function (a, k) {
+        var w = a.indexOf('W:') === 0;
+        return '<li class="' + (w ? 'warn' : '') + seq(k + 1, p) + '"><span class="tk">' + (w ? '!' : I.tick) + '</span><span>' + (w ? a.slice(2) : a) + '</span></li>';
+      }).join('') + '</ul><div class="result' + seq(n + 1, p) + '">' + s.result() + '</div></div></div>';
+    h += '<div class="lane ' + (auto ? 'auto' : 'you') + seq(n + 2, p) + '"><div class="l-ico">' + (auto ? I.auto : I.you) + '</div><div class="l-b">' +
+      '<div class="l-h"><span>' + (auto ? 'Done on its own' : 'You decide') + '</span></div><p class="why">' + s.why + '</p>' + decision(s, st) + '</div></div>';
+    if (DONE.test(st || '')) {
+      h += SCENES[i + 1] ? '<button type="button" class="btn primary next-btn" data-next="1"><span class="nb-dot"></span>Next email: ' + s.next + ' &rarr;</button>' : finCard();
+    }
+    el('scene').innerHTML = h;
+    state.anim = false;
+  }
+
+  function renderTracker() {
+    var quoted = finished('m1'), paid = finished('m2'), prod = state.st.m3 === 'auto', late = prod && state.st.m4 === 'keep';
+    var rows = [
+      ['quoted', 'Quoted', quoted, quoted ? 'USD 1,228' : ''],
+      ['paid', 'Paid', paid, paid ? 'slip logged' : ''],
+      ['prod', 'In production', prod, prod ? 'Lumeria' : ''],
+      ['ready', 'Ready', false, prod ? (late ? '~19 Oct' : 'due 12 Oct') : '']
+    ];
+    var now = prod ? 'prod' : paid ? 'paid' : quoted ? 'quoted' : '';
+    el('tracker').innerHTML = rows.map(function (r, k) {
+      var nx = rows[k + 1];
+      return '<li class="' + (r[2] ? 'on' : '') + (nx && nx[2] ? ' link' : '') + (now === r[0] ? ' now' : '') +
+        (state.flash === r[0] ? ' flash' : '') + (r[0] === 'ready' && late ? ' late' : '') + '">' +
+        '<span class="tr-dot">' + (r[2] ? I.tick : '') + '</span><span class="tr-l">' + r[1] + '</span><small>' + (r[3] || '&nbsp;') + '</small></li>';
     }).join('');
-    if (total) rows += '<tr class="tot"><td>Total</td><td></td><td>USD ' + money(total) + '</td></tr>';
-    return '<div class="doc"><div class="doc-h"><b>' + d.no + '</b>' + (d.tag ? '<span class="chip">' + d.tag + '</span>' : '') + '</div>' +
-      '<table class="doc-t">' + rows + '</table>' +
-      (d.file ? '<span class="file"><i>PDF</i>' + d.file + '</span>' : '') + '</div>';
+    state.flash = null;
+    el('clicks').textContent = state.clicks;
+    var all = finished('m4') && DONE.test(state.st.m4);
+    el('demo-count').textContent = all ? 'order handled' : 'email ' + (state.at + 1) + ' of ' + SCENES.length;
   }
 
-  function resultHtml(m) {
-    var st = state.status[m.id], h = '';
-    if (m.logged) h += '<div class="done-line">' + TICK + '<span>' + m.logged + '</span></div>';
-    if (m.doc) h += docHtml(m);
-    if (m.draft) h += '<div class="draft-box"><span class="draft-tag">Email to ' + esc(m.draft.to) + ' &middot; attached &middot; not sent</span><div class="draft">' + esc(m.draft.body) + '</div></div>';
-    if (m.todo) h += '<div class="done-line todo"><span class="dot"></span><span>' + m.todo + '</span></div>';
-    if (m.move) h += '<div class="done-line">' + TICK + '<span><b>LM-2291</b> <span class="stage-move"><span>' + m.move[0] + '</span> &rarr; <span class="to">' + m.move[1] + '</span></span> ready 12 Oct</span></div>';
-    if (m.doubt) {
-      var d = m.doubt;
-      h += '<div class="doc"><div class="doc-h"><b>' + d.ref + '</b><span class="chip st-prop">not applied</span></div>' +
-        '<table class="doc-t"><tr><td>Proposed</td><td></td><td>' + d.from + ' &rarr; ' + d.to + '</td></tr>' +
-        '<tr><td>Why it waits</td><td></td><td>' + d.reason + '</td></tr></table></div>';
-      if (st === 'proposed') h += '<div class="review"><p>Beacon wasn&rsquo;t sure, so nothing changed. Your call:</p><div class="rv-btns">' +
-        '<button type="button" class="rvb right" data-rv="kept">&#10003; Keep</button>' +
-        '<button type="button" class="rvb wrong" data-rv="discarded">&#10005; Discard</button></div></div>';
-      if (st === 'kept') h += '<div class="outcome ok"><b>Kept.</b> Card updated. Decision saved to measure accuracy.</div>';
-      if (st === 'discarded') h += '<div class="outcome ok"><b>Discarded.</b> Nothing changed. Decision saved to measure accuracy.</div>';
-      return h;
-    }
-    if (st === 'proposed') {
-      h += '<div class="review"><p>' + m.ask + '</p><div class="rv-btns">' +
-        '<button type="button" class="rvb right" data-rv="right">&#10003; Approve</button>' +
-        '<button type="button" class="rvb wrong" data-rv="wrong">&#10005; Reject</button></div></div>';
-    }
-    if (st === 'right') h += '<div class="outcome ok"><b>Approved.</b> ' + m.okText + '</div>';
-    if (st === 'wrong') h += '<div class="outcome bad"><b>Rejected.</b> Saved as a lesson so it won&rsquo;t repeat.</div>';
-    if (st === 'applied') h += '<div class="outcome ok"><b>Updated on its own.</b> Logged, one click to undo.<br><button type="button" class="linkbtn" data-undo="' + m.id + '">Undo</button></div>';
-    if (st === 'undone') h += '<div class="outcome bad"><b>Undone.</b> Saved as a lesson so it won&rsquo;t repeat.</div>';
-    return h;
+  function renderAll() { renderScene(); renderTracker(); }
+
+  function run(i) {
+    var s = SCENES[i], last = s.acts.length + 2;
+    state.at = i; state.st[s.id] = 'running'; state.p[s.id] = 0;
+    renderAll();
+    (function tick() {
+      later(function () {
+        if (state.st[s.id] !== 'running') return;
+        state.p[s.id] += 1;
+        state.anim = true;
+        if (state.p[s.id] < last) { renderScene(); tick(); }
+        else finish(i);
+      });
+    })();
   }
 
-  function renderDetail() {
-    var m = mail(state.selected), st = state.status[m.id];
-    var h = '<article class="email">' +
-      '<dl class="e-meta"><dt>From</dt><dd>' + esc(m.from.split(' · ')[0] + ' <' + m.addr + '>') + '</dd></dl>' +
-      '<h3>' + esc(m.subject) + '</h3><p class="e-body">' + esc(m.body) + '</p></article>';
-    if (!st) {
-      h += '<div class="run-row"><button type="button" class="btn primary" id="run">Run the agent &rarr;</button></div>';
-    } else {
-      var shown = st === 'running' ? state.shown[m.id] : m.steps.length;
-      h += '<ol class="steps" id="steps">' + m.steps.map(function (t, i) {
-        var guard = t.indexOf('G:') === 0;
-        return '<li class="' + (guard ? 'guard' : '') + (i < shown ? ' in' : '') + '"><span class="tk">' + (guard ? LOCK : TICK) + '</span><span>' + (guard ? t.slice(2) : t) + '</span></li>';
-      }).join('') + '</ol>';
-      if (st !== 'running') {
-        h += '<div class="proposal" id="proposal"><p class="p-h">' + m.head + '</p>' + resultHtml(m);
-        var next = MAILS[state.arrived];
-        if (done(st) && next && state.arrived < MAILS.length) h += '<button type="button" class="btn primary next-btn" data-next="1"><span class="nb-dot"></span>New email from ' + esc(next.from.split(' · ')[0]) + ' &rarr;</button>';
-        if (done(st) && MAILS.every(function (x) { return /^(right|applied|kept|discarded)$/.test(state.status[x.id]); })) h += '<p class="fin">Quote request to production in four emails. I only stepped in for what leaves the company, and the one it doubted.</p>';
-        h += '</div>';
-      }
-    }
-    el('detail').innerHTML = h;
-    var p = el('proposal');
-    if (p) {
-      if (state.landed === m.id) { void p.offsetWidth; state.landed = null; }
-      p.classList.add('in');
-    }
-  }
-
-  function renderBoard() {
-    el('board').innerHTML = STAGES.map(function (sg) {
-      var cards = state.cards.filter(function (c) { return c.stage === sg; });
-      return '<div class="col"><h4><span>' + sg + '</span><span>' + cards.length + '</span></h4>' + cards.map(function (c) {
-        return '<div class="card' + (state.hot === c.ref ? ' hot' : '') + '"><b>' + c.ref + '</b><span>' + esc(c.sup) + ' &middot; ' + esc(c.proj) + (c.note ? '<br>' + esc(c.note) : '') + '</span></div>';
-      }).join('') + '</div>';
-    }).join('');
-  }
-
-  function renderAll() { renderInbox(); renderDetail(); renderBoard(); }
-
-  function run(id) {
-    var m = mail(id);
-    state.status[id] = 'running';
-    state.shown[id] = 0;
-    renderInbox(); renderDetail();
-    function tick() {
-      if (state.status[id] !== 'running') return;
-      if (state.shown[id] < m.steps.length) {
-        state.shown[id] += 1;
-        var li = state.selected === id && document.querySelectorAll('#steps li')[state.shown[id] - 1];
-        if (li) li.classList.add('in');
-        later(tick);
-      } else finish(id);
-    }
-    later(tick);
-  }
-
-  function finish(id) {
-    var m = mail(id);
-    if (m.onRun) m.onRun(state);
-    if (m.mode === 'apply') { m.apply(state); state.status[id] = 'applied'; }
-    else state.status[id] = 'proposed';
-    renderInbox(); renderBoard();
-    if (state.selected === id) { state.landed = id; renderDetail(); }
-  }
-
-  function review(kind) {
-    var m = mail(state.selected);
-    if (state.status[m.id] !== 'proposed') return;
-    state.status[m.id] = kind;
-    if (kind === 'kept') m.apply(state);
+  function finish(i) {
+    var s = SCENES[i];
+    state.st[s.id] = s.mode === 'auto' ? 'auto' : 'wait';
+    state.flash = ['quoted', 'paid', 'prod', null][i];
     renderAll();
   }
 
-  function undo(id) {
-    var m = mail(id);
-    if (state.status[id] !== 'applied') return;
-    m.revert(state);
-    state.status[id] = 'undone';
-    renderAll();
-  }
-
-  function select(id) { state.selected = id; state.hot = null; renderAll(); }
+  function start() { if (state.started) return; state.started = true; run(0); }
 
   document.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('button');
-    if (!t) return;
-    if (t.classList.contains('mail')) { select(t.getAttribute('data-id')); return; }
-    if (t.id === 'run') { run(state.selected); return; }
-    if (t.hasAttribute('data-rv')) { review(t.getAttribute('data-rv')); return; }
-    if (t.hasAttribute('data-undo')) { undo(t.getAttribute('data-undo')); return; }
+    if (!t || !box.contains(t)) return;
+    var s = SCENES[state.at];
+    if (t.hasAttribute('data-dec')) {
+      if (state.st[s.id] !== 'wait') return;
+      state.st[s.id] = t.getAttribute('data-dec'); state.clicks += 1;
+      if (state.st[s.id] === 'keep') state.flash = 'ready';
+      renderAll(); return;
+    }
+    if (t.hasAttribute('data-undo')) {
+      if (state.st[s.id] !== 'auto') return;
+      state.st[s.id] = 'undone'; state.clicks += 1; state.flash = 'paid';
+      renderAll(); return;
+    }
     if (t.hasAttribute('data-next')) {
-      state.arrived = Math.min(state.arrived + 1, MAILS.length);
-      select(MAILS[state.arrived - 1].id);
-      el('detail').scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+      run(state.at + 1);
+      if (box.getBoundingClientRect().top < 0) box.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
       return;
     }
-    if (t.id === 'reset') { timers.forEach(clearTimeout); timers = []; state = fresh(); renderAll(); }
+    if (t.id === 'reset' || t.hasAttribute('data-restart')) {
+      timers.forEach(clearTimeout); timers = [];
+      state = fresh(); state.started = true; run(0);
+      if (box.getBoundingClientRect().top < 0) box.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
+    }
   });
 
   state = fresh();
   renderAll();
+  if ('IntersectionObserver' in window && !reduced) {
+    var io = new IntersectionObserver(function (es) {
+      if (es.some(function (x) { return x.isIntersecting; })) { io.disconnect(); start(); }
+    }, { threshold: 0.35 });
+    io.observe(box);
+  } else start();
 })();
 </script>
 </body>
