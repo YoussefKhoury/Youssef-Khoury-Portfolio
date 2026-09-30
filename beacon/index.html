@@ -516,7 +516,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         <div class="tile sm rv" style="--i:4"><div class="badge"><svg class="ico" data-i="search"></svg></div><h3>Price lookup</h3><p>every list, one search</p></div>
         <div class="tile sm rv" style="--i:5"><div class="badge"><svg class="ico" data-i="tag"></svg></div><h3>New prices</h3><p>approved before use</p></div>
         <div class="tile sm rv" style="--i:6"><div class="badge"><svg class="ico" data-i="plug"></svg></div><h3>Quote helper</h3><p>fills exact matches</p></div>
-        <div class="tile sm rv" style="--i:7"><div class="badge"><svg class="ico" data-i="receipt"></svg></div><h3>Xero drafts</h3><p>quote &rarr; draft invoice</p></div>
+        <div class="tile sm rv" style="--i:7"><div class="badge"><svg class="ico" data-i="receipt"></svg></div><h3>Invoice drafts</h3><p>quote &rarr; draft invoice in the accounting software</p></div>
         <div class="tile sm rv" style="--i:8"><div class="badge"><svg class="ico" data-i="moon"></svg></div><h3>Nightly check</h3><p>re-reads, fixes, logs</p></div>
       </div>
     </div>
@@ -716,7 +716,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     {
       id: 'm1', mode: 'review', when: 'Mon 09:12', who: 'Lea', role: 'client &middot; Studio Mira', kind: 'client',
       text: 'Hi Youssef, can you quote 18 track spots and 2 drivers for the Villa Cedar lobby?',
-      acts: ['Found the exact prices in Quotient', 'Checked stock: <b>12 spots short</b>', 'Made the quote and a reply draft'],
+      acts: ['Found the exact prices in the quoting tool', 'Checked stock: <b>12 spots short</b>', 'Made the quote and a reply draft'],
       result: function () { return paper('Quote', 'Q-1042') + '<div class="attach"><i>PDF</i>attached to a reply to Lea, not sent</div>'; },
       why: 'It goes to a client, so <b>you check it first</b>.',
       yes: 'Looks right, save the draft', no: 'Something&rsquo;s off',
@@ -727,10 +727,10 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       id: 'm2', mode: 'review', when: 'Mon 14:40', who: 'Lea', role: 'client &middot; Studio Mira', kind: 'client',
       text: 'Approved! Payment sent today, slip attached.',
       acts: ['Read the payment slip: <b>USD 1,228</b>', 'Matched it to quote Q-1042', 'Prepared the invoice'],
-      result: function () { return paper('Invoice &middot; Xero', 'Q-1042', 'DRAFT') + '<div class="remind">Reminder for you: order the spots and drivers from Lumeria</div>'; },
+      result: function () { return paper('Invoice', 'Q-1042', 'DRAFT') + '<div class="remind">Reminder for you: order the spots and drivers from Lumeria</div>'; },
       why: 'Invoices are money, so <b>you confirm first</b>.',
       yes: 'Create the draft invoice', no: 'Something&rsquo;s off',
-      ok: 'Draft invoice created in Xero. <b>You approve and send it.</b>',
+      ok: 'Draft invoice created in the accounting software. <b>You approve and send it.</b>',
       next: 'the supplier confirms'
     },
     {
