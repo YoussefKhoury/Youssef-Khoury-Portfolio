@@ -446,9 +446,18 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
       <span class="kick rv">Before</span>
       <h2 class="rv" style="--i:1">40+ orders. 20+ suppliers. <em>All in email.</em></h2>
       <div class="tiles t3">
-        <div class="tile rv pop" style="--i:0"><div class="badge b"><svg class="ico" data-i="mail"></svg></div><h3>Status</h3><p>buried in threads</p></div>
-        <div class="tile rv pop" style="--i:1"><div class="badge b"><svg class="ico" data-i="sheet"></svg></div><h3>Prices</h3><p>one spreadsheet at a time</p></div>
-        <div class="tile rv pop" style="--i:2"><div class="badge b"><svg class="ico" data-i="user"></svg></div><h3>Follow-ups</h3><p>in people's heads</p></div>
+        <div class="tile sm rv" style="--i:0"><div class="badge"><svg class="ico" data-i="home"></svg></div><h3>Today</h3><p>what needs me now</p></div>
+        <div class="tile sm rv" style="--i:1"><div class="badge"><svg class="ico" data-i="inbox"></svg></div><h3>Requests</h3><p>asks pulled from email</p></div>
+        <div class="tile sm rv" style="--i:2"><div class="badge"><svg class="ico" data-i="folder"></svg></div><h3>Projects</h3><p>status, updated by mail</p></div>
+        <div class="tile sm rv" style="--i:3"><div class="badge"><svg class="ico" data-i="truck"></svg></div><h3>Shipments</h3><p>five-stage board</p></div>
+        <div class="tile sm rv" style="--i:4"><div class="badge"><svg class="ico" data-i="clip"></svg></div><h3>Delivery sheets</h3><p>invoice &rarr; delivery note, back orders tracked</p></div>
+        <div class="tile sm rv" style="--i:5"><div class="badge"><svg class="ico" data-i="box"></svg></div><h3>Stock</h3><p>levels and every movement logged</p></div>
+        <div class="tile sm rv" style="--i:6"><div class="badge"><svg class="ico" data-i="search"></svg></div><h3>Price lookup</h3><p>every list, one search</p></div>
+        <div class="tile sm rv" style="--i:7"><div class="badge"><svg class="ico" data-i="tag"></svg></div><h3>New prices</h3><p>approved before use</p></div>
+        <div class="tile sm rv" style="--i:8"><div class="badge"><svg class="ico" data-i="plug"></svg></div><h3>Quote helper</h3><p>fills exact matches</p></div>
+        <div class="tile sm rv" style="--i:9"><div class="badge"><svg class="ico" data-i="receipt"></svg></div><h3>Invoice drafts</h3><p>quote &rarr; draft invoice in the accounting software</p></div>
+        <div class="tile sm rv" style="--i:10"><div class="badge"><svg class="ico" data-i="chat"></svg></div><h3>Desk assistant</h3><p>answers questions on the hub&rsquo;s data</p></div>
+        <div class="tile sm rv" style="--i:11"><div class="badge"><svg class="ico" data-i="moon"></svg></div><h3>Nightly check</h3><p>re-reads, fixes, logs</p></div>
       </div>
       <div class="shift rv" style="--i:3"><span>scattered</span><i></i><b>one hub</b></div>
     </div>
@@ -479,7 +488,9 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
           <li><b>Only live facts.</b> It reads the email, the thread and live project data, so old order details can't leak into new updates.</li>
           <li><b>Failures don't block the queue.</b> Retries with backoff; 3 failures and a person takes it.</li>
           <li><b>Runs on free tiers.</b> Big price lists (the largest has 240k lines) are split into sorted chunks with a binary-search index.</li>
-          <li><b>Tested before it ships.</b> Automated suites cover the API, permissions, screens and invoice builder.</li>
+          <li><b>One card per order.</b> A supplier can run several orders on one project; each email is matched to the right one by order number, PO and pro forma.</li>
+          <li><b>Holidays count.</b> Ready dates start when production really starts and skip any holiday the supplier names.</li>
+          <li><b>Tested before it ships.</b> Automated suites cover the API, permissions, screens and invoice builder; reader changes are replayed on real emails first (one fix took made-up details from 3 of 41 emails to 0).</li>
         </ul>
       </details>
     </div>
@@ -507,7 +518,7 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
   <section class="block" id="inside">
     <div class="shell">
       <span class="kick rv">Inside</span>
-      <h2 class="rv" style="--i:1">One hub. <em>Nine tools.</em></h2>
+      <h2 class="rv" style="--i:1">One hub. <em>Twelve tools.</em></h2>
       <div class="tiles t3">
         <div class="tile sm rv" style="--i:0"><div class="badge"><svg class="ico" data-i="home"></svg></div><h3>Today</h3><p>what needs me now</p></div>
         <div class="tile sm rv" style="--i:1"><div class="badge"><svg class="ico" data-i="inbox"></svg></div><h3>Requests</h3><p>asks pulled from email</p></div>
@@ -533,6 +544,8 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
         <li class="rv" style="--i:3"><span class="rl-n">04</span><span class="rl-ico"><svg class="ico" data-i="lock"></svg></span><div><h3>Costs stay private</h3><p>Only admins see buying costs.</p></div></li>
         <li class="rv" style="--i:4"><span class="rl-n">05</span><span class="rl-ico"><svg class="ico" data-i="undo"></svg></span><div><h3>Checked twice</h3><p>A second check must agree; one click undoes it.</p></div></li>
         <li class="rv" style="--i:5"><span class="rl-n">06</span><span class="rl-ico"><svg class="ico" data-i="steps"></svg></span><div><h3>Autonomy is earned</h3><p>It acts alone only after 5 approvals in a row.</p></div></li>
+        <li class="rv" style="--i:6"><span class="rl-n">07</span><span class="rl-ico"><svg class="ico" data-i="fwd"></svg></span><div><h3>Never goes backwards</h3><p>A later email can&rsquo;t move an order back; only a person can.</p></div></li>
+        <li class="rv" style="--i:7"><span class="rl-n">08</span><span class="rl-ico"><svg class="ico" data-i="user"></svg></span><div><h3>Unsure means ask</h3><p>If it can&rsquo;t tell which order an email is about, a person decides.</p></div></li>
       </ol>
     </div>
   </section>
@@ -596,6 +609,10 @@ footer .shell { display: flex; justify-content: space-between; gap: 12px; flex-w
     map: '<circle cx="5" cy="6" r="2" pathLength="1"/><circle cx="19" cy="6" r="2" pathLength="1"/><circle cx="12" cy="18" r="2" pathLength="1"/><path d="M7 6h10M6 8l5 8M18 8l-5 8" pathLength="1"/>',
     db: '<ellipse cx="12" cy="5" rx="8" ry="3" pathLength="1"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" pathLength="1"/>',
     flask: '<path d="M9 3h6M10 3v6L4 19a1.5 1.5 0 001.3 2h13.4A1.5 1.5 0 0020 19l-6-10V3" pathLength="1"/>',
+    box: '<path d="M3 7l9-4 9 4v10l-9 4-9-4z" pathLength="1"/><path d="M3 7l9 4 9-4M12 11v10" pathLength="1"/>',
+    chat: '<path d="M4 5h16v11H9l-5 4z" pathLength="1"/><path d="M8 9h8M8 12h5" pathLength="1"/>',
+    clip: '<rect x="5" y="4" width="14" height="17" rx="2" pathLength="1"/><path d="M9 4V2.5h6V4M8.5 11l1.5 1.5 3-3M8.5 16.5h7" pathLength="1"/>',
+    fwd: '<path d="M5 6l6 6-6 6M13 6l6 6-6 6" pathLength="1"/>',
     users: '<circle cx="9" cy="8" r="3" pathLength="1"/><path d="M3 20c.8-3 3-5 6-5s5.2 2 6 5" pathLength="1"/><circle cx="17" cy="9" r="2.5" pathLength="1"/><path d="M16 14.5c2.5 0 4.3 1.6 5 4.5" pathLength="1"/>'
   };
   document.querySelectorAll('svg.ico[data-i]').forEach(function (s) {
