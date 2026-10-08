@@ -330,6 +330,7 @@ h1 {
   text-wrap: balance; margin: 0 0 22px; max-width: 17ch;
 }
 h1 em { font-style: normal; color: var(--accent); }
+h1 .nw { white-space: nowrap; }
 /* pressure-type: per-letter spans that bulge toward the cursor (desktop, motion-safe) */
 .hero-copy h1 { cursor: default; user-select: none; -webkit-user-select: none; }
 h1 .tp-word { display: inline-block; white-space: nowrap; }
