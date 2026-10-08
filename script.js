@@ -89,6 +89,7 @@
       const heroBottom = (document.querySelector('.hero')?.getBoundingClientRect().bottom ?? 0);
       secnav.classList.toggle('show', heroBottom < 54);
       secnav.setAttribute('aria-hidden', heroBottom < 54 ? 'false' : 'true');
+      secnav.inert = heroBottom >= 54;
     }
     if (toTop) toTop.classList.toggle('show', window.scrollY > vh * 1.4);
     if (progress) {
@@ -146,6 +147,7 @@
     if (!overlay) return;
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden', 'false');
+    overlay.inert = false;
     indexBtn?.setAttribute('aria-expanded', 'true');
     document.documentElement.classList.add('menu-open');
     overlay.scrollTop = 0;
@@ -156,6 +158,7 @@
     if (!overlay) return;
     overlay.classList.remove('open');
     overlay.setAttribute('aria-hidden', 'true');
+    overlay.inert = true;
     indexBtn?.setAttribute('aria-expanded', 'false');
     document.documentElement.classList.remove('menu-open');
     if (indexBtnLabel) indexBtnLabel.textContent = 'Menu';
