@@ -83,7 +83,7 @@ a { color: inherit; text-decoration: none; }
 
 .mono {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
@@ -125,7 +125,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--bg);
 }
 .topbar .shell { display: flex; align-items: center; justify-content: space-between; height: 54px; }
-.topbar .id { color: var(--ink); font-size: 11px; letter-spacing: 0.1em; }
+.topbar .id { color: var(--ink); font-size: 12px; letter-spacing: 0.1em; padding: 10px 0; margin: -10px 0; }
 .topbar .id b { color: var(--accent); font-weight: 600; }
 .topbar .topnav { position: relative; display: flex; gap: 26px; }
 .topbar .topnav a {
@@ -147,7 +147,7 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   display: inline-flex; align-items: center; padding: 5px 12px;
   background: transparent; border: 0; border-radius: 0;
-  color: var(--ink); font-size: 11px; letter-spacing: 0.06em;
+  color: var(--ink); font-size: 12px; letter-spacing: 0.06em;
   cursor: pointer; transition: color .2s ease;
 }
 /* corner brackets instead of a box: top-left + bottom-right */
@@ -247,13 +247,13 @@ html.menu-open body { overflow: hidden; }
 .ov-side { display: flex; flex-direction: column; gap: 16px; align-self: center; color: var(--muted); opacity: 0; transition: opacity .4s ease .3s; }
 .overlay.open .ov-side { opacity: 1; }
 .ov-side > div { display: flex; flex-direction: column; gap: 4px; }
-.ov-side span { font-size: 11px; letter-spacing: 0.16em; color: var(--faint); }
+.ov-side span { font-size: 12px; letter-spacing: 0.16em; color: var(--faint); }
 .ov-side b { font-size: 12px; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
 .ov-social { flex-direction: column !important; gap: 6px !important; margin-top: 6px; }
 .ov-social a { display: flex; gap: 8px; font-size: 12px; letter-spacing: 0.06em; color: var(--muted); }
 .ov-social a .ar { color: var(--accent); }
 .ov-social a:hover { color: var(--ink); }
-.ov-stamp { font-size: 11px; letter-spacing: 0.14em; color: var(--faint); margin: 8px 0 0; }
+.ov-stamp { font-size: 12px; letter-spacing: 0.14em; color: var(--faint); margin: 8px 0 0; }
 
 /* ---------- reveal (only hidden once JS confirms it can un-hide them) ---------- */
 .js .reveal { opacity: 0; transform: translateY(20px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
@@ -343,7 +343,7 @@ h1 .tp-ch {
 .birthdate {
   position: absolute; z-index: 2; top: 19%; right: clamp(14px, 4.5vw, 60px);
   font-family: var(--mono); font-weight: 500;
-  font-size: 10.5px; letter-spacing: 0.16em; color: var(--faint);
+  font-size: 11.5px; letter-spacing: 0.16em; color: var(--faint);
   pointer-events: none; user-select: none; -webkit-user-select: none;
 }
 .birthdate .tp-word { display: inline-block; white-space: nowrap; }
@@ -526,6 +526,7 @@ h1 .tp-ch {
 }
 .dsr-links a {
   flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.55em;
+  padding: 0.5em 0; margin: -0.5em 0;
   font-size: 1em; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
   transition: color .2s ease;
 }
@@ -652,14 +653,14 @@ h2 {
 .case-item.flagship::before {
   content: "[ flagship ]";
   position: absolute; top: 18px; left: 54px; z-index: 2;
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
   text-transform: uppercase; color: var(--accent);
 }
 .case-item.flagship .row { padding-top: 60px; }
 .case-item.live::before {
   content: "[ in production ]";
   position: absolute; top: 18px; left: 54px; z-index: 2;
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
   text-transform: uppercase; color: #8FCB8B;
 }
 .case-item.live .row { padding-top: 60px; }
@@ -697,9 +698,11 @@ h2 {
   display: flex; flex-wrap: wrap; gap: 26px;
   margin: 0 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--line);
 }
+/* padding grows the click area, the matching negative margin keeps the row
+   where it was and lands the active seam on the rule */
 .ct-tab {
-  position: relative; padding: 0; background: none; border: 0; cursor: pointer;
-  font: inherit; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  position: relative; padding: 11px 0; margin: -11px 0; background: none; border: 0; cursor: pointer;
+  font: inherit; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--faint); transition: color .22s ease;
 }
 .ct-tab::before,
@@ -758,7 +761,7 @@ h2 {
   color: var(--accent-2); margin-bottom: 12px; max-width: 60ch;
 }
 .row .tags {
-  font-size: 11px; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 12px;
+  font-size: 12px; letter-spacing: 0.1em; color: var(--muted); display: block; margin-bottom: 12px;
 }
 .row .tags b { color: var(--accent-2); font-weight: 500; }
 /* separators live on the tag, not in the markup, so hiding a tag on a phone
@@ -772,7 +775,7 @@ h2 {
   padding-left: 12px; border-left: 2px solid var(--accent);
 }
 .case-inner .outcome .mono {
-  color: var(--accent); font-size: 10px; letter-spacing: 0.16em; margin-right: 8px;
+  color: var(--accent); font-size: 11px; letter-spacing: 0.16em; margin-right: 8px;
 }
 
 /* per-row staggered entrance */
@@ -798,7 +801,7 @@ h2 {
 }
 .row:hover .go, .row:focus-visible .go { opacity: 1; transform: none; }
 .row .go b {
-  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
   letter-spacing: 0.12em; text-transform: uppercase;
 }
 .row .go .ar { display: inline-block; }
@@ -876,7 +879,7 @@ h2 {
 
 .flag-copy p { color: var(--muted); }
 .flag-copy .actions { margin-top: 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
-.fineprint { color: var(--faint); font-size: 11px; margin-top: 20px; line-height: 1.6; }
+.fineprint { color: var(--faint); font-size: 12px; margin-top: 20px; line-height: 1.6; }
 
 .dashboard-window {
   border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
@@ -884,7 +887,7 @@ h2 {
 }
 .window-bar {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 11px;
+  padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px;
 }
 .window-bar span:first-child { color: var(--accent-2); letter-spacing: .2em; }
 .window-bar a { color: var(--accent); }
@@ -944,16 +947,16 @@ h2 {
 .cert-img { padding: 16px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
 .cert-img img { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
 .cert-copy { padding: 20px; }
-.cert-copy > span { color: var(--accent); font-size: 11px; letter-spacing: .13em; }
+.cert-copy > span { color: var(--accent); font-size: 12px; letter-spacing: .13em; }
 .cert-copy h3 {
   font-family: var(--display); font-weight: 600; font-size: 17px; letter-spacing: -0.01em;
   margin: 10px 0 8px;
 }
 .cert-copy p { color: var(--muted); font-size: 13.5px; margin: 0 0 14px; }
-.cert-copy .go { color: var(--accent); font-size: 11px; }
+.cert-copy .go { color: var(--accent); font-size: 12px; }
 .edu {
   display: flex; gap: 18px; align-items: baseline; margin-top: 20px;
-  padding: 16px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px;
+  padding: 16px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px;
 }
 .edu span { color: var(--faint); flex-shrink: 0; }
 .edu p { margin: 0; text-transform: none; letter-spacing: 0; font-size: 13px; font-family: var(--body); }
@@ -989,7 +992,7 @@ h2 {
 .xrow:hover .xr-body h3, .xrow:focus-within .xr-body h3 { color: var(--accent); }
 /* the last row's rule has nothing under it but the section's own edge */
 .xrow:last-child { border-bottom: 0; }
-.xr-when time { display: block; color: var(--muted); font-size: 11px; margin-bottom: 10px; }
+.xr-when time { display: block; color: var(--muted); font-size: 12px; margin-bottom: 10px; }
 .xr-when .bar { display: block; height: 3px; background: var(--line); position: relative; }
 .xr-when .bar::after {
   content: ""; position: absolute; inset: 0 auto 0 0; width: var(--fill, 0%);
@@ -1001,7 +1004,7 @@ h2 {
   font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: -0.01em;
   margin: 0 0 6px; display: flex; flex-wrap: wrap; gap: 10px; align-items: baseline;
 }
-.xr-body h3 .co { color: var(--accent-2); font-size: 11px; font-weight: 400; }
+.xr-body h3 .co { color: var(--accent-2); font-size: 12px; font-weight: 400; }
 .xr-body p { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 58ch; }
 
 @media (min-width: 721px) {
@@ -1044,12 +1047,12 @@ h2 {
 .ch-k { color: var(--ink); font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase; transition: color .22s ease; }
 .ch:hover .ch-k { color: var(--accent); }
 /* the handle is the proof the route is real — never let it wrap the row open */
-.ch-v { color: var(--faint); font-size: 11px; letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ch-v { color: var(--faint); font-size: 12px; letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ch-go {
   margin-left: auto; flex: none; color: var(--accent); font-size: 15px; line-height: 1;
   transition: transform .28s var(--ease);
 }
-.ch-go.mono { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+.ch-go.mono { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
 .ch:hover .ch-go:not(.mono) { transform: translate(2px, -2px); }
 
 /* heading types itself out, then the CTAs/socials fade up after */
@@ -1121,11 +1124,11 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
 }
 .foot-rights {
   justify-self: center; color: var(--faint);
-  font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase;
 }
 .foot-year {
   justify-self: end; color: var(--faint);
-  font-size: 10.5px; letter-spacing: 0.14em;
+  font-size: 11.5px; letter-spacing: 0.14em;
 }
 @media (max-width: 720px) {
   footer { padding: 40px 0 40px; }
@@ -1149,7 +1152,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
 
 .stamp {
   display: flex; align-items: center; gap: 9px;
-  color: var(--faint); font-size: 11px; letter-spacing: 0.12em;
+  color: var(--faint); font-size: 12px; letter-spacing: 0.12em;
 }
 .stamp .fmark {
   width: 16px; height: 16px;
@@ -1166,7 +1169,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   opacity: 0; visibility: hidden;
   max-width: min(90vw, 420px); text-align: center;
   padding: 11px 18px; background: var(--accent); color: #1a1204; border-radius: 8px;
-  font-size: 11px; letter-spacing: 0.1em; word-break: break-all;
+  font-size: 12px; letter-spacing: 0.1em; word-break: break-all;
   transition: transform .3s var(--ease), opacity .3s ease, visibility .3s;
 }
 .toast.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
@@ -1177,7 +1180,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 13px; background: color-mix(in srgb, var(--surface) 92%, transparent);
   border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
-  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
   backdrop-filter: blur(8px);
   opacity: 0; transform: translateY(14px); pointer-events: none;
   transition: opacity .3s var(--ease), transform .3s var(--ease), color .2s ease, border-color .2s ease;
@@ -1246,10 +1249,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   html { -webkit-text-size-adjust: 100%; scroll-padding-top: 98px; }
   #contact { padding-top: var(--dossier-breath); }
 
-  /* finger-sized case tabs: padding grows the tap area, the matching negative
-     margin keeps the row where it was and lands the active seam on the rule */
-  .ct-tab { padding: 11px 0; margin: -11px 0; }
-  .case-inner .outcome .mono { font-size: 11px; }
+  .case-inner .outcome .mono { font-size: 12px; }
 
   /* let the heading use the full centred width and breathe a little smaller */
   h1 { font-size: clamp(27px, 8vw, 34px); max-width: none; }
@@ -1326,7 +1326,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   .dossier-label {
     display: block; width: calc(100% - 28px); max-width: none; margin: 0 auto; padding: 42px 0 20px;
     border-bottom: 1px solid var(--line);
-    color: var(--accent); font: 600 10px/1 var(--mono);
+    color: var(--accent); font: 600 11px/1 var(--mono);
     letter-spacing: 0.22em; text-align: left; text-transform: uppercase;
   }
   .dossier.filing { overflow-anchor: none; }
@@ -1375,7 +1375,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
     padding: 4px 9px 5px;
     background: linear-gradient(180deg, #131010, #0a0808);
     border: 1px solid var(--line); border-bottom: 0; border-radius: 7px 7px 0 0;
-    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink);
     transition: color .3s var(--ease), border-color .3s var(--ease);
   }
   .dossier-body > .section.collapsible:nth-child(1) .sec-head > :first-child { left: auto; right: 2%; }
@@ -1426,7 +1426,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
     display: flex; align-items: center; justify-content: center;
     min-height: 44px; padding: 10px 4px; text-align: center;
     background: var(--file, #050403);
-    font: 500 11px/1.25 var(--mono); letter-spacing: 0.04em; color: var(--ink);
+    font: 500 12px/1.25 var(--mono); letter-spacing: 0.04em; color: var(--ink);
     text-transform: uppercase;
   }
   /* classified-doc redaction bar: covers the cell until the file opens, then
@@ -1603,7 +1603,7 @@ footer { position: relative; border-top: 1px solid var(--line); padding: 32px 0 
   .xr-when .bar { flex: 1; }
 
   .skillstrip { padding: 15px 0; gap: 8px; }
-  .mq-track li { padding: 3px 17px; letter-spacing: 0.12em; font-size: 11px; }
+  .mq-track li { padding: 3px 17px; letter-spacing: 0.12em; font-size: 12px; }
 
 }
 
